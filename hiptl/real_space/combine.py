@@ -7,9 +7,12 @@ create a final hdf5 file with all the needed information saved.
 import numpy as np
 import h5py as hp
 import sys
+from hicc_library.models import get_hiptl_models
 
-# defining basic path
+# setting author-defined variables (not expected to change)
 BASE = '/lustre/cosinga/hiptl_output/'
+LOG = '/lustre/cosinga/hicc/hiptl/real_space/logs/'
+models = get_hiptl_models()
 
 # getting command-line input
 START = sys.argv[1]
@@ -18,14 +21,15 @@ SNAPSHOT = sys.argv[3]
 
 # opening files to write to
 w = hp.File(BASE+'hiptl_'+SNAPSHOT+'.'+START+'.'+END+'.hdf5','w')
-logfile = open(BASE+'combine.log','a')
+logfile = open(BASE+'combine_%s.log'%SNAPSHOT,'a')
 
-# defining
-models = ['GD14', 'GK11', 'K13', 'S14']
+# getting the filenames that we will be combining
 filenos = np.arange(int(START), int(END))
 files = ['hiptl_'+str(SNAPSHOT)+'.'+str(i)+'.hdf5' for i in filenos]
+
 logfile.write('first file: ' + files[0]+'\n')
 logfile.write('last file: ' + files[-1]+'\n')
+
 for m in models:
     total = np.zeros((2048, 2048, 2048), dtype=np.float32)
     logfile.write("starting model "+m+'\n')
