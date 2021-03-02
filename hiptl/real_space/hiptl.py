@@ -9,15 +9,16 @@ import h5py as hp
 import sys
 import MAS_library as masl
 from library_hicc.models import get_hiptl_models
+
 # reading command line inputs
 CHUNK = sys.argv[1]
 SNAPSHOT = sys.argv[2]
+BOX = sys.argv[3]
 
 # defining needed paths
 HIPATH = '/lustre/diemer/illustris/hih2/'  # where the hiptl files are saved
 PTLPATH = '/lustre/cosinga/ptl%s/'%SNAPSHOT # where the ptl files are saved
 OUTPATH = '/lustre/cosinga/hiptl_output/' # where to save the output
-SUBPATH = '/lustre/cosinga/subhalo%s/'%SNAPSHOT # to find positions of SOI
 
 # input files
 hih2file = hp.File(HIPATH+"hih2_particles_0%s.%s.hdf5" %(SNAPSHOT, CHUNK), 'r')
