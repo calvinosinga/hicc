@@ -18,14 +18,15 @@ models = get_hiptl_models()
 START = sys.argv[1]
 END = sys.argv[2]
 SNAPSHOT = sys.argv[3]
+BOX = sys.argv[4]
 
 # opening files to write to
-w = hp.File(BASE+'hiptl_'+SNAPSHOT+'.'+START+'.'+END+'.hdf5','w')
-logfile = open(BASE+'combine_%s.log'%SNAPSHOT,'a')
+w = hp.File(BASE+'hiptl%s_%s.%s.%s.hdf5'%(BOX, SNAPSHOT, START, END),'w')
+logfile = open(BASE+'combine%_%s.log'%(BOX, SNAPSHOT),'a')
 
 # getting the filenames that we will be combining
 filenos = np.arange(int(START), int(END))
-files = ['hiptl_'+str(SNAPSHOT)+'.'+str(i)+'.hdf5' for i in filenos]
+files = ['hiptl%s_%s.%s.hdf5'%(BOX, SNAPSHOT, i) for i in filenos]
 
 logfile.write('first file: ' + files[0]+'\n')
 logfile.write('last file: ' + files[-1]+'\n')

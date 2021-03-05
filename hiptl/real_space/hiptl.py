@@ -17,7 +17,7 @@ BOX = sys.argv[3]
 
 # defining needed paths
 HIPATH = '/lustre/diemer/illustris/hih2/'  # where the hiptl files are saved
-PTLPATH = '/lustre/cosinga/ptl%s/'%SNAPSHOT # where the ptl files are saved
+PTLPATH = '/lustre/cosinga/tng%s/ptl%s/'%(BOX, SNAPSHOT) # where the ptl files are saved
 OUTPATH = '/lustre/cosinga/hiptl_output/' # where to save the output
 
 # input files
@@ -25,7 +25,7 @@ hih2file = hp.File(HIPATH+"hih2_particles_0%s.%s.hdf5" %(SNAPSHOT, CHUNK), 'r')
 ptlfile = hp.File(PTLPATH+"snap_0%s.%s.hdf5" %(SNAPSHOT, CHUNK), 'r')
 
 # output files
-w = hp.File(OUTPATH+'hiptl_%s.%s.hdf5' %(SNAPSHOT, CHUNK), 'w')
+w = hp.File(OUTPATH+'hiptl%s_%s.%s.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
 
 # getting author-defined constants (these COULD change but are not expected to)
 MAS = 'CIC'
