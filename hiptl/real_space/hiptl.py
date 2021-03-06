@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/bin/python3
 """
 This file takes each of the 448 subfiles for the particle-based hydrogen prescriptions
 and creates a 2048^3 grid of each of them.
