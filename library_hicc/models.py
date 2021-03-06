@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/env python3
 
 """
 This file stores just simple get methods that return the names of the models that were used

@@ -11,21 +11,21 @@ import MAS_library as masl
 from library_hicc.models import get_hiptl_models
 
 # reading command line inputs
-CHUNK = sys.argv[1]
-SNAPSHOT = sys.argv[2]
-BOX = sys.argv[3]
+CHUNK = int(sys.argv[1])
+SNAPSHOT = int(sys.argv[2])
+BOX = int(sys.argv[3])
 
 # defining needed paths
 HIPATH = '/lustre/diemer/illustris/hih2/'  # where the hiptl files are saved
-PTLPATH = '/lustre/cosinga/tng%s/ptl%s/'%(BOX, SNAPSHOT) # where the ptl files are saved
+PTLPATH = '/lustre/cosinga/tng%d/snapdir_%3d/'%(BOX, SNAPSHOT) # where the ptl files are saved
 OUTPATH = '/lustre/cosinga/hiptl_output/' # where to save the output
 
 # input files
-hih2file = hp.File(HIPATH+"hih2_particles_0%s.%s.hdf5" %(SNAPSHOT, CHUNK), 'r')
-ptlfile = hp.File(PTLPATH+"snap_0%s.%s.hdf5" %(SNAPSHOT, CHUNK), 'r')
+hih2file = hp.File(HIPATH+"hih2_particles_%3d.%d.hdf5" %(SNAPSHOT, CHUNK), 'r')
+ptlfile = hp.File(PTLPATH+"snap_%3d.%d.hdf5" %(SNAPSHOT, CHUNK), 'r')
 
 # output files
-w = hp.File(OUTPATH+'hiptl%s_%s.%s.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
+w = hp.File(OUTPATH+'hiptl%d_%3d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
 
 # getting author-defined constants (these COULD change but are not expected to)
 MAS = 'CIC'
