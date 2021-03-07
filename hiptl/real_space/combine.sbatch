@@ -16,4 +16,4 @@
 . ~/.profile
 START=$SLURM_ARRAY_TASK_ID
 END=$SLURM_ARRAY_TASK_ID+20
-python3 /lustre/cosinga/hicc/hiptl/real_space/combine.py $START $END 99 
+python3 /lustre/cosinga/hicc/hiptl/real_space/combine.py $START $END 99 100
