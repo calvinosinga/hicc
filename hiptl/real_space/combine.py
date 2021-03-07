@@ -1,4 +1,4 @@
-#!
+#!/usr/bin/env python3
 """
 This file combines the given subfiles' fields for the hiptl run to
 create a final hdf5 file with all the needed information saved.
@@ -22,7 +22,7 @@ BOX = int(sys.argv[4])
 
 # opening files to write to
 w = hp.File(BASE+'hiptl%d_%03d.%d.%d.hdf5'%(BOX, SNAPSHOT, START, END),'w')
-logfile = open(BASE+'combine%d_%03d.log'%(BOX, SNAPSHOT),'a')
+logfile = open(LOG+'combine%d_%03d.log'%(BOX, SNAPSHOT),'a')
 
 # getting the filenames that we will be combining
 filenos = np.arange(int(START), int(END))
