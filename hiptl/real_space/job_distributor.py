@@ -46,9 +46,9 @@ start_time = time.time()
 N_PROC = int(os.environ["SLURM_NTASKS"])
 
 # Find commands to execute
-line = '/lustre/cosinga/hicc/hiptl/real_space/hiptl.py'
+line = 'python3 /lustre/cosinga/hicc/hiptl/real_space/hiptl.py'
 fileno = 448
-commands = [line+' '+str(i) for i in range(fileno)]
+commands = [line+' '+str(i)+' 99 100' for i in range(fileno)]
 # for line in f.readlines():
 #     commands.append(line.rstrip())
 n_commands = len(commands)
