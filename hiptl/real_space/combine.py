@@ -11,7 +11,7 @@ from library_hicc.models import get_hiptl_models
 
 # setting author-defined variables (not expected to change)
 BASE = '/lustre/cosinga/hiptl_output/'
-LOG = '/lustre/cosinga/hicc/hiptl/real_space/logs/'
+FINAL = '/lustre/cosinga/final_fields/'
 models = get_hiptl_models()
 
 # getting command-line input
@@ -19,33 +19,37 @@ START = int(sys.argv[1])
 END = int(sys.argv[2])
 SNAPSHOT = int(sys.argv[3])
 BOX = int(sys.argv[4])
+STEP = int(sys.argv[5]) # tells if this is the 1st or 2nd step in combine process
 
-# opening files to write to
-w = hp.File(BASE+'hiptl%d_%03d.%d.%d.hdf5'%(BOX, SNAPSHOT, START, END),'w')
-logfile = open(LOG+'combine%d_%03d.log'%(BOX, SNAPSHOT),'a')
+# opening files to write to, getting the filenames of the files we are combining
+if STEP == 0:
+    w = hp.File(BASE+'hiptl%d_%03d.%d.%d.hdf5'%(BOX, SNAPSHOT, START, END),'w')
+    filenos = np.arange(START, END)
+    files = ['hiptl%d_%03d.%d.hdf5'%(BOX, SNAPSHOT, i) for i in filenos]
+elif STEP == 1:
+    w = hp.File(FINAL+'hiptl%d_%03d.final.hdf5'%(BOX, SNAPSHOT))
+    filenos = np.arange(START, END, 20)
+    files = ['hiptl%d_%03d.%d.%d.hdf5'%(BOX, SNAPSHOT, i, i+19) for i in filenos]
+else:
+    raise ValueError("the STEP input must be 0 or 1")
 
-# getting the filenames that we will be combining
-filenos = np.arange(int(START), int(END))
-files = ['hiptl%d_%03d.%d.hdf5'%(BOX, SNAPSHOT, i) for i in filenos]
-
-logfile.write('first file: ' + files[0]+'\n')
-logfile.write('last file: ' + files[-1]+'\n')
+print('first file: ' + files[0]+'\n')
+print('last file: ' + files[-1]+'\n')
 
 # sum each model's grid individually
 for m in models:
     total = np.zeros((2048, 2048, 2048), dtype=np.float32)
-    logfile.write("starting model "+m+'\n')
-    logfile.write("current total sum %.4f"%(np.sum(total)))
+    print("starting model "+m+'\n')
+    print("current total sum %.4f"%(np.sum(total)))
     for i in files:
         # it is expected that the last job will have nonexistant files
         try:
             f = hp.File(BASE+i,'r')
         except IOError:
-            logfile.write('did not find the file %s\n'%i)
+            print('did not find the file %s\n'%i)
         else:
             total += f[m][:]
-            logfile.write("new sum:" + str(np.sum(total))+"\n")
+            print("new sum:" + str(np.sum(total))+"\n")
             f.close()
     w.create_dataset(m, data=total, compression="gzip", compression_opts=9)
 w.close()
-logfile.close()
