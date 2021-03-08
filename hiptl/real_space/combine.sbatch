@@ -5,7 +5,7 @@
 #SBATCH --share
 #SBATCH --array=0-460:20
 #SBATCH --job-name=hiptl_combine
-#SBATCH --output=hiptl_combine%a.log
+#SBATCH --output=./logs/hiptl_combine%a.log
 #SBATCH --time=2-1:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
