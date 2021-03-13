@@ -3,7 +3,7 @@
 
 #SBATCH --share
 #SBATCH --job-name=hiptl_final
-#SBATCH --output=hiptl_final%a.log
+#SBATCH --output=logs/hiptl_final.log
 #SBATCH --time=2-1:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
