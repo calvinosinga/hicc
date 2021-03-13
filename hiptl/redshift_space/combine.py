@@ -23,13 +23,13 @@ STEP = int(sys.argv[5]) # tells if this is the 1st or 2nd step in combine proces
 
 # opening files to write to, getting the filenames of the files we are combining
 if STEP == 0:
-    w = hp.File(BASE+'hiptl%d_%03d.%d.%d.hdf5'%(BOX, SNAPSHOT, START, END),'w')
+    w = hp.File(BASE+'hiptlrs%d_%03d.%d.%d.hdf5'%(BOX, SNAPSHOT, START, END),'w')
     filenos = np.arange(START, END)
-    files = ['hiptl%d_%03d.%d.hdf5'%(BOX, SNAPSHOT, i) for i in filenos]
+    files = ['hiptlrs%d_%03d.%d.hdf5'%(BOX, SNAPSHOT, i) for i in filenos]
 elif STEP == 1:
-    w = hp.File(FINAL+'hiptl%d_%03d.final.hdf5'%(BOX, SNAPSHOT))
+    w = hp.File(FINAL+'hiptlrs%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'w')
     filenos = np.arange(START, END, 20)
-    files = ['hiptl%d_%03d.%d.%d.hdf5'%(BOX, SNAPSHOT, i, i+19) for i in filenos]
+    files = ['hiptlrs%d_%03d.%d.%d.hdf5'%(BOX, SNAPSHOT, i, i+20) for i in filenos]
 else:
     raise ValueError("the STEP input must be 0 or 1")
 
