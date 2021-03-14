@@ -12,20 +12,20 @@ import h5py as hp
 import illustris_python as il
 import library_hicc.color as hcc
 import matplotlib.pyplot as plt
+import sys
 
 # command-line inputs
-CHUNK = sys.argv[1]
-SNAPSHOT = sys.argv[2]
-BOX = sys.argv[3]
+SNAPSHOT = int(sys.argv[1])
+BOX = int(sys.argv[2])
 
 # defining paths
 HIPATH = '/lustre/diemer/illustris/hih2/'  # where the hiptl files are saved
-TNG = '/lustre/cosinga/tng%s/'%BOX # where the ptl files are saved
+TNG = '/lustre/cosinga/tng%d/'%BOX # where the ptl files are saved
 
 # loading needed data
-grp = il.loadHalos(TNG, int(SNAPSHOT), fields=['GroupFirstSub','Group_M_Mean200', 'GroupCM','Group_R_Crit200'])
-sh = il.loadSubhalos(TNG, int(SNAPSHOT), fields=['SubhaloMassType','SubhaloCM','SubhaloStellarPhotometrics','SubhaloGrNr'])
-head = il.loadHeader(TNG, int(SNAPSHOT))
+grp = il.groupcat.loadHalos(TNG, SNAPSHOT, fields=['GroupFirstSub','Group_M_Mean200', 'GroupCM','Group_R_Crit200'])
+sh = il.groupcat.loadSubhalos(TNG, SNAPSHOT, fields=['SubhaloMassType','SubhaloCM','SubhaloStellarPhotometrics','SubhaloGrNr'])
+head = il.groupcat.loadHeader(TNG, SNAPSHOT)
 
 # defining constants
 LITTLE_H = head['HubbleParam']
@@ -41,13 +41,19 @@ print('We have found %d halos near the target...'%np.sum(targ_idx))
 centrals_col = sh['SubhaloStellarPhotometrics'][grp['GroupFirstSub'][targ_idx], :]
 centrals_stmass = sh['SubhaloMassType'][grp['GroupFirstSub'][targ_idx], 4] *1e10/LITTLE_H # solar masses
 gr = centrals_col[:, 4] - centrals_col[:, 5]
+# I am assuming that these will be resolved...
 red_idx = hcc.is_red_nelson(gr, centrals_stmass, 'mid')
 blue_idx = ~red_idx
 print('we have %d blues and %d reds found...'%(np.sum(blue_idx),np.sum(red_idx)))
 
-# getting the group numbers of the halos with the first red and first blue centrals
-
+# getting the positions of the halos of interest
+red_hoi = (sh['SubhaloGrNr'][red_idx])[0]
+blue_hoi = (sh['SubhaloGrNr'][blue_idx])[0]
+red_pos = grp['GroupCM'][red_hoi]
+blue_pos = grp['GroupCM'][blue_hoi]
+print('red HOI: %d with position: %s'%(red_hoi,np.array2string(red_pos)))
+print('red HOI: %d with position: %s'%(blue_hoi,np.array2string(blue_pos)))
 
 # getting the ptl and hiptl data for those to compute the HI profiles
-
-#
+for i in range(448):
+    hifile = hp.File(HIPATH+)
