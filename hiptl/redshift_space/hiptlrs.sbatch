@@ -12,4 +12,4 @@
 #SBATCH --mail-type=ALL
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/hiptl/redshift_space/hiptlrs.py $SLURM_ARRAY_TASK_ID 99 100
+python3 /lustre/cosinga/hicc/hiptl/redshift_space/hiptlrs.py $SLURM_ARRAY_TASK_ID 99 100 0
