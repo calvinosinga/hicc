@@ -1,35 +1,50 @@
+#!/usr/bin/env python3
+"""
+Creates the 2048^3 grid for the HI/H2 catalogue assigned on a per
+subhalo basis.
+"""
+# import statements
 import numpy as np
 import h5py as hp
 import sys
 import MAS_library as masl
+from library_hicc.models import get_hisubhalo_models
+import illustris_python as il
 
-# getting constants
-grid = (2048,2048,2048)
-SNAPSHOT = sys.argv[1]
-BOXSIZE = 75.0 #Mpc/h
-HOME = '/lustre/cosinga/subhalo'+str(SNAPSHOT)+'/'
-SAVE = '/lustre/cosinga/subhalo_output/'
-MAS = sys.argv[2]
-###################################
-# getting data and opening a log file
-logfile = open(SAVE+'hisubhalo_log'+str(SNAPSHOT)+'.txt', 'a')
-w = hp.File(SAVE+'hisubhalo_'+str(SNAPSHOT)+'.final.hdf5', 'w')
-f = hp.File(HOME+'hih2_galaxy_0'+str(SNAPSHOT)+'.hdf5','r')
-idfile = hp.File(HOME+"id_pos"+str(SNAPSHOT)+".hdf5",'r')
-pos = idfile['coordinates'][:]/1e3 # Mpc/h
-keys = list(f.keys())
-models = []
-for k in keys:
-    if 'm_hi' in k:
-        models.append(k)
-logfile.write("the models used are: "+str(models)+'\n')
+# reading command line inputs
+SNAPSHOT = int(sys.argv[1])
+BOX = int(sys.argv[2])
+
+# defining needed paths
+HOME = '/lustre/cosinga/tng%d/'%BOX
+SAVE = '/lustre/cosinga/final_fields/'
+
+# assigning author-defined constants (not expected to change)
+GRID = (2048,2048,2048)
+MAS = 'CIC'
+
+# input data
+f = hp.File(HOME+'hih2_galaxy_%03d.hdf5'%SNAPSHOT,'r')
+pos = il.groupcat.loadSubhalos(HOME, SNAPSHOT, fields=['SubhaloCM'])
+head = il.groupcat.loadHeader(HOME,SNAPSHOT)
+pos = pos/1e3 # Mpc/h
+models = get_hisubhalo_models()
+print("the models used are: "+str(models)+'\n')
+
+# output file
+w = hp.File(SAVE+'hisubhalo%d_%03d.final.hdf5'%(BOX,SNAPSHOT), 'w')
+
+# getting simulation-defined constants
+BOXSIZE = head['BoxSize']/1e3 # Mpc/h
 
 # loop over 9 models for HI
 for m in models:
+    print("computing the grid for %s"%m)
     field = np.zeros(grid, dtype=np.float32)
     mass = f[m][:] # already in solar masses
     mass = mass.astype(np.float32)
     pos = pos.astype(np.float32)
+    print("the sum is %f"%np.sum(mass))
     masl.MA(pos, field, BOXSIZE, MAS, mass)
     w.create_dataset(m, data=field, compression="gzip", compression_opts=9)
 
