@@ -24,7 +24,7 @@ GRID = (2048,2048,2048)
 MAS = 'CIC'
 
 # input data
-f = hp.File(HOME+'hih2_galaxy_%03d.hdf5'%SNAPSHOT,'r')
+f = hp.File(HOME+'/groups_%03d/hih2_galaxy_%03d.hdf5'%(SNAPSHOT,SNAPSHOT),'r')
 pos = il.groupcat.loadSubhalos(HOME, SNAPSHOT, fields=['SubhaloCM'])
 head = il.groupcat.loadHeader(HOME,SNAPSHOT)
 pos = pos/1e3 # Mpc/h
