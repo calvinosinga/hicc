@@ -40,7 +40,6 @@ print('last file: ' + files[-1])
 for m in models:
     total = np.zeros((2048, 2048, 2048), dtype=np.float32)
     print("starting model "+m)
-    print("current total sum %.4f"%(np.sum(total)))
     for i in files:
         # it is expected that the last job will have nonexistant files
         try:
@@ -49,7 +48,8 @@ for m in models:
             print('did not find the file %s'%i)
         else:
             total += f[m][:]
-            print("new sum:" + str(np.sum(total))+)
+            print('found file %s, adding to grid'%i)
+            print("new sum:" + str(np.sum(total)))
             f.close()
     w.create_dataset(m, data=total, compression="gzip", compression_opts=9)
 w.close()

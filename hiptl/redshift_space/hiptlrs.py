@@ -56,15 +56,17 @@ for m in models:
     # getting the HI mass data
     h2_frac = hih2file['PartType0']['f_mol_'+m][:]
     masshi = (1-h2_frac)*f_neut_h*mass
-    print('finished calculating the hi mass, has sum %f'%np.sum(masshi))
+    print('finished calculating the hi mass, has sum %.3e'%np.sum(masshi))
 
     # f_neut_h is negative where the model isn't defined, removing negative masses.
     masshi = np.where(masshi >= 0, masshi, np.zeros(masshi.shape, dtype=np.float32))
     masshi = masshi.astype('float32')
-    print('finished removing the negative fractions, now has sum %f'%np.sum(masshi))
+    print('finished removing the negative fractions, now has sum %.3e'%np.sum(masshi))
     
     # assigning them into the field using the Mass Assignment Scheme given
     masl.MA(pos,field,BOXSIZE,MAS,masshi)
     w.create_dataset(m, data=field, compression="gzip", compression_opts=9)
-    
+
 w.close()
+
+# checking if the output file was formatted as expected
