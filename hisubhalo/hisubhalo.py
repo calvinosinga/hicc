@@ -40,7 +40,7 @@ BOXSIZE = head['BoxSize']/1e3 # Mpc/h
 # loop over 9 models for HI
 for m in models:
     print("computing the grid for %s"%m)
-    field = np.zeros(grid, dtype=np.float32)
+    field = np.zeros(GRID, dtype=np.float32)
     mass = f[m][:] # already in solar masses
     mass = mass.astype(np.float32)
     pos = pos.astype(np.float32)
