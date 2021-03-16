@@ -1,5 +1,5 @@
 #!/bin/bash
-# this file combines the hiptl chunk files' fields into smaller chunks
+# this file combines the hiptlrs chunk files' fields into smaller chunks
 # to be combined again later
 
 #SBATCH --share
@@ -16,4 +16,4 @@
 . ~/.profile
 START=$SLURM_ARRAY_TASK_ID
 END=$(($SLURM_ARRAY_TASK_ID+20))
-python3 /lustre/cosinga/hicc/hiptl/redshift_space/combine.py $START $END 99 100 0
+python3 /lustre/cosinga/hicc/hiptl/combine.py hiptlrs $START $END 99 100 0

@@ -12,4 +12,4 @@
 #SBATCH --mail-type=ALL
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/hiptl/redshift_space/combine.py 0 448 99 100 1
+python3 /lustre/cosinga/hicc/hiptl/combine.py hiptlrs 0 448 99 100 1

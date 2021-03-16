@@ -1,9 +1,9 @@
 #!/bin/bash
-# this file combines the hiptl chunk files' into the final field
 
 #SBATCH --share
-#SBATCH --job-name=hiptl_final
-#SBATCH --output=logs/hiptl_final.log
+#SBATCH --array=0-447
+#SBATCH --job-name=hiptl
+#SBATCH --output=./logs/hiptl%a.log
 #SBATCH --time=2-1:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
@@ -12,4 +12,4 @@
 #SBATCH --mail-type=ALL
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/hiptl/real_space/combine.py 0 448 99 100 1
+python3 /lustre/cosinga/hicc/hiptl/hiptl.py $SLURM_ARRAY_TASK_ID 99 100
