@@ -7,7 +7,9 @@ subhalo basis.
 import numpy as np
 import h5py as hp
 import sys
+print("about to import MAS_library...")
 import MAS_library as masl
+print("imported MAS_library")
 from library_hicc.models import get_hisubhalo_models
 import illustris_python as il
 
