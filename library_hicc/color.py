@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
-
+import numpy as np
 """
 Stores the color/resolution definitions.
 """
 
 def is_red_nelson(gr, stmass, run):
+    """
+    Returns a boolean array of the subhalos that are red using
+    Dylan's and Benedikt's definition of the color cuts. The run
+    determines if these cuts are shifted vertically up or down in the
+    gr-stmass plane to test the sensitivity of the results to the color
+    definition. Note that this doesn't account for the resolution.
+    """
     if run == 'high':
         return gr> 0.675 + 0.02*(np.log10(stmass)-10.28)
     elif run == 'low':
@@ -14,7 +21,9 @@ def is_red_nelson(gr, stmass, run):
 
 def is_resolved_nelson(stmass, gasmass):
     """
-    tests if the subhalo is well-resolved.
+    tests if the subhalo is well-resolved, using the mean baryonic mass that
+    was taken from Pillepich et al. 2018 (check to make sure that this is the
+    correct value).
     """
     MEANBARYONICMASS=1.4e6 #solar masses  
     refmass = MEANBARYONICMASS*200
