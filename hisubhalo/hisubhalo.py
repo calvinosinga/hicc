@@ -4,6 +4,7 @@ Creates the 2048^3 grid for the HI/H2 catalogue assigned on a per
 subhalo basis.
 """
 # import statements
+print("starting import statements")
 import numpy as np
 import h5py as hp
 import sys

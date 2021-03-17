@@ -11,4 +11,5 @@
 #SBATCH --output=hisubhalo.dat
 
 . ~/.profile
+echo "starting python script"
 python3 /lustre/cosinga/hicc/hisubhalo/hisubhalo.py 99 100
