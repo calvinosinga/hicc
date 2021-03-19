@@ -7,7 +7,8 @@ and creates a 2048^3 grid of each of them.
 import numpy as np
 import h5py as hp
 import sys
-import MAS_library as masl
+# import MAS_library as masl
+from library_hicc.mas import CICW
 from library_hicc.models import get_hiptl_models
 import redshift_space_library as rsl
 
@@ -69,7 +70,7 @@ for m in models:
     print('finished removing the negative fractions, now has sum %.3e'%np.sum(masshi))
     
     # assigning them into the field using the Mass Assignment Scheme given
-    masl.MA(pos,field,BOXSIZE,MAS,masshi)
+    CICW(pos,field,BOXSIZE,masshi)
     w.create_dataset(m, data=field, compression="gzip", compression_opts=9)
 
 w.close()

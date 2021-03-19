@@ -7,7 +7,8 @@ Creates 2048^3 grids using the subhalo catalogue, separating them into red and b
 import numpy as np
 import h5py as hp
 import sys
-import MAS_library as masl
+# import MAS_library as masl
+from library_hicc.mas import CICW
 import redshift_space_library as rsl
 import library_hicc.colors as lhicc
 import illustris_python as il
@@ -61,7 +62,7 @@ def create_field(fieldname, idx):
     the output file w using the fieldname as the key.
     """
     field = np.zeros(GRID, dtype=np.float32)
-    masl.MA(pos[idx], field, BOXSIZE, MAS, total_mass[idx])
+    CICW(pos[idx], field, BOXSIZE, total_mass[idx])
     w.create_dataset(fieldname, data=field, compression="gzip", compression_opts=9)
     counts[fieldname] = np.sum(idx)
 
