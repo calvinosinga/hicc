@@ -4,12 +4,11 @@
 #SBATCH --job-name=hisubhalo
 #SBATCH --time=6:00:00
 #SBATCH --ntasks=1
-#SBATCH --mem-per-cpu=200000
+#SBATCH --mem-per-cpu=100000
 #SBATCH --account=astronomy-hi
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=cosinga@umd.edu
-#SBATCH --output=hisubhalo-again.dat
+#SBATCH --output=hisubhalo.dat
 
 . ~/.profile
-echo "starting python script"
 python3 /lustre/cosinga/hicc/hisubhalo/hisubhalo.py 99 100
