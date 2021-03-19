@@ -62,7 +62,7 @@ for m in models:
     mass = mass.astype(np.float32)
     pos = pos.astype(np.float32)
     print("the sum is %f"%np.sum(mass))
-    CICW(pos, field, BOXSIZE, MAS, mass)
+    CICW(pos, field, BOXSIZE, mass)
     w.create_dataset(m, data=field, compression="gzip", compression_opts=9)
 
 w.close()
