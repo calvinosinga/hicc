@@ -44,6 +44,7 @@ fxdown = lambda x: 0.625 + 0.02*(x-10.28)
 fxup = lambda x: 0.675 + 0.02*(x-10.28)
 
 # now making histogram
+stmass = np.log10(stmass)
 plt.hist2d(stmass,gr,bins=50,norm=mpl.colors.LogNorm())
 cbar = plt.colorbar()
 
@@ -56,4 +57,4 @@ plt.legend()
 plt.xlabel('Stellar Mass')
 plt.ylabel('g-r (magnitude)')
 plt.title('Blue and Red Subhalo Populations')
-plt.savefig(SAVE+'gr-stmass_%d_%03d.png')
+plt.savefig(SAVE+'gr-stmass_%d_%03d.png'%(BOX,SNAPSHOT))
