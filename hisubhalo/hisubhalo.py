@@ -9,7 +9,7 @@ import numpy as np
 import h5py as hp
 import sys
 print("about to import MAS_library...")
-import MAS_library as masl
+from library_hicc.mas import CICW
 print("imported MAS_library")
 from library_hicc.models import get_hisubhalo_models
 import illustris_python as il
@@ -62,7 +62,7 @@ for m in models:
     mass = mass.astype(np.float32)
     pos = pos.astype(np.float32)
     print("the sum is %f"%np.sum(mass))
-    masl.MA(pos, field, BOXSIZE, MAS, mass)
+    CICW(pos, field, BOXSIZE, MAS, mass)
     w.create_dataset(m, data=field, compression="gzip", compression_opts=9)
 
 w.close()
