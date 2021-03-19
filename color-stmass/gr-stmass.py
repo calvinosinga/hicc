@@ -34,27 +34,49 @@ gr = sub[fields[1]][:,4] - sub[fields[1]][:,5]
 # removing the unresolved subhalos
 # TODO: maybe find the % of each bin that is resolved/unresolved
 res_idx = lhicc.is_resolved_nelson(stmass, gasmass)
-stmass = stmass[res_idx]
-gasmass = gasmass[res_idx]
-gr = gr[res_idx]
+stmass_res = stmass[res_idx]
+gr_res = gr[res_idx]
+
+# removing unresolved subhalos in just stellar mass
+stres_idx = lhicc.is_resolved_stmass(stmass)
+stmass_stres = stmass[stres_idx]
+gr_stres = gr[stres_idx]
 
 # the nelson lines definitions in gr-stmass plane
 fx = lambda x: 0.65 + 0.02*(x-10.28)
 fxdown = lambda x: 0.625 + 0.02*(x-10.28)
 fxup = lambda x: 0.675 + 0.02*(x-10.28)
 
-# now making histogram
-stmass = np.log10(stmass)
-plt.hist2d(stmass,gr,bins=50,norm=mpl.colors.LogNorm())
+# now making first histogram
+stmass_res = np.log10(stmass_res)
+plt.subplot(1, 2, 1)
+plt.hist2d(stmass_res,gr_res,bins=50,norm=mpl.colors.LogNorm())
 cbar = plt.colorbar()
 
 # adding lines to show the definitions for blue/red
-x = np.linspace(np.min(stmass), np.max(stmass))
+x = np.linspace(np.min(stmass_res), np.max(stmass_res))
 plt.plot(x, fx(x), label='fiducial', color='red', linestyle='-')
 plt.plot(x, fxdown(x), label='bluer cut', color='tomato', linestyle=':')
 plt.plot(x, fxup(x), label='redder cut', color='darkred', linestyle=':')
 plt.legend()
 plt.xlabel('Stellar Mass')
 plt.ylabel('g-r (magnitude)')
-plt.title('Blue and Red Subhalo Populations')
-plt.savefig(SAVE+'gr-stmass_%d_%03d.png'%(BOX,SNAPSHOT))
+plt.title('Resolved in Gas and Stellar Mass')
+
+# making second histogram
+stmass_stres = np.log10(stmass_stres)
+plt.subplot(1, 2, 2)
+plt.hist2d(stmass_stres,gr_stres,bins=50,norm=mpl.colors.LogNorm())
+cbar = plt.colorbar()
+
+# adding lines to show the definitions for blue/red
+x = np.linspace(np.min(stmass_stres), np.max(stmass_stres))
+plt.plot(x, fx(x), label='fiducial', color='red', linestyle='-')
+plt.plot(x, fxdown(x), label='bluer cut', color='tomato', linestyle=':')
+plt.plot(x, fxup(x), label='redder cut', color='darkred', linestyle=':')
+plt.legend()
+plt.xlabel('Stellar Mass')
+plt.ylabel('g-r (magnitude)')
+plt.title('Resolved in just Stellar Mass')
+# plt.savefig(SAVE+'gr-stmass_%d_%03d.png'%(BOX,SNAPSHOT))
+plt.savefig(SAVE+'resolution-comparison.png')

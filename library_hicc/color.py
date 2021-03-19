@@ -29,4 +29,9 @@ def is_resolved_nelson(stmass, gasmass):
     refmass = MEANBARYONICMASS*200
     resolved_in_stmass = stmass > refmass
     resolved_in_gasmass = gasmass > refmass
-    return resolved_in_gasmass * resolved_in_stmass  
+    return resolved_in_gasmass * resolved_in_stmass
+
+def is_resolved_stmass(stmass):
+    MEANBARYONICMASS=1.4e6 #solar masses  
+    refmass = MEANBARYONICMASS*200
+    return stmass > refmass
