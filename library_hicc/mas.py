@@ -8,8 +8,8 @@ def CICW(pos, number, BoxSize, mass):
     ptls = pos.shape[0]; coord = pos.shape[1]; dims = number.shape[0]
     inv_cell_size = dims/BoxSize
     
-    index_d = np.zeros(3)
-    index_u = np.zeros(3)
+    index_d = np.zeros(3, dtype=np.int64)
+    index_u = np.zeros(3, dtype=np.int64)
     d = np.zeros(3)
     u = np.zeros(3)
 
