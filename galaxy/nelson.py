@@ -10,7 +10,7 @@ import sys
 # import MAS_library as masl
 from library_hicc.mas import CICW
 import redshift_space_library as rsl
-import library_hicc.colors as lhicc
+import library_hicc.color as lhicc
 import illustris_python as il
 
 # reading command line inputs, a fourth gives axis of redshift space
@@ -38,7 +38,7 @@ BOXSIZE = head['BoxSize']/1e3 #Mpc/h
 REDSHIFT = head['Redshift']
 
 # input data
-flds = ['SubhaloCM', 'SubhaloPhotometrics', 'SubhaloMassType', 'SubhaloVel']
+flds = ['SubhaloCM', 'SubhaloStellarPhotometrics', 'SubhaloMassType', 'SubhaloVel']
 sub = il.groupcat.loadSubhalos(HOME,SNAPSHOT, fields=flds)
 mass = sub[flds[2]][:]*1e10/LITTLE_H # solar masses
 total_mass = np.sum(mass, axis=1)
@@ -55,16 +55,19 @@ if IN_RS_SPACE:
     rsl.pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
 del vel
 
-counts = {}
+counts = []
+counts_names = []
 def create_field(fieldname, idx):
     """
     Creates a field using the only the indices provided, saved to 
     the output file w using the fieldname as the key.
     """
+    print("creating field for %s"%fieldname)
     field = np.zeros(GRID, dtype=np.float32)
     CICW(pos[idx], field, BOXSIZE, total_mass[idx])
     w.create_dataset(fieldname, data=field, compression="gzip", compression_opts=9)
-    counts[fieldname] = np.sum(idx)
+    counts.append(np.sum(idx))
+    counts_names.append(fieldname)
 
 resolved_idx = lhicc.is_resolved_nelson(mass[:,4],mass[:,0])
 red_idx = lhicc.is_red_nelson(gr,mass[:,4],RUN)
@@ -73,12 +76,13 @@ red_idx *= resolved_idx # removes unresolved true values
 blue_idx *= resolved_idx
 
 # creating the fields
-create_field("total", np.ones(total_mass.shape))
+create_field("total", np.ones(total_mass.shape, dtype=bool))
 create_field("resolved", resolved_idx)
 create_field("unresolved", np.invert(resolved_idx))
 create_field("blue", blue_idx)
 create_field("red", red_idx)
 
 # saving the counts
-w.create_dataset("counts", data=counts)
+w.create_dataset("count_names", data=counts_names)
+w.create_dataset("count_vals", data=counts)
 w.close()
