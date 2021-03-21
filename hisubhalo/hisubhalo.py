@@ -48,11 +48,12 @@ print("the models used are: "+str(models)+'\n')
 del head, sub
 
 # if we are in redshift space, shift positions using velocity
+# then make output file, changing the name depending on if its in real space or redshift space
 if IN_RS_SPACE:
     rsl.pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
-
-# output file
-w = hp.File(SAVE+'hisubhalo%d_%03d.final.hdf5'%(BOX,SNAPSHOT), 'w')
+    w = hp.File(SAVE+"hisubhalors%d_%03d.final.hdf5"%(BOX,SNAPSHOT), 'w')
+else:
+    w = hp.File(SAVE+'hisubhalo%d_%03d.final.hdf5'%(BOX,SNAPSHOT), 'w')
 
 # loop over 9 models for HI
 for m in models:

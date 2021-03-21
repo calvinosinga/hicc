@@ -4,8 +4,8 @@
 
 #SBATCH --share
 #SBATCH --array=0-460:20
-#SBATCH --job-name=hiptlrs_combine
-#SBATCH --output=./logs/rshiptl_combine%a.log
+#SBATCH --job-name=hiptl_combine
+#SBATCH --output=./logs/hiptl_combine%a.log
 #SBATCH --time=2-1:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
@@ -17,3 +17,4 @@
 START=$SLURM_ARRAY_TASK_ID
 END=$(($SLURM_ARRAY_TASK_ID+20))
 python3 /lustre/cosinga/hicc/hiptl/combine.py hiptl $START $END 99 100 0 
+python3 /lustre/cosinga/hicc/hiptl/combine.py hiptl $START $END 67 100 0 

@@ -14,3 +14,6 @@
 python3 /lustre/cosinga/hicc/galaxy/nelson.py 99 100 'mid' 0
 python3 /lustre/cosinga/hicc/galaxy/nelson.py 99 100 'high' 0
 python3 /lustre/cosinga/hicc/galaxy/nelson.py 99 100 'low' 0
+python3 /lustre/cosinga/hicc/galaxy/nelson.py 67 100 'mid' 0
+python3 /lustre/cosinga/hicc/galaxy/nelson.py 67 100 'high' 0
+python3 /lustre/cosinga/hicc/galaxy/nelson.py 67 100 'low' 0

@@ -11,4 +11,5 @@
 #SBATCH --output=hisubhalors.dat
 
 . ~/.profile
+python3 /lustre/cosinga/hicc/hisubhalo/hisubhalo.py 67 100 0
 python3 /lustre/cosinga/hicc/hisubhalo/hisubhalo.py 99 100 0

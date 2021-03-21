@@ -47,12 +47,13 @@ pos = sub[flds[0]][:]/1e3 # Mpc/h
 vel = sub[flds[3]][:] # km/s
 del sub, flds
 
-# output data
-w = hp.File('%snelson%d_%s_%03d.final.hdf5'%(SAVE,BOX,RUN,SNAPSHOT), 'w')
-
 # if we are working in redshift-space, shift the positions using the velocities
+# then create the output file, so the names are different
 if IN_RS_SPACE:
     rsl.pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
+    w = hp.File('%snelsonrs%d_%s_%03d.final.hdf5'%(SAVE,BOX,RUN,SNAPSHOT), 'w')
+else:
+    w = hp.File('%snelson%d_%s_%03d.final.hdf5'%(SAVE,BOX,RUN,SNAPSHOT), 'w')
 del vel
 
 counts = []
@@ -83,6 +84,8 @@ create_field("blue", blue_idx)
 create_field("red", red_idx)
 
 # saving the counts
-w.create_dataset("count_names", data=counts_names)
-w.create_dataset("count_vals", data=counts)
+cfile = open(SAVE+"subhalo_counts%d_%03d.txt"%(BOX,SNAPSHOT),'w')
+for c in range(len(counts)):
+    cfile.write("%s %d\n"%(counts_names[c], counts[c]))
+cfile.close()
 w.close()
