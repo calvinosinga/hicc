@@ -51,9 +51,9 @@ del sub, flds
 # then create the output file, so the names are different
 if IN_RS_SPACE:
     rsl.pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
-    w = hp.File('%snelsonrs%d_%s_%03d.final.hdf5'%(SAVE,BOX,RUN,SNAPSHOT), 'w')
+    w = hp.File('%snelsonrs_%s%d_%03d.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT), 'w')
 else:
-    w = hp.File('%snelson%d_%s_%03d.final.hdf5'%(SAVE,BOX,RUN,SNAPSHOT), 'w')
+    w = hp.File('%snelson_%s%d_%03d.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT), 'w')
 del vel
 
 counts = []
