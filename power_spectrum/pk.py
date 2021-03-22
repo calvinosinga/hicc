@@ -109,6 +109,6 @@ else:# auto power spectrum
         if DIM == 1:
             w.create_dataset(k,data= res.Pk[:,0])
         elif DIM == 2:
-            w.create_dataset(k,data=res.Pk2D[:,0]
+            w.create_dataset(k,data=res.Pk2D[:,0])
     f1.close()
     w.close()
