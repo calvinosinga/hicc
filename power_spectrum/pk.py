@@ -92,9 +92,9 @@ else:# auto power spectrum
     
     # iterate over each k, save its auto power to file
     for k in keylist:
-        field1 = f1[key1][:]
+        field1 = f1[k][:]
         to_overdensity(field1)
-        res = Pk(field1, BOXSIZE, axis=axis, MAS=MAS)
+        res = Pk(field1, BOXSIZE, axis=AXIS, MAS=MAS)
 
         # if first calculation, save the wavenumbers
         if k == keylist[0]:
@@ -109,6 +109,6 @@ else:# auto power spectrum
         if DIM == 1:
             w.create_dataset(k,data= res.Pk[:,0])
         elif DIM == 2:
-            w.create_dataset(k,data=res.Pk2D[:,0])
+            w.create_dataset(k,data=res.Pk2D[:])
     f1.close()
     w.close()
