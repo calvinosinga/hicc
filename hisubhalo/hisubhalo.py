@@ -4,13 +4,10 @@ Creates the 2048^3 grid for the HI/H2 catalogue assigned on a per
 subhalo basis.
 """
 # import statements
-print("starting import statements")
 import numpy as np
 import h5py as hp
 import sys
-print("about to import MAS_library...")
 from library_hicc.mas import CICW
-print("imported MAS_library")
 from library_hicc.models import get_hisubhalo_models
 import illustris_python as il
 import redshift_space_library as rsl
