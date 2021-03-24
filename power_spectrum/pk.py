@@ -49,9 +49,9 @@ if IS_XPK:
     w = hp.File(HOME+'pk/%s-%s%d_%03d.%dDxpk.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT,DIM),'w')
 
     # input files, loop over all of the keys in each
-    f1 = hp.File(HOME+FILE1+'%d_%03d.final.hdf5','r')
+    f1 = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
     key1list = list(f1.keys())
-    f2 = hp.File(HOME+FILE2+'%d_%03d.final.hdf5','r')
+    f2 = hp.File(HOME+FILE2+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
     key2list = list(f2.keys())
     for key1 in key1list:
         for key2 in key2list:
@@ -63,7 +63,7 @@ if IS_XPK:
             to_overdensity(field1)
             to_overdensity(field2)
             # compute the xpk
-            res = XPk([field1,field2], BOXSIZE, axis=axis, MAS=[MAS, MAS])
+            res = XPk([field1,field2], BOXSIZE, axis=AXIS, MAS=[MAS, MAS])
 
             # if this is the first calculation, save the wavenumbers
             if key1 == key1list[0] and key2 == key2list[0]:
