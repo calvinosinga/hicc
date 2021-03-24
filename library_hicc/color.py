@@ -23,15 +23,23 @@ def is_resolved_nelson(stmass, gasmass):
     """
     tests if the subhalo is well-resolved, using the mean baryonic mass that
     was taken from Pillepich et al. 2018 (check to make sure that this is the
-    correct value).
+    correct value). The subhalo is resolved if the gasmass OR the stellar mass
+    is greater than the reference mass.
     """
     MEANBARYONICMASS=1.4e6 #solar masses  
     refmass = MEANBARYONICMASS*200
     resolved_in_stmass = stmass > refmass
     resolved_in_gasmass = gasmass > refmass
-    return resolved_in_gasmass * resolved_in_stmass
+    return resolved_in_gasmass + resolved_in_stmass
 
 def is_resolved_stmass(stmass):
     MEANBARYONICMASS=1.4e6 #solar masses  
     refmass = MEANBARYONICMASS*200
     return stmass > refmass
+
+def is_resolved_gas_stmass(stmass, gasmass):
+    MEANBARYONICMASS=1.4e6 #solar masses  
+    refmass = MEANBARYONICMASS*200
+    resolved_in_stmass = stmass > refmass
+    resolved_in_gasmass = gasmass > refmass
+    return resolved_in_gasmass * resolved_in_stmass
