@@ -34,6 +34,7 @@ head = il.groupcat.loadHeader(HOME,SNAPSHOT)
 LITTLE_H = head['HubbleParam'] # 100 km/s/Mpc
 BOXSIZE = head['BoxSize']/1e3 #Mpc/h
 REDSHIFT = head['Redshift']
+print('the boxsize is %f'%BOXSIZE)
 
 # input data
 f = hp.File(HOME+'/groups_%03d/hih2_galaxy_%03d.hdf5'%(SNAPSHOT,SNAPSHOT),'r')
@@ -59,7 +60,7 @@ for m in models:
     mass = f[m][:] # already in solar masses
     mass = mass.astype(np.float32)
     pos = pos.astype(np.float32)
-    print("the sum is %f"%np.sum(mass))
+    print("the sum is %f solar masses"%np.sum(mass))
     CICW(pos, field, BOXSIZE, mass)
     w.create_dataset(m, data=field, compression="gzip", compression_opts=9)
 
