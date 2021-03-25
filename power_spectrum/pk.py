@@ -42,11 +42,13 @@ del head
 print("The boxsize is %d"%BOXSIZE)
 
 def to_overdensity(field):
-    if not field.dtype == np.float32:
-        print("turning into float32s")
     field = field/BOXSIZE**3
     field = field/np.mean(field).astype(np.float32)
     field=field - 1
+    if not field.dtype == np.float32:
+        print("turning into float32s")
+        field.astype(np.float32)
+    
 
 if IS_XPK:
     print("calculating the cross-power for %s, %s"%(FILE1, FILE2))
