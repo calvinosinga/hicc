@@ -39,12 +39,17 @@ MAS = 'CIC'
 head = il.groupcat.loadHeader(TNG, SNAPSHOT)
 BOXSIZE = head['BoxSize']/1e3 # Mpc/h
 del head
+print("The boxsize is %d"%BOXSIZE)
 
 def to_overdensity(field):
+    if not field.dtype == np.float32:
+        print("turning into float32s")
+    field = field/BOXSIZE**3
     field = field/np.mean(field).astype(np.float32)
     field=field - 1
 
 if IS_XPK:
+    print("calculating the cross-power for %s, %s"%(FILE1, FILE2))
     # output file
     w = hp.File(HOME+'pk/%s-%s%d_%03d.%dDxpk.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT,DIM),'w')
 
@@ -55,6 +60,7 @@ if IS_XPK:
     key2list = list(f2.keys())
     for key1 in key1list:
         for key2 in key2list:
+            print("starting xpk calculation for %s, %s"%(key1, key2))
             # get the fields
             field1 = f1[key1][:]
             field2 = f2[key2][:]
@@ -83,6 +89,7 @@ if IS_XPK:
     f2.close()
     w.close()
 else:# auto power spectrum
+    print("starting procedure for the auto power for %s"%FILE1)
     # output file
     w = hp.File(HOME+'pk/%s%d_%03d.%dDpk.hdf5'%(FILE1,BOX,SNAPSHOT,DIM),'w')
 
@@ -92,6 +99,7 @@ else:# auto power spectrum
     
     # iterate over each k, save its auto power to file
     for k in keylist:
+        print("calculating pk for %s"%k)
         field1 = f1[k][:]
         to_overdensity(field1)
         res = Pk(field1, BOXSIZE, axis=AXIS, MAS=MAS)

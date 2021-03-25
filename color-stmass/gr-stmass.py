@@ -88,6 +88,7 @@ plt.clf()
 
 # making third histogram
 stmass_res = np.log10(stmass_res)
+stmass_res[stmass_res==-np.inf] = 0
 plt.hist2d(stmass_res,gr_res,bins=50,norm=mpl.colors.LogNorm())
 cbar = plt.colorbar()
 
