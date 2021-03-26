@@ -39,7 +39,7 @@ MAS = 'CIC'
 head = il.groupcat.loadHeader(TNG, SNAPSHOT)
 BOXSIZE = head['BoxSize']/1e3 # Mpc/h
 del head
-print("The boxsize is %d"%BOXSIZE)
+print("The boxsize is %f"%BOXSIZE)
 
 def to_overdensity(field):
     field = field/BOXSIZE**3
@@ -108,6 +108,7 @@ else:# auto power spectrum
 
         # if first calculation, save the wavenumbers
         if k == keylist[0]:
+            print("saving the wavenumbers...")
             # if in 1D, just need 1 k, otherwise need kper and kpar
             if DIM == 1:
                 w.create_dataset("k",data=res.k3D)
@@ -116,9 +117,11 @@ else:# auto power spectrum
                 w.create_dataset("kpar", data=res.kpar)
         
         # save pk result
+        print("saving the pk result...")
         if DIM == 1:
             w.create_dataset(k,data= res.Pk[:,0])
         elif DIM == 2:
             w.create_dataset(k,data=res.Pk2D[:])
     f1.close()
     w.close()
+    print("\nfinished power spectrum calculation.")
