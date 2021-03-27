@@ -48,6 +48,7 @@ def to_overdensity(field):
     if not field.dtype == np.float32:
         print("turning into float32s")
         field.astype(np.float32)
+    return field
     
 
 if IS_XPK:
@@ -68,8 +69,8 @@ if IS_XPK:
             field2 = f2[key2][:]
             
             # convert them to overdensities
-            to_overdensity(field1)
-            to_overdensity(field2)
+            field1=to_overdensity(field1)
+            field2=to_overdensity(field2)
             # compute the xpk
             res = XPk([field1,field2], BOXSIZE, axis=AXIS, MAS=[MAS, MAS])
 
@@ -103,7 +104,7 @@ else:# auto power spectrum
     for k in keylist:
         print("calculating pk for %s"%k)
         field1 = f1[k][:]
-        to_overdensity(field1)
+        field1=to_overdensity(field1)
         res = Pk(field1, BOXSIZE, axis=AXIS, MAS=MAS)
 
         # if first calculation, save the wavenumbers
