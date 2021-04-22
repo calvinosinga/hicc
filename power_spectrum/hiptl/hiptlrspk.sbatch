@@ -12,3 +12,4 @@
 
 . ~/.profile
 python3 /lustre/cosinga/hicc/power_spectrum/pk.py auto 99 100 1 0 hiptlrs
+python3 /lustre/cosinga/hicc/power_spectrum/pk.py auto 99 100 2 0 hiptlrs
