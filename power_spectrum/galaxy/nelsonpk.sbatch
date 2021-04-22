@@ -2,7 +2,7 @@
 
 #SBATCH --share
 #SBATCH --job-name=nelson_pk
-#SBATCH --time=1-20:00:00
+#SBATCH --time=2-20:00:00
 #SBATCH --ntasks=1
 #SBATCH --mem-per-cpu=150000
 #SBATCH --account=astronomy-hi

@@ -39,7 +39,7 @@ MAS = 'CIC'
 head = il.groupcat.loadHeader(TNG, SNAPSHOT)
 BOXSIZE = head['BoxSize']/1e3 # Mpc/h
 del head
-print("The boxsize is %f"%BOXSIZE)
+print("The boxsize is %.3f"%BOXSIZE)
 
 def to_overdensity(field):
     field = field/BOXSIZE**3
