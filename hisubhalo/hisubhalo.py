@@ -38,9 +38,10 @@ print('the boxsize is %f'%BOXSIZE)
 
 # input data
 f = hp.File(HOME+'/groups_%03d/hih2_galaxy_%03d.hdf5'%(SNAPSHOT,SNAPSHOT),'r')
+ids = f['id_subhalo'][:] # used to idx into the subhalo catalog
 sub = il.groupcat.loadSubhalos(HOME, SNAPSHOT, fields=['SubhaloCM','SubhaloVel'])
-pos = sub['SubhaloCM']/1e3 # Mpc/h
-vel = sub['SubhaloVel'] # km/s
+pos = sub['SubhaloCM'][ids]/1e3 # Mpc/h
+vel = sub['SubhaloVel'][ids] # km/s
 models = get_hisubhalo_models()
 print("the models used are: "+str(models)+'\n')
 del head, sub
