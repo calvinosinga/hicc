@@ -69,8 +69,9 @@ def create_field(fieldname, idx):
     w.create_dataset(fieldname, data=field, compression="gzip", compression_opts=9)
     counts.append(np.sum(idx))
     counts_names.append(fieldname)
+    return
 
-resolved_idx = lhicc.is_resolved_nelson(mass[:,4],mass[:,0])
+resolved_idx = lhicc.is_resolved_stmass(mass[:,4],mass[:,0])
 red_idx = lhicc.is_red_nelson(gr,mass[:,4],RUN)
 blue_idx = np.invert(red_idx)
 red_idx *= resolved_idx # removes unresolved true values
