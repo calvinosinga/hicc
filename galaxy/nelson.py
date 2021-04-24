@@ -38,7 +38,7 @@ BOXSIZE = head['BoxSize']/1e3 #Mpc/h
 REDSHIFT = head['Redshift']
 
 # input data
-flds = ['SubhaloCM', 'SubhaloStellarPhotometrics', 'SubhaloMassType', 'SubhaloVel']
+flds = ['SubhaloPos', 'SubhaloStellarPhotometrics', 'SubhaloMassType', 'SubhaloVel']
 sub = il.groupcat.loadSubhalos(HOME,SNAPSHOT, fields=flds)
 mass = sub[flds[2]][:]*1e10/LITTLE_H # solar masses
 total_mass = np.sum(mass, axis=1)
