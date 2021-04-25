@@ -21,10 +21,11 @@ def CICW(pos, number, BoxSize, mass):
             index_d[axis] = (int(dist))%dims
             index_u[axis] = index_d[axis] + 1
             index_u[axis] = index_u[axis]%dims #seems this is faster
-        number[index_d[0],index_d[1],index_u[2]] += d[0]*d[1]*u[2]
-        number[index_d[0],index_u[1],index_d[2]] += d[0]*u[1]*d[2]
-        number[index_d[0],index_u[1],index_u[2]] += d[0]*u[1]*u[2]
-        number[index_u[0],index_d[1],index_d[2]] += u[0]*d[1]*d[2]
-        number[index_u[0],index_d[1],index_u[2]] += u[0]*d[1]*u[2]
-        number[index_u[0],index_u[1],index_d[2]] += u[0]*u[1]*d[2]
-        number[index_u[0],index_u[1],index_u[2]] += u[0]*u[1]*u[2]
+        number[index_d[0],index_d[1],index_u[2]] += d[0]*d[1]*u[2]*mass[i]
+        number[index_d[0],index_u[1],index_d[2]] += d[0]*u[1]*d[2]*mass[i]
+        number[index_d[0],index_u[1],index_u[2]] += d[0]*u[1]*u[2]*mass[i]
+        number[index_u[0],index_d[1],index_d[2]] += u[0]*d[1]*d[2]*mass[i]
+        number[index_u[0],index_d[1],index_u[2]] += u[0]*d[1]*u[2]*mass[i]
+        number[index_u[0],index_u[1],index_d[2]] += u[0]*u[1]*d[2]*mass[i]
+        number[index_u[0],index_u[1],index_u[2]] += u[0]*u[1]*u[2]*mass[i]
+    return

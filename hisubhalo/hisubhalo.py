@@ -27,7 +27,6 @@ SAVE = '/lustre/cosinga/final_fields/'
 
 # assigning author-defined constants (not expected to change)
 GRID = (2048,2048,2048)
-MAS = 'CIC'
 
 # getting simulation-defined constants
 head = il.groupcat.loadHeader(HOME,SNAPSHOT)
@@ -41,11 +40,16 @@ f = hp.File(HOME+'/groups_%03d/hih2_galaxy_%03d.hdf5'%(SNAPSHOT,SNAPSHOT),'r')
 ids = f['id_subhalo'][:] # used to idx into the subhalo catalog
 ids = ids.astype(np.int32)
 sub = il.groupcat.loadSubhalos(HOME, SNAPSHOT, fields=['SubhaloPos','SubhaloVel'])
+idfile = hp.File(HOME+"id_pos"+str(SNAPSHOT)+".hdf5",'r')
+coord_check = idfile['coordinates'][:]/1e3
 pos = sub['SubhaloPos'][ids]/1e3 # Mpc/h
 vel = sub['SubhaloVel'][ids] # km/s
 models = get_hisubhalo_models()
 print("the models used are: "+str(models)+'\n')
 del head, sub
+
+# checking to make sure that the positions match up with previous version
+
 
 # if we are in redshift space, shift positions using velocity
 # then make output file, changing the name depending on if its in real space or redshift space
