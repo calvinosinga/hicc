@@ -27,7 +27,7 @@ elif AUTO_OR_XPK == "auto":
 else:
     raise ValueError("incorrect input: first arg should be auto or cross")
 
-
+print("read command-line inputs")
 # defining basic paths
 HOME = '/lustre/cosinga/final_fields/'
 TNG = '/lustre/cosinga/tng%d'%BOX
@@ -40,7 +40,7 @@ head = il.groupcat.loadHeader(TNG, SNAPSHOT)
 BOXSIZE = head['BoxSize']/1e3 # Mpc/h
 del head
 print("The boxsize is %.3f"%BOXSIZE)
-
+print("got simulation-defined constants")
 def to_overdensity(field):
     field = field/BOXSIZE**3
     field = field/np.mean(field).astype(np.float32)
