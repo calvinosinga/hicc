@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 import numpy as np 
 import time,sys,os
 import pyfftw
@@ -30,10 +31,10 @@ def MAS_function(MAS):
     return MAS_index#,MAS_corr
 
 def MAS_correction(x, MAS_index):
-    return (1.0 if (x==0.0) else pow(x/sin(x),MAS_index))
+    return (1.0 if (x==0.0) else pow(x/np.sin(x),MAS_index))
 
 # This function performs the 3D FFT of a field in single precision
-def FFT3Dr_f(a, threads)
+def FFT3Dr_f(a, threads):
     # align arrays
     dims  = len(a)
     a_in  = pyfftw.empty_aligned((dims,dims,dims),    dtype='float32')
@@ -159,7 +160,7 @@ def IFFT2Dr_d(a, threads):
     # put input array into delta_r and perform FFTW
     a_in [:] = a;  fftw_plan(a_in,a_out);  return a_out
 
-class Pk:
+class hicc_Pk:
     def __init__(self,delta,BoxSize,axis=2,MAS='CIC',threads=1):
 
         start = time.time()
@@ -202,7 +203,7 @@ class Pk:
         Pk3D     = np.zeros((kmax+1,3), dtype=np.float64)
         Pkphase  = np.zeros(kmax+1,     dtype=np.float64)
         Nmodes3D = np.zeros(kmax+1,     dtype=np.float64)
-
+        MAS_corr = np.zeros(3)
 
         # do a loop over the independent modes.
         # compute k,k_par,k_per, mu for each mode. k's are in kF units
@@ -227,16 +228,16 @@ class Pk:
 
 
                     # compute |k| of the mode and its integer part
-                    k       = sqrt(kx*kx + ky*ky + kz*kz)
+                    k       = np.sqrt(kx*kx + ky*ky + kz*kz)
                     k_index = int(k)
 
                     # compute the value of k_par and k_perp
                     if axis==0:   
-                        k_par, k_per = kx, int(sqrt(ky*ky + kz*kz))
+                        k_par, k_per = kx, int(np.sqrt(ky*ky + kz*kz))
                     elif axis==1: 
-                        k_par, k_per = ky, int(sqrt(kx*kx + kz*kz))
+                        k_par, k_per = ky, int(np.sqrt(kx*kx + kz*kz))
                     else:         
-                        k_par, k_per = kz, int(sqrt(kx*kx + ky*ky))
+                        k_par, k_per = kz, int(np.sqrt(kx*kx + ky*ky))
 
                     # find the value of mu
                     if k==0:  mu = 0.0
@@ -254,7 +255,7 @@ class Pk:
                     real = delta_k[kxx,kyy,kzz].real
                     imag = delta_k[kxx,kyy,kzz].imag
                     delta2 = real*real + imag*imag
-                    phase  = atan2(real, sqrt(delta2)) 
+                    phase  = np.arctan2(real, np.sqrt(delta2)) 
 
                     # Pk1D: only consider modes with |k|<kF
                     if k<=middle:
@@ -284,7 +285,7 @@ class Pk:
         for i in range(len(k1D)):
             Pk1D[i] = Pk1D[i]*(BoxSize/dims**2)**3 #give units
             k1D[i]  = (k1D[i]/Nmodes1D[i])*kF      #give units
-            kmaxper = sqrt(kN**2 - k1D[i]**2)
+            kmaxper = np.sqrt(kN**2 - k1D[i]**2)
             Pk1D[i] = Pk1D[i]*(np.pi*kmaxper**2/Nmodes1D[i])/(2.0*np.pi)**2
         self.k1D = np.asarray(k1D);  self.Pk1D = np.asarray(Pk1D)
         self.Nmodes1D = np.asarray(Nmodes1D  )
