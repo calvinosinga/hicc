@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 import numpy as np 
 import time,sys,os
 import pyfftw
@@ -160,6 +159,37 @@ def IFFT2Dr_d(a, threads):
     # put input array into delta_r and perform FFTW
     a_in [:] = a;  fftw_plan(a_in,a_out);  return a_out
 
+# This function checks that all independent modes have been counted
+def check_number_modes(Nmodes,dims):
+    # (0,0,0) own antivector, while (n,n,n) has (-n,-n,-n) for dims odd
+    if dims%2==1:  own_modes = 1 
+    # (0,0,0),(0,0,n),(0,n,0),(n,0,0),(n,n,0),(n,0,n),(0,n,n),(n,n,n)
+    else:          own_modes = 8 
+    repeated_modes = (dims**3 - own_modes)//2  
+    indep_modes    = repeated_modes + own_modes
+
+    if int(np.sum(Nmodes))!=indep_modes:
+        print('WARNING: Not all modes counted')
+        print('Counted  %d independent modes'%(int(np.sum(Nmodes))))
+        print('Expected %d independent modes'%indep_modes)
+        sys.exit()
+    return
+
+# This function checks that all independent modes have been counted
+def check_number_modes_2D(Nmodes,dims):
+    # (0,0) own antivector, while (n,n) has (-n,-n) for dims odd
+    if dims%2==1:  own_modes = 1 
+    # (0,0),(0,n),(0,n),(n,0),(n,n)
+    else:          own_modes = 4
+    repeated_modes = (dims**2 - own_modes)//2  
+    indep_modes    = repeated_modes + own_modes
+
+    if int(np.sum(Nmodes))!=indep_modes:
+        print('WARNING: Not all modes counted')
+        print('Counted  %d independent modes'%(int(np.sum(Nmodes))))
+        print('Expected %d independent modes'%indep_modes)
+        sys.exit() 
+    return
 class hicc_Pk:
     def __init__(self,delta,BoxSize,axis=2,MAS='CIC',threads=1):
 
