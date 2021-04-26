@@ -40,8 +40,6 @@ f = hp.File(HOME+'/groups_%03d/hih2_galaxy_%03d.hdf5'%(SNAPSHOT,SNAPSHOT),'r')
 ids = f['id_subhalo'][:] # used to idx into the subhalo catalog
 ids = ids.astype(np.int32)
 sub = il.groupcat.loadSubhalos(HOME, SNAPSHOT, fields=['SubhaloPos','SubhaloVel'])
-idfile = hp.File(HOME+"id_pos"+str(SNAPSHOT)+".hdf5",'r')
-coord_check = idfile['coordinates'][:]/1e3
 pos = sub['SubhaloPos'][ids]/1e3 # Mpc/h
 vel = sub['SubhaloVel'][ids] # km/s
 models = get_hisubhalo_models()
