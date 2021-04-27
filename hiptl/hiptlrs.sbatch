@@ -3,6 +3,7 @@
 #SBATCH --share
 #SBATCH --array=0-447
 #SBATCH --job-name=hiptlrs
+#SBATCH --error=./logs/hiptlrs%a.err
 #SBATCH --output=./logs/hiptlrs%a.log
 #SBATCH --time=2-1:00:00
 #SBATCH --ntasks=1
