@@ -5,7 +5,7 @@ mkdir outlogs
 mkdir errors
 
 # check to make sure input is correct
-if [-z "$1"]
+if [ -z "$1" ]
 then
     echo "$1 is not provided: needs snapshot 99,67,50,33"
     exit 125
@@ -13,21 +13,21 @@ else
     echo "snapshot: $1"
     
 fi
-if [-z "$2"]
+if [ -z "$2" ]
 then
     echo "$2 is not provided: needs box length: 100,300,50"
     exit 125
 else
     echo "box length: $2"
 fi
-if [-z "$3"]
+if [ -z "$3" ]
 then
     echo "$3 is not provided: needs axis - either 0,1,2 although typically 0"
     exit 125
 else
     echo "axis: $3"
 fi
-if [-z "$4"]
+if [ -z "$4" ]
 then
     echo "$4 is not provided: needs number of files: 448-TNG100, 680-TNG50, 600-TNG300"
     exit 125
