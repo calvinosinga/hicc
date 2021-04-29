@@ -3,7 +3,7 @@
 #SBATCH --job-name=hiptl_combine
 #SBATCH --output=./outlogs/hiptl_combine.log
 #SBATCH --error=./errors/hiptl_combine.err
-#SBATCH --time=2-1:00:00
+#SBATCH --time=1-1:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
 #SBATCH --account=astronomy-hi

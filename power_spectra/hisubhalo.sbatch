@@ -3,7 +3,7 @@
 #SBATCH --share
 #SBATCH --error=./errors/hisubhalo.err
 #SBATCH --job-name=hisubhalo
-#SBATCH --time=16:00:00
+#SBATCH --time=10:00:00
 #SBATCH --ntasks=1
 #SBATCH --mem-per-cpu=100000
 #SBATCH --account=astronomy-hi

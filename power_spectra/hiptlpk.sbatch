@@ -3,7 +3,7 @@
 #SBATCH --share
 #SBATCH --job-name=hiptl_pk
 #SBATCH --error=./errors/hiptl_pk.err
-#SBATCH --time=2-8:00:00
+#SBATCH --time=18:00:00
 #SBATCH --ntasks=1
 #SBATCH --mem-per-cpu=150000
 #SBATCH --account=astronomy-hi

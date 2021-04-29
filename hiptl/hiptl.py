@@ -32,10 +32,12 @@ hih2file = hp.File(HIPATH+"hih2_particles_%03d.%d.hdf5" %(SNAPSHOT, CHUNK), 'r')
 ptlfile = hp.File(PTLPATH+"snap_%03d.%d.hdf5" %(SNAPSHOT, CHUNK), 'r')
 
 # output files
-w = hp.File(OUTPATH+'hiptlrs%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
+if IN_RS_SPACE:
+    w = hp.File(OUTPATH+'hiptlrs%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
+else:
+    w = hp.File(OUTPATH+'hiptl%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
 
 # getting author-defined constants (these COULD change but are not expected to)
-MAS = 'CIC'
 GRID = (2048,2048,2048)
 models = get_hiptl_models()
 
@@ -48,7 +50,7 @@ SCALE_FACTOR = head['Time']
 
 # getting data
 mass = ptlfile['PartType0']['Masses'][:]*1e10/LITTLE_H # solar masses
-pos = ptlfile['PartType0']['CenterOfMass'][:]/1e3 # Mpc/h
+pos = ptlfile['PartType0']['Coordinates'][:]/1e3 # Mpc/h
 vel = ptlfile['PartType0']['Velocities'][:] * np.sqrt(SCALE_FACTOR) # km/s
 f_neut_h = hih2file['PartType0']['f_neutral_H'][:]
 
@@ -74,5 +76,3 @@ for m in models:
     w.create_dataset(m, data=field, compression="gzip", compression_opts=9)
 
 w.close()
-
-# checking if the output file was formatted as expected

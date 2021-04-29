@@ -1,4 +1,6 @@
 #!/bin/bash
+# TODO: some way for rerunning individual jobs that fail in array in slurm
+# TODO: error logs for array into one file - to find individual jobs that fail
 
 # create directories to store output
 mkdir outlogs
@@ -22,7 +24,7 @@ else
 fi
 if [ -z "$3" ]
 then
-    echo "$3 is not provided: needs axis - either 0,1,2 although typically 0"
+    echo "$3 is not provided: needs axis for line-of-sight - either 0,1,2 although typically 0"
     exit 125
 else
     echo "axis: $3"
@@ -34,11 +36,18 @@ then
 else
     echo "numfiles: $4"
 fi
+
 # submit hisubhalo jobs
 hisubgrid=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 hisubhalo.sbatch)
 hisubgrid="${hisubgrid##* }"
 
 sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hisubgrid hisubhalopk.sbatch
+
+# submit galaxy jobs
+galgrid=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 galaxy.sbatch)
+galgrid="${galgrid##* }"
+
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hisubgrid galaxypk.sbatch
 
 # submit hiptl jobs
 hiptlgrid=$(sbatch --array=0-$4 --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 hiptl.sbatch)
@@ -49,16 +58,35 @@ hiptlcomb="${hiptlcomb##* }"
 
 sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hiptlcomb hiptlpk.sbatch
 
-# submit galaxy jobs
-galgrid=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 galaxy.sbatch)
-galgrid="${galgrid##* }"
+# submit ptl jobs
+ptlgrid=$(sbatch --array=0-$4 --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 ptl.sbatch)
+ptlgrid="${ptlgrid##* }"
 
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hisubgrid galaxypk.sbatch
+ptlcomb=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,NUMFILES=$4 --dependency=afterok:$ptlgrid ptl_combine.sbatch)
+ptlcomb="${ptlcomb##* }"
 
-# calculate cross-power stuff?
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$ptlcomb ptlpk.sbatch
 
+# calculate pk for paco
+# TODO: analysis step, still need redshift space stuff from paco
 
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 pacopk.sbatch
 
+# nelson-nelson xpk
+
+# hisubhalo-nelson xpk
+
+# hiptl-nelson xpk
+
+# paco-nelson xpk
+
+# hiptl-ptl xpk
+
+# paco-ptl xpk
+
+# hisubhalo-ptl xpk
+
+# hydrotools visualization step?
 
 # make gr-stmass plots
-python ../color-stmass/gr-stmass.py $1 $2
+python /lustre/cosinga/hicc/color-stmass/gr-stmass.py $1 $2 &
