@@ -3,7 +3,7 @@
 #SBATCH --share
 #SBATCH --job-name=hiptl_pk
 #SBATCH --error=./errors/hiptl_pk.err
-#SBATCH --time=18:00:00
+#SBATCH --time=1-18:00:00
 #SBATCH --ntasks=1
 #SBATCH --mem-per-cpu=150000
 #SBATCH --account=astronomy-hi
@@ -13,5 +13,4 @@
 
 . ~/.profile
 python3 /lustre/cosinga/hicc/pk/pk.py auto $SNAP $BOX 1 $AXIS hiptl
-python3 /lustre/cosinga/hicc/pk/pk.py auto $SNAP $BOX 1 $AXIS hiptlrs
-python3 /lustre/cosinga/hicc/pk/pk.py auto $SNAP $BOX 2 $AXIS hiptlrs
+python3 /lustre/cosinga/hicc/pk/pk.py auto $SNAP $BOX 0 $AXIS hiptlrs

@@ -4,7 +4,7 @@
 #SBATCH --job-name=hiptl
 #SBATCH --error=./errors/hiptl%a.err
 #SBATCH --output=./outlogs/hiptl%a.log
-#SBATCH --time=10:00:00
+#SBATCH --time=15:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
 #SBATCH --account=astronomy-hi

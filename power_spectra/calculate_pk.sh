@@ -1,7 +1,7 @@
 #!/bin/bash
 # TODO: some way for rerunning individual jobs that fail in array in slurm
 # TODO: error logs for array into one file - to find individual jobs that fail
-
+# TODO: analysis step for paco, still need redshift space stuff from paco
 # create directories to store output
 mkdir outlogs
 mkdir errors
@@ -47,7 +47,19 @@ sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hisubgrid hisub
 galgrid=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 galaxy.sbatch)
 galgrid="${galgrid##* }"
 
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hisubgrid galaxypk.sbatch
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid galaxypk.sbatch
+
+# nelson-nelson xpk
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid nelson-nelsonxpk.sbatch
+
+# hisubhalo-nelson xpk
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid:$hisubgrid hisubhalo-nelsonxpk.sbatch
+
+# calculate pk for paco
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 pacopk.sbatch
+
+# paco-nelson xpk
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid paco-nelsonxpk.sbatch
 
 # submit hiptl jobs
 hiptlgrid=$(sbatch --array=0-$4 --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 hiptl.sbatch)
@@ -67,25 +79,17 @@ ptlcomb="${ptlcomb##* }"
 
 sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$ptlcomb ptlpk.sbatch
 
-# calculate pk for paco
-# TODO: analysis step, still need redshift space stuff from paco
-
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 pacopk.sbatch
-
-# nelson-nelson xpk
-
-# hisubhalo-nelson xpk
-
 # hiptl-nelson xpk
-
-# paco-nelson xpk
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid:$hiptlcomb hiptl-nelsonxpk.sbatch
 
 # hiptl-ptl xpk
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hiptlcomb:$ptlcomb hiptl-ptlxpk.sbatch
 
 # paco-ptl xpk
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$ptlcomb paco-ptlxpk.sbatch
 
 # hisubhalo-ptl xpk
-
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hisubgrid:$ptlcomb hisubhalo-ptlxpk.sbatch
 # hydrotools visualization step?
 
 # make gr-stmass plots

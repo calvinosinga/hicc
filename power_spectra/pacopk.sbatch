@@ -12,4 +12,4 @@
 #SBATCH --error=./errors/pacopk.err
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/power_spectrum/pk.py auto $SNAP $BOX 1 $AXIS paco
+python3 /lustre/cosinga/hicc/pk/pk.py auto $SNAP $BOX 1 $AXIS paco

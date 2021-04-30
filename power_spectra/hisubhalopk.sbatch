@@ -13,5 +13,4 @@
 
 . ~/.profile
 python3 /lustre/cosinga/hicc/pk/pk.py auto $SNAP $BOX 1 $AXIS hisubhalo
-python3 /lustre/cosinga/hicc/pk/pk.py auto $SNAP $BOX 1 $AXIS hisubhalors
-python3 /lustre/cosinga/hicc/pk/pk.py auto $SNAP $BOX 2 $AXIS hisubhalors
+python3 /lustre/cosinga/hicc/pk/pk.py auto $SNAP $BOX 0 $AXIS hisubhalors
