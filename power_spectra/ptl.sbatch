@@ -12,5 +12,5 @@
 #SBATCH --mail-type=ALL
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/particle/ptl.py $SLURM_ARRAY_TASK_ID $SNAP $BOX
-python3 /lustre/cosinga/hicc/particle/ptl.py $SLURM_ARRAY_TASK_ID $SNAP $BOX $AXIS
+python3 /lustre/cosinga/hicc/particle/particle.py $SLURM_ARRAY_TASK_ID $SNAP $BOX
+python3 /lustre/cosinga/hicc/particle/particle.py $SLURM_ARRAY_TASK_ID $SNAP $BOX $AXIS
