@@ -6,6 +6,8 @@
 mkdir outlogs
 mkdir errors
 
+rm ./errors/*.err
+rm ./outlogs/*.dat
 # check to make sure input is correct
 if [ -z "$1" ]
 then
