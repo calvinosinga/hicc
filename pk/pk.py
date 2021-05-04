@@ -26,6 +26,7 @@ if AUTO_OR_XPK == "cross":
     SAME_FILE = FILE1 == FILE2
 elif AUTO_OR_XPK == "auto":
     IS_XPK = False
+    SMALL_GRID = 0
 else:
     raise ValueError("incorrect input: first arg should be auto or cross")
 

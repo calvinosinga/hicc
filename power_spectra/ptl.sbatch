@@ -2,8 +2,8 @@
 
 #SBATCH --share
 #SBATCH --job-name=ptl
-#SBATCH --error=./logs/ptl%a.err
-#SBATCH --output=./logs/ptl%a.log
+#SBATCH --error=./errors/ptl%a.err
+#SBATCH --output=./outlogs/ptl%a.log
 #SBATCH --time=15:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu

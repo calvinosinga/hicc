@@ -2,7 +2,8 @@
 
 #SBATCH --share
 #SBATCH --job-name=ptl_combine
-#SBATCH --output=logs/ptl_combine.log
+#SBATCH --output=./outlogs/ptl_combine.dat
+#SBATCH --error=./errors/ptl_combine.err
 #SBATCH --time=2-1:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
