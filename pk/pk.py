@@ -108,11 +108,15 @@ if IS_XPK:
                 elif DIM == 2:
                     w.create_dataset("%s-%s"%(key1, key2), data=res.PkX2D[:,0,0])
                 elif DIM == 0:
-                    w1.create_dataset(k,data= res.Pk[:,0])
-                    w2.create_dataset(k,data=res.Pk2D[:])
+                    w1.create_dataset("%s-%s"%(key1, key2),data= res.XPk[:,0,0])
+                    w2.create_dataset("%s-%s"%(key1, key2),data=res.PkX2D[:,0,0])
     f1.close()
     f2.close()
-    w.close()
+    if DIM==0:
+        w1.close()
+        w2.close()
+    else:
+        w.close()
 else:# auto power spectrum
     print("starting procedure for the auto power for %s"%FILE1)
     # output file
@@ -157,5 +161,9 @@ else:# auto power spectrum
             w1.create_dataset(k,data= res.Pk[:,0])
             w2.create_dataset(k,data=res.Pk2D[:])
     f1.close()
-    w.close()
+    if DIM==0:
+        w1.close()
+        w2.close()
+    else:
+        w.close()
     print("\nfinished power spectrum calculation.")
