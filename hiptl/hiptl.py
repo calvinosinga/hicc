@@ -10,7 +10,8 @@ import sys
 # import MAS_library as masl
 from library_hicc.mas import CICW
 from library_hicc.models import get_hiptl_models
-import redshift_space_library as rsl
+# import redshift_space_library as rsl
+from library_hicc.redshift_space import pos_redshift_space
 
 # reading command line inputs
 CHUNK = int(sys.argv[1])
@@ -60,13 +61,13 @@ for m in models:
     # shifting the positions to redshift space
     if IN_RS_SPACE:
         # this function NEEDS everything to be single-precision
-        pos.astype(np.float32)
-        vel.astype(np.float32)
-        bigh = np.float32(100*LITTLE_H)
-        BOXSIZE = np.float32(BOXSIZE)
-        REDSHIFT = np.float32(REDSHIFT)
-        AXIS = np.float32(AXIS)
-        rsl.pos_redshift_space(pos, vel, BOXSIZE, bigh, REDSHIFT, AXIS)
+        # pos.astype(np.float32)
+        # vel.astype(np.float32)
+        # bigh = np.float32(100*LITTLE_H)
+        # BOXSIZE = np.float32(BOXSIZE)
+        # REDSHIFT = np.float32(REDSHIFT)
+        # AXIS = np.float32(AXIS)
+        pos = pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
 
     # getting the HI mass data
     h2_frac = hih2file['PartType0']['f_mol_'+m][:]

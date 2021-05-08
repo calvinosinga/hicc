@@ -8,8 +8,8 @@ import numpy as np
 import h5py as hp
 import sys
 from library_hicc.mas import CICW
-import redshift_space_library as rsl
-
+#import redshift_space_library as rsl
+from library_hicc.redshift_space import pos_redshift_space
 # reading command line inputs
 CHUNK = int(sys.argv[1])
 SNAPSHOT = int(sys.argv[2])
@@ -60,13 +60,13 @@ for p in ptltype:
     # shifting the positions to redshift space
     if IN_RS_SPACE:
         # this function NEEDS everything to be single-precision
-        pos.astype(np.float32)
-        vel.astype(np.float32)
-        bigh = np.float32(100*LITTLE_H)
-        BOXSIZE = np.float32(BOXSIZE)
-        REDSHIFT = np.float32(REDSHIFT)
-        AXIS = np.float32(AXIS)
-        rsl.pos_redshift_space(pos, vel, BOXSIZE, bigh, REDSHIFT, AXIS)
+        # pos.astype(np.float32)
+        # vel.astype(np.float32)
+        # bigh = np.float32(100*LITTLE_H)
+        # BOXSIZE = np.float32(BOXSIZE)
+        # REDSHIFT = np.float32(REDSHIFT)
+        # AXIS = np.float32(AXIS)
+        pos = pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
 
     # assigning them into the field using the Mass Assignment Scheme given
     CICW(pos,field,BOXSIZE,mass)
