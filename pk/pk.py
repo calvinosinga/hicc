@@ -106,10 +106,11 @@ if IS_XPK:
                 if DIM == 1:
                     w.create_dataset("%s-%s"%(key1, key2),data=res.XPk[:,0,0])
                 elif DIM == 2:
-                    w.create_dataset("%s-%s"%(key1, key2), data=res.PkX2D[:,0,0])
+                    w.create_dataset("%s-%s"%(key1, key2), data=res.PkX2D[:,0])
                 elif DIM == 0:
                     w1.create_dataset("%s-%s"%(key1, key2),data= res.XPk[:,0,0])
-                    w2.create_dataset("%s-%s"%(key1, key2),data=res.PkX2D[:,0,0])
+                    w2.create_dataset("%s-%s"%(key1, key2),data=res.PkX2D[:,0])
+                    # 2D only has a field index, no "ell" index
     f1.close()
     f2.close()
     if DIM==0:

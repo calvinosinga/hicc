@@ -66,7 +66,7 @@ for m in models:
         BOXSIZE = np.float32(BOXSIZE)
         REDSHIFT = np.float32(REDSHIFT)
         AXIS = np.float32(AXIS)
-        rsl.pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
+        rsl.pos_redshift_space(pos, vel, BOXSIZE, bigh, REDSHIFT, AXIS)
 
     # getting the HI mass data
     h2_frac = hih2file['PartType0']['f_mol_'+m][:]

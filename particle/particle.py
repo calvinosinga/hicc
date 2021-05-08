@@ -66,7 +66,7 @@ for p in ptltype:
         BOXSIZE = np.float32(BOXSIZE)
         REDSHIFT = np.float32(REDSHIFT)
         AXIS = np.float32(AXIS)
-        rsl.pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
+        rsl.pos_redshift_space(pos, vel, BOXSIZE, bigh, REDSHIFT, AXIS)
 
     # assigning them into the field using the Mass Assignment Scheme given
     CICW(pos,field,BOXSIZE,mass)
