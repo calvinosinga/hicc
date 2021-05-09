@@ -30,7 +30,7 @@ print('first file: ' + files[0])
 print('last file: ' + files[-1])
 
 total = np.zeros((2048, 2048, 2048), dtype=np.float32)
-
+m="particles" 
 for i in files:
     f = hp.File(BASE+i,'r')
     total += f[m][:]

@@ -1,10 +1,8 @@
 #!/bin/bash
 
 #SBATCH --share
-#SBATCH --array=0-447
-#SBATCH --job-name=ptl
-#SBATCH --error=./logs/ptl%a.err
-#SBATCH --output=./logs/ptl%a.log
+#SBATCH --job-name=ptlrs_combine
+#SBATCH --output=logs/ptlrs_combine.log
 #SBATCH --time=2-1:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
@@ -13,4 +11,4 @@
 #SBATCH --mail-type=ALL
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/particle/ptl.py $SLURM_ARRAY_TASK_ID 99 100
+python3 /lustre/cosinga/hicc/particle/combine.py ptlrs 99 100 448
