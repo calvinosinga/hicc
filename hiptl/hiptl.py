@@ -60,13 +60,6 @@ for m in models:
     field = np.zeros(GRID, dtype=np.float32)
     # shifting the positions to redshift space
     if IN_RS_SPACE:
-        # this function NEEDS everything to be single-precision
-        # pos.astype(np.float32)
-        # vel.astype(np.float32)
-        # bigh = np.float32(100*LITTLE_H)
-        # BOXSIZE = np.float32(BOXSIZE)
-        # REDSHIFT = np.float32(REDSHIFT)
-        # AXIS = np.float32(AXIS)
         pos = pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
 
     # getting the HI mass data
