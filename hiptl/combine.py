@@ -11,7 +11,8 @@ from library_hicc.models import get_hiptl_models
 
 # setting author-defined variables (not expected to change)
 models = get_hiptl_models()
-
+BASE = "/lustre/cosinga/hiptl_output/"
+FINAL = "/lustre/cosinga/final_fields/"
 # getting command-line inputs
 PREFIX = sys.argv[1]
 START = int(sys.argv[2])
@@ -34,9 +35,6 @@ else:
 
 print('first file: ' + files[0])
 print('last file: ' + files[-1])
-
-# creating output file
-w = hp.File(FINAL+'%s%d_%03d.final.hdf5'%(PREFIX, BOX, SNAPSHOT),'w')
 
 # sum each model's grid individually
 for m in models:
