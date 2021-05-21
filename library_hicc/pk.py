@@ -215,6 +215,7 @@ class hicc_Pk:
 
         ## compute FFT of the field (change this for double precision) ##
         delta_k = FFT3Dr_f(delta,threads)
+        
         #################################
 
         # define arrays containing k1D, Pk1D and Nmodes1D. We need kmax_par+1

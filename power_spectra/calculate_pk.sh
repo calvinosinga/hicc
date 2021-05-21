@@ -39,6 +39,7 @@ else
     echo "numfiles: $4"
 fi
 
+$COMBINE_ARRAY=$((20-$4%20+$4))
 # submit hisubhalo jobs
 hisubgrid=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 hisubhalo.sbatch)
 hisubgrid="${hisubgrid##* }"
@@ -67,19 +68,26 @@ sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid paco-ne
 hiptlgrid=$(sbatch --array=0-$4 --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 hiptl.sbatch)
 hiptlgrid="${hiptlgrid##* }"
 
-hiptlcomb=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,NUMFILES=$4 --dependency=afterok:$hiptlgrid hiptl_combine.sbatch)
+#SBATCH --array=0-460:20
+hiptlcomb=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,NUMFILES=$4 --dependency=afterok:$hiptlgrid --array=0-$COMBINE_ARRAY:20 hiptl_combine.sbatch)
 hiptlcomb="${hiptlcomb##* }"
 
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hiptlcomb hiptlpk.sbatch
+hiptlfinal=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,NUMFILES=$4 --dependency=afterok:$hiptlcomb hiptl_final.sbatch)
+hiptlfinal="${hiptlfinal##* }"
+
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hiptlfinal hiptlpk.sbatch
 
 # submit ptl jobs
 ptlgrid=$(sbatch --array=0-$4 --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 ptl.sbatch)
 ptlgrid="${ptlgrid##* }"
 
-ptlcomb=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,NUMFILES=$4 --dependency=afterok:$ptlgrid ptl_combine.sbatch)
+ptlcomb=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,NUMFILES=$4 --dependency=afterok:$ptlgrid --array=0-$COMBINE_ARRAY:20 ptl_combine.sbatch)
 ptlcomb="${ptlcomb##* }"
 
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$ptlcomb ptlpk.sbatch
+ptlfinal=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,NUMFILES=$4 --dependency=afterok:$ptlcomb ptl_final.sbatch)
+ptlfinal="${ptlfinal##* }"
+
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$ptlfinal ptlpk.sbatch
 
 # hiptl-nelson xpk
 sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid:$hiptlcomb hiptl-nelsonxpk.sbatch

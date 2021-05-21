@@ -11,5 +11,7 @@
 #SBATCH --mail-type=ALL
 
 . ~/.profile
+START=$SLURM_ARRAY_TASK_ID
+END=$(($SLURM_ARRAY_TASK_ID+20))
 python3 /lustre/cosinga/hicc/hiptl/combine.py hiptl $SNAP $BOX $NUMFILES
 python3 /lustre/cosinga/hicc/hiptl/combine.py hiptlrs $SNAP $BOX $NUMFILES
