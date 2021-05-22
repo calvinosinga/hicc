@@ -11,7 +11,6 @@ import sys
 # setting author-defined variables (not expected to change)
 BASE = '/lustre/cosinga/hiptl_output/'
 FINAL = '/lustre/cosinga/final_fields/'
-models = get_hiptl_models()
 
 # getting command-line input
 PREFIX = sys.argv[1]

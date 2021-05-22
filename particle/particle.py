@@ -68,40 +68,46 @@ for p in ptltype:
     CICW(pos,field,BOXSIZE,mass)
 
 w.create_dataset("particles", data=field, compression="gzip", compression_opts=9)
+
+
 # testing the different hydrogen densities
-dendec = np.logspace(-6,2,5)
+nobins = 5
+dendec = np.logspace(-4,2,nobins)
+counts = np.zeros(nobins)
 p = 'PartType0'
 mass = ptlfile[p]['Masses'][:]*1e10/LITTLE_H # solar masses
-density = ptlfile[p]['Density'][:]*1e10/LITTLE_H
-tothyd = ptlfile[p]['GFM_Metals'][:,0] # fraction of cell that is hydrogen
-nha = ptlfile[p]['NeutralHydrogenAbundance'][:] # fraction of hydrogen that is neutral
+density = ptlfile[p]['Density'][:]*1e10/LITTLE_H # solar masses per kpc/h cubed
+tothyd = ptlfile[p]['GFM_Metals'][0,:] # fraction of cell that is hydrogen
 kpctocm = 3.086e21
 smtog = 1.989e33
 m_p=1.673e-24
-n_h = density*tothyd*nha/kpctocm**3*LITTLE_H**3*smtog/m_p
+fac = 1/kpctocm**3*LITTLE_H**3*smtog/m_p
+n_h = density*tothyd*fac
 pos = ptlfile[p]['Coordinates'][:]/1e3 # Mpc/h
 vel = ptlfile[p]['Velocities'][:] * np.sqrt(SCALE_FACTOR) # km/s
 print("now binning according to number density")
-for d in range(len(dendec)):
+for d in range(nobins):
     field = np.zeros(GRID)
     if d == 0:
         lo = np.min(n_h)
         hi = dendec[d]
     elif d == len(dendec) - 1:
         lo = dendec[d]
-        hi = np.max(dendec)
+        hi = np.max(n_h)+1 # so that the highest densities are still included
     else:
         lo = dendec[d]
         hi = dendec[d+1]
-    mask1 = n_h > lo
+    print("the shape of the number density array is "+str(n_h.shape))
+    mask1 = n_h >= lo
     mask2 = n_h < hi
     mask = mask1 & mask2
-    print("in the <%.3e bin there are %d cells, has average %.4e"%(hi, len(mask), np.mean(n_h[mask])))
+    counts[d] = np.sum(mask)
+    print("in the <%.3e bin there are %d cells, has average %.4e"%(hi, counts[d], np.mean(n_h[mask])))
     posmask = pos[mask,:]
     massmask = mass[mask]
     if IN_RS_SPACE:
         velmask = vel[mask,:]
-        pos = pos_redshift_space(posmask, velmask, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
+        posmask = pos_redshift_space(posmask, velmask, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
     CICW(posmask,field,BOXSIZE,massmask)
     w.create_dataset("<%.3e"%hi, data=field, compression="gzip", compression_opts=9)
 
