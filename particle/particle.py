@@ -110,5 +110,5 @@ for d in range(nobins):
         posmask = pos_redshift_space(posmask, velmask, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
     CICW(posmask,field,BOXSIZE,massmask)
     w.create_dataset("<%.3e"%hi, data=field, compression="gzip", compression_opts=9)
-
+w.create_dataset("bin_counts",data=counts)
 w.close()
