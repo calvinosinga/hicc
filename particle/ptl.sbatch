@@ -8,7 +8,7 @@
 #SBATCH --time=2-1:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
-#SBATCH --account=astronomy-hi
+#SBATCH --account=astronomy
 #SBATCH --mem-per-cpu=80000
 #SBATCH --mail-type=ALL
 
