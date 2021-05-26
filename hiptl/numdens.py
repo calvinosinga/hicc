@@ -67,23 +67,23 @@ density = 1 / kpctocm**3 * LITTLE_H**3 * smtog * density
 
 # using simple density to number density conversion rho = 1.4 mp nH
 
-simple = density / m_p / 1.4
-simple_hist = np.histogram(simple, bins=bins)
-w.create_dataset("simple", data=simple_hist[0])
+nh = density / m_p / 1.4
+hist = np.histogram(nh, bins=bins)
+w.create_dataset("simple", data=hist[0])
 
 # using snapshot's definition of hydrogen abundance
-all_hydrogen = density * tothyd / m_p
-all_hist = np.histogram(all_hydrogen, bins=bins)
-w.create_dataset("all_hydrogen", data=all_hist[0])
+nh = density * tothyd / m_p
+hist = np.histogram(nh, bins=bins)
+w.create_dataset("all_hydrogen", data=hist[0])
 
 # using the snapshot's definition of nha without sfr adjustment
-neutral_hydrogen = density * tothyd * nha / m_p
-neut_hist = np.histogram(neutral_hydrogen, bins=bins)
-w.create_dataset("neutral_hydrogen_with_sfc", data=neut_hist[0])
+nh = density * tothyd * nha / m_p
+hist = np.histogram(nh, bins=bins)
+w.create_dataset("neutral_hydrogen_with_sfc", data=hist[0])
 
 # using the Benedikt's definition of neutral hydrogen
-hih2_neutral_hydrogen = density * f_neut_H / m_p
-hih2_neut_hist = np.histogram(neutral_hydrogen, bins=bins)
-w.create_dataset("hih2_neutral_hydrogen", data=hih2_neut_hist[0])
+nh = density * f_neut_H / m_p
+hist = np.histogram(nh, bins=bins)
+w.create_dataset("hih2_neutral_hydrogen", data=hist[0])
 
 w.close()
