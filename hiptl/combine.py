@@ -35,10 +35,11 @@ else:
 
 print('first file: ' + files[0])
 print('last file: ' + files[-1])
-
+f = hp.File(BASE+files[0], 'r')
+GRID = f[models[0]][:].shape
 # sum each model's grid individually
 for m in models:
-    total = np.zeros((2048, 2048, 2048), dtype=np.float32)
+    total = np.zeros(GRID, dtype=np.float32)
     print("starting model "+m)
     for i in files:
         # it is expected that the last job will find nonexistent files

@@ -17,8 +17,9 @@ from library_hicc.redshift_space import pos_redshift_space
 CHUNK = int(sys.argv[1])
 SNAPSHOT = int(sys.argv[2])
 BOX = int(sys.argv[3])
-if len(sys.argv) > 4:
-    AXIS = int(sys.argv[4])
+DIM = int(sys.argv[4])
+if len(sys.argv) > 5:
+    AXIS = int(sys.argv[5])
     IN_RS_SPACE = True
 else:
     IN_RS_SPACE = False
@@ -39,7 +40,7 @@ else:
     w = hp.File(OUTPATH+'hiptl%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
 
 # getting author-defined constants (these COULD change but are not expected to)
-GRID = (2048,2048,2048)
+GRID = (DIM,DIM,DIM)
 models = get_hiptl_models()
 
 # getting the needed simulation-defined constants

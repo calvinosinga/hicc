@@ -8,11 +8,13 @@ The name of the text file is given as command-line input, .
 import sys
 import numpy as np
 import h5py as hp
+import time
 import illustris_python as il
 from Pk_library import Pk
 from Pk_library import XPk
 
 # reading command line inputs
+start = time.time()
 AUTO_OR_XPK = sys.argv[1]
 SNAPSHOT = int(sys.argv[2])
 BOX = int(sys.argv[3])
@@ -113,7 +115,9 @@ if IS_XPK:
                     # 2D only has a field index, no "ell" index
     f1.close()
     f2.close()
+    
     if DIM==0:
+        
         w1.close()
         w2.close()
     else:
@@ -166,5 +170,7 @@ else:# auto power spectrum
         w1.close()
         w2.close()
     else:
+        runtime = time.time()-start
+        w.create_dataset("runtime", data=runtime)
         w.close()
     print("\nfinished power spectrum calculation.")
