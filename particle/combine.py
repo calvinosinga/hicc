@@ -8,7 +8,6 @@ import numpy as np
 import h5py as hp
 import sys
 
-from numpy.core.defchararray import count
 
 # setting author-defined variables (not expected to change)
 BASE = '/lustre/cosinga/hiptl_output/'
@@ -42,23 +41,27 @@ print('first file: ' + files[0])
 print('last file: ' + files[-1])
 
 # array of files to iterate over
-keylist = ((hp.File(BASE+files[0],'r')).keys()) # getting the keys from first file
+keylist = list((hp.File(BASE+files[0],'r')).keys()) # getting the keys from first file
 
 total_counts = None
 for k in keylist:
     total = np.zeros(GRID, dtype=np.float32)
     for i in files:
-        f = hp.File(BASE+i,'r')
-        if "count" in k: # since the number of bins should stay flexible
-            if total_counts is None:
-                total_counts = f[k][:]
-            else:
-                total_counts += f[k][:]
+        try:
+            f = hp.File(BASE+i,'r')
+        except IOError:
+            print("did not find file %s"%i)
         else:
-            total += f[k][:]
-            print('found file %s for %s, adding to grid'%(i,k))
-            print("new sum:" + str(np.sum(total)))
-        f.close()
+            if "count" in k: # since the number of bins should stay flexible
+                if total_counts is None:
+                    total_counts = f[k][:]
+                else:
+                    total_counts += f[k][:]
+            else:
+                total += f[k][:]
+                print('found file %s for %s, adding to grid'%(i,k))
+                print("new sum:" + str(np.sum(total)))
+            f.close()
     w.create_dataset(k, data=total, compression="gzip", compression_opts=9)
 w.create_dataset("bin_counts", data=total_counts)
 w.close()

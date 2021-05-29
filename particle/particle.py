@@ -73,9 +73,9 @@ nptl = head['NumPart_ThisFile']
 
 
 # testing the different hydrogen densities
-nobins = 5
-dendec = np.logspace(-4,2,nobins)
-counts = np.zeros(nobins)
+
+dendec =[0,1e-4,1e-2,1,100,np.inf]
+counts = np.zeros_like(dendec)
 p = 'PartType0'
 mass = ptlfile[p]['Masses'][:]*1e10/LITTLE_H # solar masses
 density = ptlfile[p]['Density'][:]*1e10/LITTLE_H # solar masses per kpc/h cubed
@@ -92,7 +92,7 @@ n_h = density*f_neut_h*fac
 pos = ptlfile[p]['Coordinates'][:]/1e3 # Mpc/h
 vel = ptlfile[p]['Velocities'][:] * np.sqrt(SCALE_FACTOR) # km/s
 print("now binning according to number density")
-for d in range(nobins):
+for d in range(len(dendec)):
     field = np.zeros(GRID)
     if d == 0:
         lo = np.min(n_h)
@@ -115,6 +115,6 @@ for d in range(nobins):
         velmask = vel[mask,:]
         posmask = pos_redshift_space(posmask, velmask, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
     CICW(posmask,field,BOXSIZE,massmask)
-    w.create_dataset("<%.3e"%hi, data=field, compression="gzip", compression_opts=9)
+    w.create_dataset("<%.3e"%dendec[d], data=field, compression="gzip", compression_opts=9)
 w.create_dataset("bin_counts",data=counts)
 w.close()

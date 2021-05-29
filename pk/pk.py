@@ -39,7 +39,15 @@ TNG = '/lustre/cosinga/tng%d'%BOX
 
 # getting author-defined constants
 MAS = 'CIC'
-GRID = (2048, 2048, 2048)
+
+# getting the dimensions of the grids
+f = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
+keylist = list(f.keys())
+for k in keylist:
+    GRID = f[k][:].shape
+    if len(GRID) == 3:
+        break
+
 # getting simulation defined constants
 head = il.groupcat.loadHeader(TNG, SNAPSHOT)
 BOXSIZE = head['BoxSize']/1e3 # Mpc/h
@@ -78,13 +86,17 @@ if IS_XPK:
     key2list = list(f2.keys())
     for key1 in key1list:
         for key2 in key2list:
+
+            # get the fields
+            field1 = f1[key1][:]
+            field2 = f2[key2][:]
+
             if SAME_FILE and key1 == key2:
                 print("skipping xpk calculation for %s, %s; just auto power"%(key1, key2))
+            elif not (field1.shape == GRID and field2.shape==GRID):
+                print("skipping calculation for %s, %s; grid is not correct shape"%(key1, key2))
             else:
                 print("starting xpk calculation for %s, %s"%(key1, key2))
-                # get the fields
-                field1 = f1[key1][:]
-                field2 = f2[key2][:]
                 
                 # convert them to overdensities
                 field1=to_overdensity(field1)
@@ -137,34 +149,38 @@ else:# auto power spectrum
     
     # iterate over each k, save its auto power to file
     for k in keylist:
-        print("calculating pk for %s"%k)
-        field1 = f1[k][:]
-        field1=to_overdensity(field1)
-        res = Pk(field1, BOXSIZE, axis=AXIS, MAS=MAS)
 
-        # if first calculation, save the wavenumbers
-        if k == keylist[0]:
-            print("saving the wavenumbers...")
-            # if in 1D, just need 1 k, otherwise need kper and kpar
+        field1 = f1[k][:]
+        if not field1.shape == GRID:
+            print("skipping pk calculation for %s; not the correct shape."%k)
+        else:
+            print("calculating pk for %s"%k)
+            field1=to_overdensity(field1)
+            res = Pk(field1, BOXSIZE, axis=AXIS, MAS=MAS)
+
+            # if first calculation, save the wavenumbers
+            if k == keylist[0]:
+                print("saving the wavenumbers...")
+                # if in 1D, just need 1 k, otherwise need kper and kpar
+                if DIM == 1:
+                    w.create_dataset("k",data=res.k3D)
+                elif DIM == 2:
+                    w.create_dataset("kper", data=res.kper)
+                    w.create_dataset("kpar", data=res.kpar)
+                elif DIM == 0:
+                    w1.create_dataset("k",data=res.k3D)
+                    w2.create_dataset("kper", data=res.kper)
+                    w2.create_dataset("kpar", data=res.kpar)
+            
+            # save pk result
+            print("saving the pk result...")
             if DIM == 1:
-                w.create_dataset("k",data=res.k3D)
+                w.create_dataset(k,data= res.Pk[:,0])
             elif DIM == 2:
-                w.create_dataset("kper", data=res.kper)
-                w.create_dataset("kpar", data=res.kpar)
+                w.create_dataset(k,data=res.Pk2D[:])
             elif DIM == 0:
-                w1.create_dataset("k",data=res.k3D)
-                w2.create_dataset("kper", data=res.kper)
-                w2.create_dataset("kpar", data=res.kpar)
-        
-        # save pk result
-        print("saving the pk result...")
-        if DIM == 1:
-            w.create_dataset(k,data= res.Pk[:,0])
-        elif DIM == 2:
-            w.create_dataset(k,data=res.Pk2D[:])
-        elif DIM == 0:
-            w1.create_dataset(k,data= res.Pk[:,0])
-            w2.create_dataset(k,data=res.Pk2D[:])
+                w1.create_dataset(k,data= res.Pk[:,0])
+                w2.create_dataset(k,data=res.Pk2D[:])
     f1.close()
     if DIM==0:
         w1.close()
