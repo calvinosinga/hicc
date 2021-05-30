@@ -17,13 +17,13 @@ from library_hicc.redshift_space import pos_redshift_space
 CHUNK = int(sys.argv[1])
 SNAPSHOT = int(sys.argv[2])
 BOX = int(sys.argv[3])
-RES = int(sys.argv[4]) # resolution of the grid
-if len(sys.argv) > 5:
-    AXIS = int(sys.argv[5])
+if len(sys.argv) > 4:
+    AXIS = int(sys.argv[4])
     IN_RS_SPACE = True
 else:
     IN_RS_SPACE = False
 
+resos = (1024, 1200, 1400, 1600, 1800, 2048)
 # defining needed paths
 HIPATH = '/lustre/diemer/illustris/hih2/'  # where the hiptl files are saved
 PTLPATH = '/lustre/cosinga/tng%d/snapdir_%03d/'%(BOX, SNAPSHOT) # where the ptl files are saved
@@ -35,12 +35,12 @@ ptlfile = hp.File(PTLPATH+"snap_%03d.%d.hdf5" %(SNAPSHOT, CHUNK), 'r')
 
 # output files
 if IN_RS_SPACE:
-    w = hp.File(OUTPATH+'hiptlrs%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
+    w = hp.File(OUTPATH+'hiptlrs%d_%03d.%d_res.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
 else:
-    w = hp.File(OUTPATH+'hiptl%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
+    w = hp.File(OUTPATH+'hiptl%d_%03d.%d_res.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
 
 # getting author-defined constants (these COULD change but are not expected to)
-GRID = (RES,RES,RES)
+
 models = get_hiptl_models()
 
 # getting the needed simulation-defined constants
@@ -56,8 +56,10 @@ pos = ptlfile['PartType0']['Coordinates'][:]/1e3 # Mpc/h
 vel = ptlfile['PartType0']['Velocities'][:] * np.sqrt(SCALE_FACTOR) # km/s
 f_neut_h = hih2file['PartType0']['f_neutral_H'][:]
 
-for m in models:
-    print('starting to calculate grid for %s'%m)
+m = models[0]
+for r in resos:
+    GRID = (r,r,r)
+    print('starting to calculate grid for resolution %d'%r)
     field = np.zeros(GRID, dtype=np.float32)
     # shifting the positions to redshift space
     if IN_RS_SPACE:
@@ -72,9 +74,9 @@ for m in models:
     masshi = np.where(masshi >= 0, masshi, np.zeros(masshi.shape, dtype=np.float32))
     masshi = masshi.astype('float32')
     print('finished removing the negative fractions, now has sum %.3e'%np.sum(masshi))
-    
+
     # assigning them into the field using the Mass Assignment Scheme given
     CICW(pos,field,BOXSIZE,masshi)
-    w.create_dataset(m, data=field, compression="gzip", compression_opts=9)
+    w.create_dataset(m+"_res=%d"%r, data=field, compression="gzip", compression_opts=9)
 
 w.close()
