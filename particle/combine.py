@@ -22,10 +22,7 @@ SNAPSHOT = int(sys.argv[4])
 BOX = int(sys.argv[5])
 STEP = int(sys.argv[6]) # tells if this is the 1st or 2nd step in combine process
 
-# creating output file
-w = hp.File(FINAL+'%s%d_%03d.final.hdf5'%(PREFIX, BOX, SNAPSHOT),'w')
-
-# getting array of files to iterate over
+# getting array of files to iterate over and getting write file
 if STEP == 0:
     w = hp.File(BASE+'%s%d_%03d.%d.%d.hdf5'%(PREFIX, BOX, SNAPSHOT, START, END),'w')
     filenos = np.arange(START, END)
@@ -49,14 +46,18 @@ for k in keylist:
     for i in files:
         try:
             f = hp.File(BASE+i,'r')
+            print("found file %s"%i)
         except IOError:
             print("did not find file %s"%i)
         else:
             if "count" in k: # since the number of bins should stay flexible
+                print("adding up the bin counts")
                 if total_counts is None:
                     total_counts = f[k][:]
+                    print("initializing the bin counts: current total is " +str(total_counts))
                 else:
                     total_counts += f[k][:]
+                    print("new running total for bin counts is "+str(total_counts))
             else:
                 total += f[k][:]
                 print('found file %s for %s, adding to grid'%(i,k))
