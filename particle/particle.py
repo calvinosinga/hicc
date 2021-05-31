@@ -91,21 +91,17 @@ fac = 1/kpctocm**3*LITTLE_H**3*smtog/m_p
 n_h = density*f_neut_h*fac
 pos = ptlfile[p]['Coordinates'][:]/1e3 # Mpc/h
 vel = ptlfile[p]['Velocities'][:] * np.sqrt(SCALE_FACTOR) # km/s
-print("now binning according to number density")
-for d in range(len(dendec)):
-    field = np.zeros(GRID)
-    if d == 0:
-        lo = np.min(n_h)
-        hi = dendec[d]
-    elif d == len(dendec) - 1:
-        lo = dendec[d]
-        hi = np.max(n_h)+1 # so that the highest densities are still included
-    else:
-        lo = dendec[d]
-        hi = dendec[d+1]
-    print("the shape of the number density array is "+str(n_h.shape))
+print("now binning according to number density, there are " + str(n_h.shape)+ " cells.")
+for d in range(len(dendec)-1):
+    field = np.zeros(GRID, dtype=np.float32)
+    lo = dendec[d]
+    hi = dendec[d+1]
+    print("getting low mask: %.3e"%lo)
     mask1 = n_h >= lo
+    print("low mask has %d cells in it"%np.sum(mask1))
+    print("getting high mask: %.3e"%hi)
     mask2 = n_h < hi
+    print("high mask has %d cells in it"%np.sum(mask2))
     mask = mask1 & mask2
     counts[d] = np.sum(mask)
     print("in the <%.3e bin there are %d cells, has average %.4e"%(hi, counts[d], np.mean(n_h[mask])))
