@@ -14,4 +14,5 @@ from hydrotools.interface import interface as iface_run
 # map_get = True
 # n_max_extract = None, rank_by = None,
 map_fields = ['f_mol_GD14_vol','f_mol_GK11_vol', 'f_mol_K13_vol','f_mol_S14_vol','f_neutral_H', 'gas_rho']
-iface_run.extractGalaxyData(sim='tng75', snap_idx=99, paranoid=True, output_path='/lustre/cosinga/final_fields/', file_suffix='_final', output_compression='gzip', map_get=True, map_fields=map_fields)
+iface_run.extractGalaxyData(sim='tng75', snap_idx=99, paranoid=True, output_path='/lustre/cosinga/final_fields/', 
+            file_suffix='_final', output_compression='gzip', map_get=True, map_fields=map_fields)

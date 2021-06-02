@@ -36,7 +36,7 @@ else:
 print('first file: ' + files[0])
 print('last file: ' + files[-1])
 ff = hp.File(BASE+files[0], 'r')
-keylist = list(f.keys())
+keylist = list(ff.keys())
 # sum each resolution's grid individually
 for k in keylist:
     print("starting grid "+k)
