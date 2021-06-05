@@ -40,7 +40,7 @@ keylist = list(ff.keys())
 # sum each resolution's grid individually
 for k in keylist:
     print("starting grid "+k)
-    total = np.zeros_like(ff[k][:])
+    total = np.zeros_like(ff[k][:], dtype=np.float32)
     for i in files:
         # it is expected that the last job will find nonexistent files
         try:

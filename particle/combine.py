@@ -63,6 +63,7 @@ for k in keylist:
                 print('found file %s for %s, adding to grid'%(i,k))
                 print("new sum:" + str(np.sum(total)))
             f.close()
-    w.create_dataset(k, data=total, compression="gzip", compression_opts=9)
+    if not "count" in k:
+        w.create_dataset(k, data=total, compression="gzip", compression_opts=9)
 w.create_dataset("bin_counts", data=total_counts)
 w.close()
