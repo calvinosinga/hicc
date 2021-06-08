@@ -41,12 +41,7 @@ TNG = '/lustre/cosinga/tng%d'%BOX
 MAS = 'CIC'
 
 # getting the dimensions of the grids
-f = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
-keylist = list(f.keys())
-for k in keylist:
-    GRID = f[k][:].shape
-    if len(GRID) == 3:
-        break
+
 
 # getting simulation defined constants
 head = il.groupcat.loadHeader(TNG, SNAPSHOT)
@@ -93,7 +88,7 @@ if IS_XPK:
 
             if SAME_FILE and key1 == key2:
                 print("skipping xpk calculation for %s, %s; just auto power"%(key1, key2))
-            elif not (field1.shape == GRID and field2.shape==GRID):
+            elif not (len(field1.shape) == 3 and len(field2.shape)==3):
                 print("skipping calculation for %s, %s; grid is not correct shape"%(key1, key2))
             else:
                 print("starting xpk calculation for %s, %s"%(key1, key2))
@@ -151,7 +146,7 @@ else:# auto power spectrum
     for k in keylist:
 
         field1 = f1[k][:]
-        if not field1.shape == GRID:
+        if not len(field1.shape) == 3:
             print("skipping pk calculation for %s; not the correct shape."%k)
         else:
             print("calculating pk for %s"%k)
