@@ -97,7 +97,7 @@ models.append("total")
 print("now binning according to number density, there are " + str(n_h.shape)+ " cells.")
 for m in models:
     if not m is "total":
-        molfrac = hih2file[p][m][:]
+        molfrac = hih2file[p]['f_mol_'+m][:]
 
     for d in range(len(dendec)-1):
         field = np.zeros(GRID, dtype=np.float32)
