@@ -10,6 +10,7 @@ import sys
 from library_hicc.mas import CICW
 #import redshift_space_library as rsl
 from library_hicc.redshift_space import pos_redshift_space
+from library_hicc.models import get_hiptl_models
 # reading command line inputs
 CHUNK = int(sys.argv[1])
 SNAPSHOT = int(sys.argv[2])
@@ -91,26 +92,37 @@ fac = 1/kpctocm**3*LITTLE_H**3*smtog/m_p
 n_h = density*f_neut_h*fac
 pos = ptlfile[p]['Coordinates'][:]/1e3 # Mpc/h
 vel = ptlfile[p]['Velocities'][:] * np.sqrt(SCALE_FACTOR) # km/s
+models = get_hiptl_models()
+models.append("total")
 print("now binning according to number density, there are " + str(n_h.shape)+ " cells.")
-for d in range(len(dendec)-1):
-    field = np.zeros(GRID, dtype=np.float32)
-    lo = dendec[d]
-    hi = dendec[d+1]
-    print("getting low mask: %.3e"%lo)
-    mask1 = n_h >= lo
-    print("low mask has %d cells in it"%np.sum(mask1))
-    print("getting high mask: %.3e"%hi)
-    mask2 = n_h < hi
-    print("high mask has %d cells in it"%np.sum(mask2))
-    mask = mask1 & mask2
-    counts[d] = np.sum(mask)
-    print("in the <%.3e bin there are %d cells, has average %.4e"%(hi, counts[d], np.mean(n_h[mask])))
-    posmask = pos[mask,:]
-    massmask = mass[mask]
-    if IN_RS_SPACE:
-        velmask = vel[mask,:]
-        posmask = pos_redshift_space(posmask, velmask, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
-    CICW(posmask,field,BOXSIZE,massmask)
-    w.create_dataset("<%.3e"%dendec[d], data=field, compression="gzip", compression_opts=9)
+for m in models:
+    if not m is "total":
+        molfrac = hih2file[p][m][:]
+
+    for d in range(len(dendec)-1):
+        field = np.zeros(GRID, dtype=np.float32)
+        lo = dendec[d]
+        hi = dendec[d+1]
+        print("getting low mask: %.3e"%lo)
+        mask1 = n_h >= lo
+        print("low mask has %d cells in it"%np.sum(mask1))
+        print("getting high mask: %.3e"%hi)
+        mask2 = n_h < hi
+        print("high mask has %d cells in it"%np.sum(mask2))
+        mask = mask1 & mask2
+        counts[d] = np.sum(mask)
+        print("in the <%.3e bin there are %d cells, has average %.4e"%(hi, counts[d], np.mean(n_h[mask])))
+
+        posmask = pos[mask,:]
+        if m is "total":
+            massmask = mass[mask] * f_neut_h
+        else:
+            molfracmask = molfrac[mask]
+            massmask = mass[mask] * f_neut_h * (1-molfracmask)
+        if IN_RS_SPACE:
+            velmask = vel[mask,:]
+            posmask = pos_redshift_space(posmask, velmask, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
+        CICW(posmask,field,BOXSIZE,massmask)
+        w.create_dataset("%s_<%.3e"%(m,dendec[d]), data=field, compression="gzip", compression_opts=9)
 w.create_dataset("bin_counts",data=counts)
 w.close()
