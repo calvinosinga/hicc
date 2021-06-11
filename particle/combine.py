@@ -12,7 +12,6 @@ import sys
 # setting author-defined variables (not expected to change)
 BASE = '/lustre/cosinga/hiptl_output/'
 FINAL = '/lustre/cosinga/final_fields/'
-GRID = (2048,2048,2048)
 
 # getting command-line input
 PREFIX = sys.argv[1]
@@ -38,11 +37,12 @@ print('first file: ' + files[0])
 print('last file: ' + files[-1])
 
 # array of files to iterate over
-keylist = list((hp.File(BASE+files[0],'r')).keys()) # getting the keys from first file
+ff = hp.File(BASE+files[0],'r')
+keylist = list(ff.keys()) # getting the keys from first file
 
 total_counts = None
 for k in keylist:
-    total = np.zeros(GRID, dtype=np.float32)
+    total = np.zeros_like(ff[k][:], dtype=np.float32)
     for i in files:
         try:
             f = hp.File(BASE+i,'r')
