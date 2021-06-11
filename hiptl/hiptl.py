@@ -18,11 +18,8 @@ CHUNK = int(sys.argv[1])
 SNAPSHOT = int(sys.argv[2])
 BOX = int(sys.argv[3])
 RES = int(sys.argv[4]) # resolution of the grid
-if len(sys.argv) > 5:
-    AXIS = int(sys.argv[5])
-    IN_RS_SPACE = True
-else:
-    IN_RS_SPACE = False
+AXIS = int(sys.argv[5]) # if -1, not in redshift space
+IN_RS_SPACE = AXIS == -1
 
 # defining needed paths
 HIPATH = '/lustre/diemer/illustris/hih2/'  # where the hiptl files are saved
@@ -52,7 +49,7 @@ SCALE_FACTOR = head['Time']
 
 # getting data
 mass = ptlfile['PartType0']['Masses'][:]*1e10/LITTLE_H # solar masses
-pos = ptlfile['PartType0']['Coordinates'][:]/1e3 # Mpc/h
+pos = ptlfile['PartType0']['Coordinates'][:]/1e3 * SCALE_FACTOR # Mpc/h
 vel = ptlfile['PartType0']['Velocities'][:] * np.sqrt(SCALE_FACTOR) # km/s
 f_neut_h = hih2file['PartType0']['f_neutral_H'][:]
 

@@ -15,24 +15,25 @@ import redshift_space_library as rsl
 # reading command line inputs, a third gives axis for redshift space
 SNAPSHOT = int(sys.argv[1])
 BOX = int(sys.argv[2])
-if len(sys.argv) > 3:
-    AXIS = int(sys.argv[3])
-    IN_RS_SPACE = True
-else:
-    IN_RS_SPACE = False
+RES = int(sys.argv[3]) # resolution of the grid
+AXIS = int(sys.argv[4]) # is -1 if not in redshift space
+IN_RS_SPACE = AXIS == -1
+
 
 # defining needed paths
 HOME = '/lustre/cosinga/tng%d/'%BOX
 SAVE = '/lustre/cosinga/final_fields/'
 
 # assigning author-defined constants (not expected to change)
-GRID = (2048,2048,2048)
+GRID = (RES,RES,RES)
 
 # getting simulation-defined constants
 head = il.groupcat.loadHeader(HOME,SNAPSHOT)
 LITTLE_H = head['HubbleParam'] # 100 km/s/Mpc
 BOXSIZE = head['BoxSize']/1e3 #Mpc/h
 REDSHIFT = head['Redshift']
+SCALE = head['Time'] # scale factor
+
 print('the boxsize is %f'%BOXSIZE)
 
 # input data
@@ -40,7 +41,7 @@ f = hp.File(HOME+'/groups_%03d/hih2_galaxy_%03d.hdf5'%(SNAPSHOT,SNAPSHOT),'r')
 ids = f['id_subhalo'][:] # used to idx into the subhalo catalog
 ids = ids.astype(np.int32)
 sub = il.groupcat.loadSubhalos(HOME, SNAPSHOT, fields=['SubhaloPos','SubhaloVel'])
-pos = sub['SubhaloPos'][ids]/1e3 # Mpc/h
+pos = sub['SubhaloPos'][ids]/1e3 * SCALE # Mpc/h
 vel = sub['SubhaloVel'][ids] # km/s
 models = get_hisubhalo_models()
 print("the models used are: "+str(models)+'\n')

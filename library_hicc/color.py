@@ -13,9 +13,9 @@ def is_red_nelson(gr, stmass, run):
     definition. Note that this doesn't account for the resolution.
     """
     if run == 'high':
-        return gr> 0.675 + 0.02*(np.log10(stmass)-10.28)
+        return gr> 0.7 + 0.02*(np.log10(stmass)-10.28)
     elif run == 'low':
-        return gr> 0.625 + 0.02*(np.log10(stmass)-10.28)
+        return gr> 0.6 + 0.02*(np.log10(stmass)-10.28)
     elif run == 'mid':
         return gr> 0.65 + 0.02*(np.log10(stmass)-10.28)
 

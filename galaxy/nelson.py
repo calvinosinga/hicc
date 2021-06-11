@@ -13,22 +13,21 @@ import redshift_space_library as rsl
 import library_hicc.color as lhicc
 import illustris_python as il
 
-# reading command line inputs, a fourth gives axis of redshift space
+# reading command line inputs
 SNAPSHOT = int(sys.argv[1])
 BOX = int(sys.argv[2])
-RUN = sys.argv[3]
-if len(sys.argv) > 4:
-    AXIS = int(sys.argv[4])
-    IN_RS_SPACE = True
-else:
-    IN_RS_SPACE = False
+RUN = sys.argv[3] # low,mid,high to test sensitivity to color definition
+RES = sys.argv[4] # resolution of the grid
+AXIS = int(sys.argv[5])
+IN_RS_SPACE = AXIS == -1 # giving -1 means that we are not in redshift space
+
 
 # defining needed paths
 HOME = '/lustre/cosinga/tng%d/'%BOX
 SAVE = '/lustre/cosinga/final_fields/'
 
 # assigning author-defined constants (not expected to change)
-GRID = (2048,2048,2048)
+GRID = (RES,RES,RES)
 MAS = 'CIC'
 
 # getting simulation defined constants
@@ -36,6 +35,7 @@ head = il.groupcat.loadHeader(HOME,SNAPSHOT)
 LITTLE_H = head['HubbleParam'] # 100 km/s/Mpc
 BOXSIZE = head['BoxSize']/1e3 #Mpc/h
 REDSHIFT = head['Redshift']
+SCALE = head['Time'] # scale factor
 
 # input data
 flds = ['SubhaloPos', 'SubhaloStellarPhotometrics', 'SubhaloMassType', 'SubhaloVel']
@@ -43,8 +43,8 @@ sub = il.groupcat.loadSubhalos(HOME,SNAPSHOT, fields=flds)
 mass = sub[flds[2]][:]*1e10/LITTLE_H # solar masses
 total_mass = np.sum(mass, axis=1)
 gr = sub[flds[1]][:,4] - sub[flds[1]][:,5]
-pos = sub[flds[0]][:]/1e3 # Mpc/h
-vel = sub[flds[3]][:] # km/s
+pos = sub[flds[0]][:]/1e3 * SCALE # Mpc/h, 52 MB
+vel = sub[flds[3]][:] # km/s, 52 MB
 del sub, flds
 
 # if we are working in redshift-space, shift the positions using the velocities
