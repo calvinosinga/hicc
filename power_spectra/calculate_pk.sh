@@ -46,12 +46,12 @@ else
     echo "resolution of grid: $5"
 fi
 
-$ARRAYNO=$(($4-1))
-$COMBINE_ARRAY=$(($4-$4%20))
+ARRAYNO=$(($4-1))
+COMBINE_ARRAY=$(($4-$4%20))
 
-$GRIDMEM=$(($5*$5*$5*4/1000000+10000))
-$PKMEM=$(($GRIDMEM*2))
-$XPKMEM=$(($PKMEM*2))
+GRIDMEM=$(($5*$5*$5*4/1000000+10000))
+PKMEM=$(($GRIDMEM*2))
+XPKMEM=$(($PKMEM*2))
 # submit hisubhalo jobs
 hisubgrid=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,RES=$5 --mem-per-cpu=$GRIDMEM hisubhalo.sbatch)
 hisubgrid="${hisubgrid##* }"
