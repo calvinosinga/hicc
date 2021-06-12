@@ -1,4 +1,3 @@
-from hisubhalo.hisubhalo import SCALE
 import numpy as np
 import h5py as hp
 import sys

@@ -54,7 +54,8 @@ def to_overdensity(field):
         field = field[::2,:,:]+field[1::2,:,:]
         field = field[:, ::2, :] + field[:, ::2, :]
         field = field[:, :, ::2] + field[:, :, ::2]
-    
+    else:
+        print("not halving the size of the grid")
     field = field/BOXSIZE**3
     field = field/np.mean(field).astype(np.float32)
     field=field - 1

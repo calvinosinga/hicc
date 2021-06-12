@@ -8,9 +8,8 @@
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
 #SBATCH --account=astronomy-hi
-#SBATCH --mem-per-cpu=80000
 #SBATCH --mail-type=ALL
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/hiptl/hiptl.py $SLURM_ARRAY_TASK_ID $SNAP $BOX
-python3 /lustre/cosinga/hicc/hiptl/hiptl.py $SLURM_ARRAY_TASK_ID $SNAP $BOX $AXIS
+python3 /lustre/cosinga/hicc/hiptl/hiptl.py $SLURM_ARRAY_TASK_ID $SNAP $BOX $RES -1
+python3 /lustre/cosinga/hicc/hiptl/hiptl.py $SLURM_ARRAY_TASK_ID $SNAP $BOX $RES $AXIS

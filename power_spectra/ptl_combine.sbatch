@@ -4,13 +4,14 @@
 #SBATCH --job-name=ptl_combine
 #SBATCH --output=./outlogs/ptl_combine.dat
 #SBATCH --error=./errors/ptl_combine.err
-#SBATCH --time=2-1:00:00
+#SBATCH --time=10:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
 #SBATCH --account=astronomy-hi
-#SBATCH --mem-per-cpu=80000
 #SBATCH --mail-type=ALL
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/particle/combine.py ptl $SNAP $BOX $NUMFILES
-python3 /lustre/cosinga/hicc/particle/combine.py ptlrs $SNAP $BOX $NUMFILES
+START=$SLURM_ARRAY_TASK_ID
+END=$(($SLURM_ARRAY_TASK_ID+20))
+python3 /lustre/cosinga/hicc/particle/combine.py ptl $START $END $SNAP $BOX $RES -1
+python3 /lustre/cosinga/hicc/particle/combine.py ptlrs $START $END $SNAP $BOX $RES 0

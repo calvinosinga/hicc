@@ -49,35 +49,35 @@ fi
 $ARRAYNO=$(($4-1))
 $COMBINE_ARRAY=$(($4-$4%20))
 
-$MEM_FOR_PK=$(())
-$MEM_FOR_GRID=$(())
-
+$GRIDMEM=$(($5*$5*$5*4/1000000+10000))
+$PKMEM=$(($GRIDMEM*2))
+$XPKMEM=$(($PKMEM*2))
 # submit hisubhalo jobs
-hisubgrid=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,RES=$5 hisubhalo.sbatch)
+hisubgrid=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,RES=$5 --mem-per-cpu=$GRIDMEM hisubhalo.sbatch)
 hisubgrid="${hisubgrid##* }"
 
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hisubgrid hisubhalopk.sbatch
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hisubgrid --mem-per-cpu=$PKMEM hisubhalopk.sbatch
 
 # submit galaxy jobs
-galgrid=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,RES=$5 galaxy.sbatch)
+galgrid=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,RES=$5 --mem-per-cpu=$GRIDMEM galaxy.sbatch)
 galgrid="${galgrid##* }"
 
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid galaxypk.sbatch
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid --mem-per-cpu=$PKMEM galaxypk.sbatch
 
 # nelson-nelson xpk
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid nelson-nelsonxpk.sbatch
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid --mem-per-cpu=$PKMEM nelson-nelsonxpk.sbatch
 
 # hisubhalo-nelson xpk
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid:$hisubgrid hisubhalo-nelsonxpk.sbatch
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid:$hisubgrid --mem-per-cpu=$XPKMEM hisubhalo-nelsonxpk.sbatch
 
 # calculate pk for paco
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 pacopk.sbatch
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --mem-per-cpu=$PKMEM pacopk.sbatch
 
 # paco-nelson xpk
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid paco-nelsonxpk.sbatch
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid --mem-per-cpu=$XPKMEM paco-nelsonxpk.sbatch
 
 # submit hiptl jobs
-hiptlgrid=$(sbatch --array=0-$ARRAYNO --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,RES=$5 hiptl.sbatch)
+hiptlgrid=$(sbatch --array=0-$ARRAYNO --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,RES=$5 --mem-per-cpu=$GRIDMEM hiptl.sbatch)
 hiptlgrid="${hiptlgrid##* }"
 
 #SBATCH --array=0-460:20
@@ -87,31 +87,31 @@ hiptlcomb="${hiptlcomb##* }"
 hiptlfinal=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,NUMFILES=$4 --dependency=afterok:$hiptlcomb hiptl_final.sbatch)
 hiptlfinal="${hiptlfinal##* }"
 
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hiptlfinal hiptlpk.sbatch
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hiptlfinal --mem-per-cpu=$PKMEM hiptlpk.sbatch
 
 # submit ptl jobs
-ptlgrid=$(sbatch --array=0-$ARRAYNO --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 ptl.sbatch)
+ptlgrid=$(sbatch --array=0-$ARRAYNO --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,RES=$5 --mem-per-cpu=$PKMEM ptl.sbatch)
 ptlgrid="${ptlgrid##* }"
 
-ptlcomb=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,NUMFILES=$4 --dependency=afterok:$ptlgrid --array=0-$COMBINE_ARRAY:20 ptl_combine.sbatch)
+ptlcomb=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,NUMFILES=$4 --mem-per-cpu=$PKMEM --dependency=afterok:$ptlgrid --array=0-$COMBINE_ARRAY:20 ptl_combine.sbatch)
 ptlcomb="${ptlcomb##* }"
 
-ptlfinal=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,NUMFILES=$4 --dependency=afterok:$ptlcomb ptl_final.sbatch)
+ptlfinal=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,NUMFILES=$4 --mem-per-cpu=$PKMEM --dependency=afterok:$ptlcomb ptl_final.sbatch)
 ptlfinal="${ptlfinal##* }"
 
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$ptlfinal ptlpk.sbatch
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$ptlfinal --mem-per-cpu=$PKMEM ptlpk.sbatch
 
 # hiptl-nelson xpk
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid:$hiptlcomb hiptl-nelsonxpk.sbatch
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid:$hiptlcomb --mem-per-cpu=$XPKMEM hiptl-nelsonxpk.sbatch
 
 # hiptl-ptl xpk
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hiptlcomb:$ptlcomb hiptl-ptlxpk.sbatch
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hiptlcomb:$ptlcomb --mem-per-cpu=$XPKMEM hiptl-ptlxpk.sbatch
 
 # paco-ptl xpk
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$ptlcomb paco-ptlxpk.sbatch
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$ptlcomb --mem-per-cpu=$XPKMEM paco-ptlxpk.sbatch
 
 # hisubhalo-ptl xpk
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hisubgrid:$ptlcomb hisubhalo-ptlxpk.sbatch
+sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hisubgrid:$ptlcomb --mem-per-cpu=$XPKMEM hisubhalo-ptlxpk.sbatch
 # hydrotools visualization step?
 
 # make gr-stmass plots

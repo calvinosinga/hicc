@@ -5,7 +5,6 @@
 #SBATCH --error=./errors/hisubhalo_pk.err
 #SBATCH --time=18:00:00
 #SBATCH --ntasks=1
-#SBATCH --mem-per-cpu=150000
 #SBATCH --account=astronomy-hi
 #SBATCH --mail-type=ALL
 #SBATCH --output=./outlogs/hisubhalo_pk.dat
