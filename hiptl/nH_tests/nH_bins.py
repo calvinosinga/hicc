@@ -12,7 +12,7 @@ SNAPSHOT = int(sys.argv[2])
 BOX = int(sys.argv[3])
 RES = int(sys.argv[4]) # resolution of the grid
 AXIS = int(sys.argv[5]) # if -1, not in redshift space
-IN_RS_SPACE = AXIS == -1
+IN_RS_SPACE = not (AXIS == -1)
 
 # defining needed paths
 PTLPATH = '/lustre/cosinga/tng%d/snapdir_%03d/'%(BOX, SNAPSHOT) # where the ptl files are saved

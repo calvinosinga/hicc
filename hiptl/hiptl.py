@@ -19,7 +19,7 @@ SNAPSHOT = int(sys.argv[2])
 BOX = int(sys.argv[3])
 RES = int(sys.argv[4]) # resolution of the grid
 AXIS = int(sys.argv[5]) # if -1, not in redshift space
-IN_RS_SPACE = AXIS == -1
+IN_RS_SPACE = not (AXIS == -1)
 
 # defining needed paths
 HIPATH = '/lustre/diemer/illustris/hih2/'  # where the hiptl files are saved

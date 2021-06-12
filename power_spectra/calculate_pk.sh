@@ -50,6 +50,8 @@ $ARRAYNO=$(($4-1))
 $COMBINE_ARRAY=$(($4-$4%20))
 
 $MEM_FOR_PK=$(())
+$MEM_FOR_GRID=$(())
+
 # submit hisubhalo jobs
 hisubgrid=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,RES=$5 hisubhalo.sbatch)
 hisubgrid="${hisubgrid##* }"

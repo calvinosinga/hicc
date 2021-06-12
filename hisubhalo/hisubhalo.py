@@ -17,7 +17,7 @@ SNAPSHOT = int(sys.argv[1])
 BOX = int(sys.argv[2])
 RES = int(sys.argv[3]) # resolution of the grid
 AXIS = int(sys.argv[4]) # is -1 if not in redshift space
-IN_RS_SPACE = AXIS == -1
+IN_RS_SPACE = not (AXIS == -1)
 
 
 # defining needed paths
