@@ -33,21 +33,31 @@ else
 fi
 if [ -z "$4" ]
 then
-    echo "$4 is not provided: needs number of files: 448-TNG100, 680-TNG50, 600-TNG300"
+    echo "command-line arg needed: number of files: 448-TNG100, 680-TNG50, 600-TNG300"
     exit 125
 else
     echo "numfiles: $4"
 fi
+if [ -z "$5" ]
+then
+    echo "command-line arg needed: grid resolution"
+    exit 125
+else
+    echo "resolution of grid: $5"
+fi
 
-$COMBINE_ARRAY=$((20-$4%20+$4))
+$ARRAYNO=$(($4-1))
+$COMBINE_ARRAY=$(($4-$4%20))
+
+$MEM_FOR_PK=$(())
 # submit hisubhalo jobs
-hisubgrid=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 hisubhalo.sbatch)
+hisubgrid=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,RES=$5 hisubhalo.sbatch)
 hisubgrid="${hisubgrid##* }"
 
 sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hisubgrid hisubhalopk.sbatch
 
 # submit galaxy jobs
-galgrid=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 galaxy.sbatch)
+galgrid=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,RES=$5 galaxy.sbatch)
 galgrid="${galgrid##* }"
 
 sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid galaxypk.sbatch
@@ -65,7 +75,7 @@ sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 pacopk.sbatch
 sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid paco-nelsonxpk.sbatch
 
 # submit hiptl jobs
-hiptlgrid=$(sbatch --array=0-$4 --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 hiptl.sbatch)
+hiptlgrid=$(sbatch --array=0-$ARRAYNO --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,RES=$5 hiptl.sbatch)
 hiptlgrid="${hiptlgrid##* }"
 
 #SBATCH --array=0-460:20
@@ -78,7 +88,7 @@ hiptlfinal="${hiptlfinal##* }"
 sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hiptlfinal hiptlpk.sbatch
 
 # submit ptl jobs
-ptlgrid=$(sbatch --array=0-$4 --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 ptl.sbatch)
+ptlgrid=$(sbatch --array=0-$ARRAYNO --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 ptl.sbatch)
 ptlgrid="${ptlgrid##* }"
 
 ptlcomb=$(sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,NUMFILES=$4 --dependency=afterok:$ptlgrid --array=0-$COMBINE_ARRAY:20 ptl_combine.sbatch)

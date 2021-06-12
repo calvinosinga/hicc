@@ -12,7 +12,7 @@
 #SBATCH --error=./errors/nelson.dat
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/galaxy/nelson.py $SNAP $BOX 'mid'
+python3 /lustre/cosinga/hicc/galaxy/nelson.py $SNAP $BOX 'mid' $RES
 python3 /lustre/cosinga/hicc/galaxy/nelson.py $SNAP $BOX 'high'
 python3 /lustre/cosinga/hicc/galaxy/nelson.py $SNAP $BOX 'low'
 # really only want the main one in redshift space
