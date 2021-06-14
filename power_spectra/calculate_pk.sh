@@ -70,8 +70,8 @@ sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid --mem-p
 # hisubhalo-nelson xpk
 sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid:$hisubgrid --mem-per-cpu=$XPKMEM hisubhalo-nelsonxpk.sbatch
 
-# calculate pk for paco
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --mem-per-cpu=$PKMEM pacopk.sbatch
+# calculate pk for paco (need to change the memory)
+# sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --mem-per-cpu=$PKMEM pacopk.sbatch
 
 # paco-nelson xpk
 sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid --mem-per-cpu=$XPKMEM paco-nelsonxpk.sbatch

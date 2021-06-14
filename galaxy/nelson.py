@@ -17,7 +17,7 @@ import illustris_python as il
 SNAPSHOT = int(sys.argv[1])
 BOX = int(sys.argv[2])
 RUN = sys.argv[3] # low,mid,high to test sensitivity to color definition
-RES = sys.argv[4] # resolution of the grid
+RES = int(sys.argv[4]) # resolution of the grid
 AXIS = int(sys.argv[5])
 IN_RS_SPACE = AXIS == -1 # giving -1 means that we are not in redshift space
 
