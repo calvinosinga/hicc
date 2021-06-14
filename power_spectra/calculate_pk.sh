@@ -74,7 +74,7 @@ sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid:$hisubg
 # sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --mem-per-cpu=$PKMEM pacopk.sbatch
 
 # paco-nelson xpk
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid --mem-per-cpu=$XPKMEM paco-nelsonxpk.sbatch
+# sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid --mem-per-cpu=$XPKMEM paco-nelsonxpk.sbatch
 
 # submit hiptl jobs
 hiptlgrid=$(sbatch --array=0-$ARRAYNO --export=ALL,SNAP=$1,BOX=$2,AXIS=$3,RES=$5 --mem-per-cpu=$GRIDMEM hiptl.sbatch)
@@ -108,7 +108,7 @@ sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$galgrid:$hiptlc
 sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hiptlcomb:$ptlcomb --mem-per-cpu=$XPKMEM hiptl-ptlxpk.sbatch
 
 # paco-ptl xpk
-sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$ptlcomb --mem-per-cpu=$XPKMEM paco-ptlxpk.sbatch
+# sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$ptlcomb --mem-per-cpu=$XPKMEM paco-ptlxpk.sbatch
 
 # hisubhalo-ptl xpk
 sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$hisubgrid:$ptlcomb --mem-per-cpu=$XPKMEM hisubhalo-ptlxpk.sbatch

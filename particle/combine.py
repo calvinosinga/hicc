@@ -40,7 +40,6 @@ print('last file: ' + files[-1])
 ff = hp.File(BASE+files[0],'r')
 keylist = list(ff.keys()) # getting the keys from first file
 
-total_counts = None
 for k in keylist:
     total = np.zeros_like(ff[k][:], dtype=np.float32)
     for i in files:
@@ -50,20 +49,11 @@ for k in keylist:
         except IOError:
             print("did not find file %s"%i)
         else:
-            if "count" in k: # since the number of bins should stay flexible
-                print("adding up the bin counts")
-                if total_counts is None:
-                    total_counts = f[k][:]
-                    print("initializing the bin counts: current total is " +str(total_counts))
-                else:
-                    total_counts += f[k][:]
-                    print("new running total for bin counts is "+str(total_counts))
-            else:
-                total += f[k][:]
-                print('found file %s for %s, adding to grid'%(i,k))
-                print("new sum:" + str(np.sum(total)))
+
+            total += f[k][:]
+            print('found file %s for %s, adding to grid'%(i,k))
+            print("new sum:" + str(np.sum(total)))
             f.close()
-    if not "count" in k:
-        w.create_dataset(k, data=total, compression="gzip", compression_opts=9)
-w.create_dataset("bin_counts", data=total_counts)
+    w.create_dataset(k, data=total, compression="gzip", compression_opts=9)
+
 w.close()
