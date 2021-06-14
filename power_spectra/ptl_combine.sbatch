@@ -13,5 +13,5 @@
 . ~/.profile
 START=$SLURM_ARRAY_TASK_ID
 END=$(($SLURM_ARRAY_TASK_ID+20))
-python3 /lustre/cosinga/hicc/particle/combine.py ptl $START $END $SNAP $BOX $RES -1
-python3 /lustre/cosinga/hicc/particle/combine.py ptlrs $START $END $SNAP $BOX $RES 0
+python3 /lustre/cosinga/hicc/particle/combine.py ptl $START $END $SNAP $BOX 0
+python3 /lustre/cosinga/hicc/particle/combine.py ptlrs $START $END $SNAP $BOX 1
