@@ -85,7 +85,7 @@ create_field("blue", blue_idx)
 create_field("red", red_idx)
 
 # saving the counts
-cfile = open(SAVE+"subhalo_counts%d_%03d.txt"%(BOX,SNAPSHOT),'w')
+cfile = open(SAVE+"subhalo_counts%s%d_%03d.txt"%(RUN,BOX,SNAPSHOT),'w')
 for c in range(len(counts)):
     cfile.write("%s %d\n"%(counts_names[c], counts[c]))
 cfile.close()
