@@ -40,8 +40,9 @@ TNG = '/lustre/cosinga/tng%d'%BOX
 # getting author-defined constants
 MAS = 'CIC'
 
-# getting the dimensions of the grids
+# memory issues, create log file to write to
 
+log = open("/lustre/cosinga/hicc/pk/%s_log.txt"%FILE1,'w')
 
 # getting simulation defined constants
 head = il.groupcat.loadHeader(TNG, SNAPSHOT)
@@ -68,6 +69,8 @@ def to_overdensity(field):
 
 if IS_XPK:
     print("calculating the cross-power for %s, %s"%(FILE1, FILE2))
+
+    log.write("calculating the cross-power for %s, %s\n"%(FILE1, FILE2))
     # output file
     if DIM==0: # create both 1D and 2D
         w1 = hp.File(HOME+'pk/%s-%s%d_%03d.1Dxpk.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT),'w')
@@ -80,15 +83,18 @@ if IS_XPK:
     key1list = list(f1.keys())
     f2 = hp.File(HOME+FILE2+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
     key2list = list(f2.keys())
+    log.write('opened both files, size of each are %.3e and %.3e.\n starting calculations... \n'%(sys.getsizeof(f1),sys.getsizeof(f2)))
     for key1 in key1list:
         for key2 in key2list:
-
+            log.write("now calculating xpk for %s-%s...\n"%(key1,key2))
             # get the fields
             field1 = f1[key1][:]
+            log.write("committed the first field, size=%.3e\n"%sys.getsizeof(field1))
             field2 = f2[key2][:]
-
+            log.write("committed the second field, size=%.3e\n"%sys.getsizeof(field2))
             if SAME_FILE and key1 == key2:
                 print("skipping xpk calculation for %s, %s; just auto power"%(key1, key2))
+                log.write("skipping xpk calculation for %s, %s; just auto power\n"%(key1,key2))
             elif not (len(field1.shape) == 3 and len(field2.shape)==3):
                 print("skipping calculation for %s, %s; grid is not correct shape"%(key1, key2))
             else:
@@ -99,7 +105,7 @@ if IS_XPK:
                 field2=to_overdensity(field2)
                 # compute the xpk
                 res = XPk([field1,field2], BOXSIZE, axis=AXIS, MAS=[MAS, MAS])
-
+                print("just got the xpk result, size = %.3e\n"%sys.getsizeof(res))
                 # if this is the first calculation, save the wavenumbers
                 if key1 == key1list[0] and key2 == key2list[0]:
                     # if in 1D, just need 1 k, otherwise need kper and kpar
@@ -112,7 +118,8 @@ if IS_XPK:
                         w1.create_dataset("k",data=res.k3D)
                         w2.create_dataset("kper", data=res.kper)
                         w2.create_dataset("kpar", data=res.kpar)            
-                # save xpk result    
+                # save xpk result
+                log.write("now saving the xpk result...\n")
                 if DIM == 1:
                     w.create_dataset("%s-%s"%(key1, key2),data=res.XPk[:,0,0])
                 elif DIM == 2:

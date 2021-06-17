@@ -9,8 +9,8 @@
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
 #SBATCH --account=astronomy-hi
-#SBATCH --mem-per-cpu=80000
+#SBATCH --mem-per-cpu=27000
 #SBATCH --mail-type=ALL
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/particle/particle.py $SLURM_ARRAY_TASK_ID 99 100 0
+python3 /lustre/cosinga/hicc/particle/particle.py $SLURM_ARRAY_TASK_ID 99 100 1600 0
