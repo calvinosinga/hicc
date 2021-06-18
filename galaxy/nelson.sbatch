@@ -11,7 +11,7 @@
 #SBATCH --output=nelson.dat
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/galaxy/nelson.py 99 100 'mid' 1600 -1
+#python3 /lustre/cosinga/hicc/galaxy/nelson.py 99 100 'mid' 1600 -1
 python3 /lustre/cosinga/hicc/galaxy/nelson.py 99 100 'high' 1600 -1
 python3 /lustre/cosinga/hicc/galaxy/nelson.py 99 100 'low' 1600 -1
 
