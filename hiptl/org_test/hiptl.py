@@ -56,10 +56,10 @@ for m in models:
     # we iterate over the models first to save on memory - it means we have to loop
     # over the files several times but 16 GB per field x 4 models x 2 spaces gives more 
     # memory than one node has so we need to sacrifice run time
-    print('starting to calculate grid for %s'%m)
+    print('starting to calculate grids for %s'%m)
     total = np.zeros(GRID, dtype=np.float32)
     totalrs = np.zeros(GRID, dtype=np.float32)
-    for i in len(filenos):
+    for i in range(len(filenos)):
         # handle IOerrors when trying to open files (expected that some files 
         # will not exist in the last job)
         try:
