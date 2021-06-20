@@ -35,7 +35,7 @@ wrs = hp.File(OUTPATH+'hiptl%d_%03d.%d.%d.hdf5' %(BOX, SNAPSHOT, START, END), 'w
 filenos = np.arange(START, END)
 
 # files to access
-hih2files = ["%shih2_particles__%03d.%d.hdf5" %(HIPATH, SNAPSHOT, i) for i in filenos]
+hih2files = ["%shih2_particles_%03d.%d.hdf5" %(HIPATH, SNAPSHOT, i) for i in filenos]
 ptlfiles = [PTLPATH+"snap_%03d.%d.hdf5" %(SNAPSHOT, i) for i in filenos]
 
 # getting the needed simulation-defined constants
@@ -66,7 +66,7 @@ for m in models:
             hih2f = hp.File(hih2files[i],'r')
             ptlf = hp.File(ptlfiles[i],'r')
         except IOError:
-            print('did not find the file %s'%i)
+            print('did not find the file %s,%s'%(hih2files[i],ptlfiles[i]))
         else:
             # getting data
             mass = ptlf[p]['Masses'][:]*1e10/LITTLE_H # solar masses

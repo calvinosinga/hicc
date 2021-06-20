@@ -12,4 +12,4 @@
 
 . ~/.profile
 python3 /lustre/cosinga/hicc/pk/pk.py cross 99 100 1 0 nelson_mid hiptl 0
-python3 /lustre/cosinga/hicc/pk/pk.py cross 99 100 0 0 nelsonrs_mid hiptl 0
+python3 /lustre/cosinga/hicc/pk/pk.py cross 99 100 0 0 nelsonrs_mid hiptlrs 0

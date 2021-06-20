@@ -20,15 +20,12 @@ RUN = sys.argv[3] # low,mid,high to test sensitivity to color definition
 RES = int(sys.argv[4]) # resolution of the grid
 AXIS = int(sys.argv[5])
 IN_RS_SPACE = AXIS == -1 # giving -1 means that we are not in redshift space
-
+GRID = (RES,RES,RES)
 
 # defining needed paths
 HOME = '/lustre/cosinga/tng%d/'%BOX
 SAVE = '/lustre/cosinga/final_fields/'
 
-# assigning author-defined constants (not expected to change)
-GRID = (RES,RES,RES)
-MAS = 'CIC'
 
 # getting simulation defined constants
 head = il.groupcat.loadHeader(HOME,SNAPSHOT)

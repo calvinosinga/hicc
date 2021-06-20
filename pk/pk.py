@@ -41,7 +41,6 @@ TNG = '/lustre/cosinga/tng%d'%BOX
 MAS = 'CIC'
 
 # memory issues, create log file to write to
-
 log = open("/lustre/cosinga/hicc/pk/%s_log.txt"%FILE1,'w')
 
 # getting simulation defined constants
