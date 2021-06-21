@@ -40,8 +40,11 @@ print('last file: ' + files[-1])
 ff = hp.File(BASE+files[0],'r')
 keylist = list(ff.keys()) # getting the keys from first file
 
+# currently having some memory issues, outputting some logs into a new file
+memlog = open("/lustre/cosinga/hicc/particle/logs/combine_memlog.txt", 'w')
 for k in keylist:
     total = np.zeros_like(ff[k][:], dtype=np.float32)
+    memlog.write("current size of the total field is %.3e\n"%sys.getsizeof(total))
     for i in files:
         try:
             f = hp.File(BASE+i,'r')
@@ -49,7 +52,7 @@ for k in keylist:
         except IOError:
             print("did not find file %s"%i)
         else:
-
+            memlog.write("the size of the field to be added is %.3e"%sys.getsizeof(f[k][:]))
             total += f[k][:]
             print('found file %s for %s, adding to grid'%(i,k))
             print("new sum:" + str(np.sum(total)))

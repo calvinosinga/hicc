@@ -19,7 +19,7 @@ SNAPSHOT = int(sys.argv[2])
 BOX = int(sys.argv[3])
 RES = int(sys.argv[4]) # resolution of the grid
 AXIS = int(sys.argv[5]) # if -1, not in redshift space
-IN_RS_SPACE = not (AXIS == -1)
+GRID = (RES,RES,RES)
 
 # defining needed paths
 HIPATH = '/lustre/diemer/illustris/hih2/'  # where the hiptl files are saved
@@ -31,13 +31,10 @@ hih2file = hp.File(HIPATH+"hih2_particles_%03d.%d.hdf5" %(SNAPSHOT, CHUNK), 'r')
 ptlfile = hp.File(PTLPATH+"snap_%03d.%d.hdf5" %(SNAPSHOT, CHUNK), 'r')
 
 # output files
-if IN_RS_SPACE:
-    w = hp.File(OUTPATH+'hiptlrs%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
-else:
-    w = hp.File(OUTPATH+'hiptl%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
+wrs = hp.File(OUTPATH+'hiptlrs%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
+w = hp.File(OUTPATH+'hiptl%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
 
 # getting author-defined constants (these COULD change but are not expected to)
-GRID = (RES,RES,RES)
 models = get_hiptl_models()
 
 # getting the needed simulation-defined constants
@@ -56,9 +53,8 @@ f_neut_h = hih2file['PartType0']['f_neutral_H'][:]
 for m in models:
     print('starting to calculate grid for %s'%m)
     field = np.zeros(GRID, dtype=np.float32)
-    # shifting the positions to redshift space
-    if IN_RS_SPACE:
-        pos = pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
+    # shifting the positions to redshift space   
+    rspos = pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
 
     # getting the HI mass data
     h2_frac = hih2file['PartType0']['f_mol_'+m][:]
@@ -73,5 +69,10 @@ for m in models:
     # assigning them into the field using the Mass Assignment Scheme given
     CICW(pos,field,BOXSIZE,masshi)
     w.create_dataset(m, data=field, compression="gzip", compression_opts=9)
+
+    # now doing the same for redshift space
+    field = np.zeros(GRID, dtype=np.float32)
+    CICW(rspos, field, BOXSIZE, masshi)
+    wrs.create_dataset(m, data=field, compression="gzip", compression_opts=9)
 
 w.close()

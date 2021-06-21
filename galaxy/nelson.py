@@ -9,7 +9,7 @@ import h5py as hp
 import sys
 # import MAS_library as masl
 from library_hicc.mas import CICW
-import redshift_space_library as rsl
+from library_hicc.redshift_space import pos_redshift_space
 import library_hicc.color as lhicc
 import illustris_python as il
 
@@ -19,7 +19,6 @@ BOX = int(sys.argv[2])
 RUN = sys.argv[3] # low,mid,high to test sensitivity to color definition
 RES = int(sys.argv[4]) # resolution of the grid
 AXIS = int(sys.argv[5])
-IN_RS_SPACE = AXIS == -1 # giving -1 means that we are not in redshift space
 GRID = (RES,RES,RES)
 
 # defining needed paths
@@ -42,17 +41,17 @@ total_mass = np.sum(mass, axis=1)
 gr = sub[flds[1]][:,4] - sub[flds[1]][:,5]
 pos = sub[flds[0]][:]/1e3 * SCALE # Mpc/h, 52 MB
 vel = sub[flds[3]][:] # km/s, 52 MB
+rspos = pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
 del sub, flds
 
 # if we are working in redshift-space, shift the positions using the velocities
 # then create the output file, so the names are different
-if IN_RS_SPACE:
-    rsl.pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
-    w = hp.File('%snelsonrs_%s%d_%03d.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT), 'w')
-else:
-    w = hp.File('%snelson_%s%d_%03d.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT), 'w')
-del vel
 
+wrs = hp.File('%snelsonrs_%s%d_%03d.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT), 'w')
+w = hp.File('%snelson_%s%d_%03d.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT), 'w')
+
+print("writing to the redshift file %snelsonrs_%s%d_%03d.final.hdf5"%(SAVE,RUN,BOX,SNAPSHOT))
+print("writing to the real space file %snelson_%s%d_%03d.final.hdf5"%(SAVE,RUN,BOX,SNAPSHOT))
 counts = []
 counts_names = []
 def create_field(fieldname, idx):
@@ -63,7 +62,11 @@ def create_field(fieldname, idx):
     print("creating field for %s"%fieldname)
     field = np.zeros(GRID, dtype=np.float32)
     CICW(pos[idx], field, BOXSIZE, total_mass[idx])
+    
     w.create_dataset(fieldname, data=field, compression="gzip", compression_opts=9)
+    field = np.zeros(GRID, dtype=np.float32)
+    CICW(rspos[idx], field, BOXSIZE, total_mass[idx])
+    wrs.create_dataset(fieldname, data=field)
     counts.append(np.sum(idx))
     counts_names.append(fieldname)
     return
