@@ -41,7 +41,10 @@ TNG = '/lustre/cosinga/tng%d'%BOX
 MAS = 'CIC'
 
 # memory issues, create log file to write to
-log = open("/lustre/cosinga/hicc/pk/%spk_log.log"%FILE1,'w')
+if IS_XPK:
+    log = open("/lustre/cosinga/hicc/pk/%s-%spk_log.log"%(FILE1,FILE2),'w')
+else:
+    log = open("/lustre/cosinga/hicc/pk/%spk_log.log"%(FILE1),'w')
 
 # getting simulation defined constants
 head = il.groupcat.loadHeader(TNG, SNAPSHOT)
