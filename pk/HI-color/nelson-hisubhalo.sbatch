@@ -11,5 +11,5 @@
 #SBATCH --mail-user=cosinga@umd.edu
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/power_spectrum/pk.py cross 99 100 1 0 nelson_mid hisubhalo
-python3 /lustre/cosinga/hicc/power_spectrum/pk.py cross 99 100 1 0 nelsonrs_mid hisubhalors
+python3 /lustre/cosinga/hicc/pk/pk.py cross 99 100 1 0 nelson_mid hisubhalo 0
+python3 /lustre/cosinga/hicc/pk/pk.py cross 99 100 1 0 nelsonrs_mid hisubhalors 0
