@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #SBATCH --share
-#SBATCH --mem-per-cpu=60000
+#SBATCH --mem-per-cpu=100000
 #SBATCH --job-name=nelson-nelson_xpk
-#SBATCH --time=2-10:00:00
+#SBATCH --time=1-10:00:00
 #SBATCH --ntasks=1
 #SBATCH --account=astronomy-hi
 #SBATCH --mail-type=ALL
