@@ -10,8 +10,7 @@ CHUNK = int(sys.argv[1])
 SNAPSHOT = int(sys.argv[2])
 BOX = int(sys.argv[3])
 RES = int(sys.argv[4]) # resolution of the grid
-AXIS = int(sys.argv[5]) # if -1, not in redshift space
-IN_RS_SPACE = not (AXIS == -1)
+AXIS = int(sys.argv[5])
 
 # defining needed paths
 PTLPATH = '/lustre/cosinga/tng%d/snapdir_%03d/'%(BOX, SNAPSHOT) # where the ptl files are saved
@@ -23,10 +22,8 @@ ptlfile = hp.File(PTLPATH+"snap_%03d.%d.hdf5" %(SNAPSHOT, CHUNK), 'r')
 hih2file = hp.File(HIPATH+"hih2_particles_%03d.%d.hdf5" %(SNAPSHOT, CHUNK), 'r')
 
 # output files
-if IN_RS_SPACE:
-    w = hp.File(OUTPATH+'nHrs%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
-else:
-    w = hp.File(OUTPATH+'nH%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
+wrs = hp.File(OUTPATH+'nHrs%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
+w = hp.File(OUTPATH+'nH%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
 
 # getting author-defined constants (these COULD change but are not expected to)
 GRID = (RES,RES,RES)
@@ -87,10 +84,15 @@ for m in models:
             massmask = mass[mask] * f_neut_h[mask]
         else:
             massmask = mass[mask] * f_neut_h[mask] * (1-molfrac[mask])
-        if IN_RS_SPACE:
-            velmask = vel[mask,:]
-            posmask = pos_redshift_space(posmask, velmask, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
+        
+        
         CICW(posmask,field,BOXSIZE,massmask)
         w.create_dataset("%s_<%.3e"%(m,dendec[d]), data=field, compression="gzip", compression_opts=9)
+        field = np.zeros(GRID, dtype=np.float32)
+        velmask = vel[:,mask]
+        posmask = pos_redshift_space(posmask, velmask, BOXSIZE, LITTLE_H*100, REDSHIFT, AXIS)
+        CICW(posmask,field,BOXSIZE,massmask)
+        wrs.create_dataset("%s_<%.3e"%(m,dendec[d]), data=field, compression="gzip", compression_opts=9)
 w.create_dataset("bin_counts",data=counts)
+wrs.create_dataset("bin_counts", data=counts)
 w.close()

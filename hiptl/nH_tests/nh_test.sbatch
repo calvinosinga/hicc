@@ -12,4 +12,4 @@
 #SBATCH --mail-type=ALL
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/hiptl/nH_tests/nH_bins.py 125 99 100 1600 -1
+python3 /lustre/cosinga/hicc/hiptl/nH_tests/nH_bins.py 125 99 100 1024 0

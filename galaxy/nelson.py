@@ -34,6 +34,7 @@ REDSHIFT = head['Redshift']
 SCALE = head['Time'] # scale factor
 
 # input data
+print("starting subhalo grid generation")
 flds = ['SubhaloPos', 'SubhaloStellarPhotometrics', 'SubhaloMassType', 'SubhaloVel']
 sub = il.groupcat.loadSubhalos(HOME,SNAPSHOT, fields=flds)
 mass = sub[flds[2]][:]*1e10/LITTLE_H # solar masses
@@ -41,6 +42,7 @@ total_mass = np.sum(mass, axis=1)
 gr = sub[flds[1]][:,4] - sub[flds[1]][:,5]
 pos = sub[flds[0]][:]/1e3 * SCALE # Mpc/h, 52 MB
 vel = sub[flds[3]][:] # km/s, 52 MB
+print("now shifting the positions to redshift space...")
 rspos = pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
 del sub, flds
 
@@ -59,16 +61,29 @@ def create_field(fieldname, idx):
     Creates a field using the only the indices provided, saved to 
     the output file w using the fieldname as the key.
     """
-    print("creating field for %s"%fieldname)
+    def print_mem(name, obj):
+        mem = sys.getsizeof(obj)
+        mem = mem/1e6
+        print("\t %s is %.3eMB"%(name, mem))
+        return
+    print("creating fields for %s"%fieldname)
+    print("\t now creating real-space field")
     field = np.zeros(GRID, dtype=np.float32)
-    CICW(pos[idx], field, BOXSIZE, total_mass[idx])
     
+    CICW(pos[idx], field, BOXSIZE, total_mass[idx])
+    print("\t now assigning the masses to the grid")
+    print("\t average mass of each subhalo: %d"%np.mean(total_mass[idx]))
+    print_mem("mass", total_mass[idx])
+    print_mem("field", field)
+    print_mem("position", pos[idx])
     w.create_dataset(fieldname, data=field, compression="gzip", compression_opts=9)
     field = np.zeros(GRID, dtype=np.float32)
-    CICW(rspos[idx], field, BOXSIZE, total_mass[idx])
+    print("\t now assigning the masses to the grid")
+    CICW(rspos[idx], field, BOXSIZE, total_mass[idx]) #rspos is adjusted outside of this method
     wrs.create_dataset(fieldname, data=field)
     counts.append(np.sum(idx))
     counts_names.append(fieldname)
+    print("\t there are %d subhalos in this group"%np.sum(idx))
     return
 
 resolved_idx = lhicc.is_resolved_stmass(mass[:,4])
