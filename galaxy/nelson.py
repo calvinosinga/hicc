@@ -29,9 +29,10 @@ SAVE = '/lustre/cosinga/final_fields/'
 # getting simulation defined constants
 head = il.groupcat.loadHeader(HOME,SNAPSHOT)
 LITTLE_H = head['HubbleParam'] # 100 km/s/Mpc
-BOXSIZE = head['BoxSize']/1e3 #Mpc/h
-REDSHIFT = head['Redshift']
 SCALE = head['Time'] # scale factor
+BOXSIZE = head['BoxSize']/1e3 * SCALE #Mpc/h
+REDSHIFT = head['Redshift']
+
 
 # input data
 print("starting subhalo grid generation")

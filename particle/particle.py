@@ -39,9 +39,10 @@ GRID = (RES,RES,RES)
 # getting the needed simulation-defined constants
 head = dict(ptlfile['Header'].attrs)
 LITTLE_H = head['HubbleParam'] # 100 km/s/Mpc
-BOXSIZE = head['BoxSize']/1e3 #Mpc/h
+SCALE = head['Time'] # scale factor
+BOXSIZE = head['BoxSize']/1e3 * SCALE #Mpc/h
 REDSHIFT = head['Redshift']
-SCALE_FACTOR = head['Time']
+
 DMPTL = head['MassTable'][1] *1e10/LITTLE_H # solar masses
 ptltype = [0,1,4,5]
 ptltype = ['PartType'+str(i) for i in ptltype]
@@ -55,8 +56,8 @@ for p in ptltype:
         mass = np.ones(nptl[1]) * DMPTL
     else:
         mass = ptlfile[p]['Masses'][:]*1e10/LITTLE_H # solar masses
-    pos = ptlfile[p]['Coordinates'][:]/1e3 * SCALE_FACTOR # Mpc/h
-    vel = ptlfile[p]['Velocities'][:] * np.sqrt(SCALE_FACTOR) # km/s
+    pos = ptlfile[p]['Coordinates'][:]/1e3 * SCALE # Mpc/h
+    vel = ptlfile[p]['Velocities'][:] * np.sqrt(SCALE) # km/s
 
     # shifting the positions to redshift space
     if IN_RS_SPACE:

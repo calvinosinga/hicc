@@ -39,15 +39,17 @@ models = get_hiptl_models()
 
 # getting the needed simulation-defined constants
 head = dict(ptlfile['Header'].attrs)
+SCALE = head['Time'] # scale factor
+BOXSIZE = head['BoxSize']/1e3 * SCALE #Mpc/h
 LITTLE_H = head['HubbleParam'] # 100 km/s/Mpc
-BOXSIZE = head['BoxSize']/1e3 #Mpc/h
+
 REDSHIFT = head['Redshift']
-SCALE_FACTOR = head['Time']
+
 
 # getting data
 mass = ptlfile['PartType0']['Masses'][:]*1e10/LITTLE_H # solar masses
-pos = ptlfile['PartType0']['Coordinates'][:]/1e3 * SCALE_FACTOR # Mpc/h
-vel = ptlfile['PartType0']['Velocities'][:] * np.sqrt(SCALE_FACTOR) # km/s
+pos = ptlfile['PartType0']['Coordinates'][:]/1e3 * SCALE # Mpc/h
+vel = ptlfile['PartType0']['Velocities'][:] * np.sqrt(SCALE) # km/s
 f_neut_h = hih2file['PartType0']['f_neutral_H'][:]
 
 for m in models:

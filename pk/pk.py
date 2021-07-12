@@ -23,7 +23,6 @@ AXIS = int(sys.argv[5])
 FILE1 = sys.argv[6]
 if AUTO_OR_XPK == "cross":
     FILE2 = sys.argv[7]
-    SMALL_GRID = int(sys.argv[8])
     IS_XPK = True
     SAME_FILE = FILE1 == FILE2
 elif AUTO_OR_XPK == "auto":
@@ -48,7 +47,8 @@ else:
 
 # getting simulation defined constants
 head = il.groupcat.loadHeader(TNG, SNAPSHOT)
-BOXSIZE = head['BoxSize']/1e3 # Mpc/h
+SCALE = head['Time'] # scale factor
+BOXSIZE = head['BoxSize']/1e3 * SCALE #Mpc/h - convert from comoving using a
 del head
 print("The boxsize is %.3f"%BOXSIZE)
 print("got simulation-defined constants")
@@ -97,7 +97,7 @@ if IS_XPK:
             if SAME_FILE and key1 == key2:
                 print("skipping xpk calculation for %s, %s; just auto power"%(key1, key2))
                 log.write("skipping xpk calculation for %s, %s; just auto power\n"%(key1,key2))
-            elif not (len(field1.shape) == 3 and len(field2.shape)==3):
+            elif not (len(field1.shape) == 3 or len(field2.shape)==3):
                 print("skipping calculation for %s, %s; grid is not correct shape"%(key1, key2))
             else:
                 print("starting xpk calculation for %s, %s"%(key1, key2))
