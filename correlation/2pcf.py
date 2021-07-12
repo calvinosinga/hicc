@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from pk.pk import FILE2, SAME_FILE
 import sys
 import numpy as np
 import h5py as hp
