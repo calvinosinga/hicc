@@ -79,6 +79,7 @@ def create_field(fieldname, idx):
     print_mem("position", pos[idx])
     w.create_dataset(fieldname, data=field, compression="gzip", compression_opts=9)
     field = np.zeros(GRID, dtype=np.float32)
+    print("\t now creating redshift-space field")
     print("\t now assigning the masses to the grid")
     CICW(rspos[idx], field, BOXSIZE, total_mass[idx]) #rspos is adjusted outside of this method
     wrs.create_dataset(fieldname, data=field)
@@ -100,9 +101,12 @@ create_field("unresolved", np.invert(resolved_idx))
 create_field("blue", blue_idx)
 create_field("red", red_idx)
 
+print("now saving the counts")
 # saving the counts
 cfile = open(SAVE+"subhalo_counts%s%d_%03d.txt"%(RUN,BOX,SNAPSHOT),'w')
 for c in range(len(counts)):
     cfile.write("%s %d\n"%(counts_names[c], counts[c]))
+
+print("now closing the files")
 cfile.close()
 w.close()
