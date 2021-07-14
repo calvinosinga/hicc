@@ -25,6 +25,7 @@ if AUTO_OR_XPK == "cross":
     FILE2 = sys.argv[7]
     IS_XPK = True
     SAME_FILE = FILE1 == FILE2
+    SMALL_GRID = 0
 elif AUTO_OR_XPK == "auto":
     IS_XPK = False
     SMALL_GRID = 0
