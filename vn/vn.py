@@ -22,7 +22,7 @@ GRID = (RES,RES,RES)
 # defining needed paths
 PTLPATH = '/lustre/cosinga/tng%d/snapdir_%03d/'%(BOX, SNAPSHOT) # where the ptl files are saved
 OUTPATH = '/lustre/cosinga/hiptl_output/' # where to save the output
-TREECOOL = '/lustre/cosinga/fg20_treecool/fg20_spec_lambda.dat'
+TREECOOL = '/lustre/cosinga/fg20_treecool/TREECOOL_fg_dec11'
 
 # get input file
 ptlfile = hp.File(PTLPATH+"snap_%03d.%d.hdf5" %(SNAPSHOT, CHUNK), 'r')
@@ -33,10 +33,11 @@ wrs = hp.File(OUTPATH+"v-n_trialrs%d_%03d.%d.hdf5"%(BOX, SNAPSHOT, CHUNK))
 
 # getting the needed simulation-defined constants
 head = dict(ptlfile['Header'].attrs)
-LITTLE_H = head['HubbleParam'] # 100 km/s/Mpc
-BOXSIZE = head['BoxSize']/1e3 #Mpc/h
-REDSHIFT = head['Redshift']
 SCALE_FACTOR = head['Time']
+LITTLE_H = head['HubbleParam'] # 100 km/s/Mpc
+BOXSIZE = head['BoxSize']/1e3 * SCALE_FACTOR #Mpc/h
+REDSHIFT = head['Redshift']
+
 
 # creating HI using Paco's function
 pos, MHI = vnhi(PTLPATH+"snap_%03d.%d.hdf5"%(SNAPSHOT, CHUNK),TREECOOL)
