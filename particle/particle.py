@@ -4,11 +4,12 @@ This file takes each of the 448 subfiles for the particle subfiles and creates a
 grid for them.
 """
 # import statements
+from functools import wraps
 import numpy as np
 import h5py as hp
 import sys
 from library_hicc.mas import CICW
-#import redshift_space_library as rsl
+from library_hicc.printer import Printer
 from library_hicc.redshift_space import pos_redshift_space
 
 # reading command line inputs
@@ -17,26 +18,26 @@ SNAPSHOT = int(sys.argv[2])
 BOX = int(sys.argv[3])
 RES = int(sys.argv[4]) # resolution of the grid
 AXIS = int(sys.argv[5]) # if -1, not in redshift space
-IN_RS_SPACE = not (AXIS == -1)
 
 # defining needed paths
 PTLPATH = '/lustre/cosinga/tng%d/snapdir_%03d/'%(BOX, SNAPSHOT) # where the ptl files are saved
 OUTPATH = '/lustre/cosinga/hiptl_output/' # where to save the output
 HIPATH = '/lustre/diemer/illustris/hih2/'  # where the hiptl files are saved
+LOG = '/lustre/cosinga/hicc/logs/'
 
 # input files
 ptlfile = hp.File(PTLPATH+"snap_%03d.%d.hdf5" %(SNAPSHOT, CHUNK), 'r')
 
 # output files
-if IN_RS_SPACE:
-    w = hp.File(OUTPATH+'ptlrs%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
-else:
-    w = hp.File(OUTPATH+'ptl%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
+wrs = hp.File(OUTPATH+'ptlrs%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
+w = hp.File(OUTPATH+'ptl%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK), 'w')
+pnt = Printer(LOG+'ptl%d_%03d.%d.log' %(BOX, SNAPSHOT, CHUNK))
 
 # getting author-defined constants (these COULD change but are not expected to)
 GRID = (RES,RES,RES)
 
 # getting the needed simulation-defined constants
+pnt.write("loading sim info...")
 head = dict(ptlfile['Header'].attrs)
 LITTLE_H = head['HubbleParam'] # 100 km/s/Mpc
 SCALE = head['Time'] # scale factor
@@ -50,23 +51,44 @@ nptl = head['NumPart_ThisFile']
 
 
 # getting data
+pnt.write('creating grid...')
 field = np.zeros(GRID, dtype=np.float32)
+
+pnt.write('starting loop for real-space...')
 for p in ptltype:
+    pnt.writeTab("getting data for %s"%p)
+    if '1' in p:
+        mass = np.ones(nptl[1]) * DMPTL
+    else:
+        mass = ptlfile[p]['Masses'][:]*1e10/LITTLE_H # solar masses
+    pos = ptlfile[p]['Coordinates'][:]/1e3 * SCALE # Mpc/h
+
+    # assigning them into the field using the Mass Assignment Scheme given
+    pnt.writeTab("assigning to real-space grid...")
+    CICW(pos,field,BOXSIZE,mass)
+
+pnt.write("saving real-space grid...")
+w.create_dataset("particles", data=field, compression="gzip", compression_opts=9)
+w.close()
+
+pnt.write('creating new grid for redshift space...')
+field = np.zeros(GRID, dtype=np.float32)
+
+pnt.write('starting loop for redshift-space...')
+for p in ptltype:
+    pnt.writeTab("getting data for %s"%p)
     if '1' in p:
         mass = np.ones(nptl[1]) * DMPTL
     else:
         mass = ptlfile[p]['Masses'][:]*1e10/LITTLE_H # solar masses
     pos = ptlfile[p]['Coordinates'][:]/1e3 * SCALE # Mpc/h
     vel = ptlfile[p]['Velocities'][:] * np.sqrt(SCALE) # km/s
-
-    # shifting the positions to redshift space
-    if IN_RS_SPACE:
-        pos = pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
-
+    pnt.writeTab("moving positions to redshift space...")
+    pos = pos_redshift_space(pos, vel, BOXSIZE, LITTLE_H*100, REDSHIFT, AXIS)
     # assigning them into the field using the Mass Assignment Scheme given
+    pnt.writeTab("assigning to redshift-space grid...")
     CICW(pos,field,BOXSIZE,mass)
 
-w.create_dataset("particles", data=field, compression="gzip", compression_opts=9)
-
-
-w.close()
+pnt.write("saving redshift-space grid...")
+wrs.create_dataset("particles", data=field, compression="gzip", compression_opts=9)
+wrs.close()
