@@ -12,6 +12,7 @@ from library_hicc.mas import CICW
 from library_hicc.redshift_space import pos_redshift_space
 import library_hicc.color as lhicc
 import illustris_python as il
+from library_hicc.printer import Printer
 
 # reading command line inputs
 SNAPSHOT = int(sys.argv[1])
@@ -24,7 +25,7 @@ GRID = (RES,RES,RES)
 # defining needed paths
 HOME = '/lustre/cosinga/tng%d/'%BOX
 SAVE = '/lustre/cosinga/final_fields/'
-
+LOG = '/lustre/cosinga/hicc/logs/'
 
 # getting simulation defined constants
 head = il.groupcat.loadHeader(HOME,SNAPSHOT)
@@ -33,9 +34,12 @@ SCALE = head['Time'] # scale factor
 BOXSIZE = head['BoxSize']/1e3 * SCALE #Mpc/h
 REDSHIFT = head['Redshift']
 
-
+# output files
+wrs = hp.File('%snelsonrs_%s%d_%03d.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT), 'w')
+w = hp.File('%snelson_%s%d_%03d.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT), 'w')
+pnt = Printer(LOG+'nelson_%s%d_%03d.log'%(RUN,BOX,SNAPSHOT))
 # input data
-print("starting subhalo grid generation")
+pnt.write("starting subhalo grid generation")
 flds = ['SubhaloPos', 'SubhaloStellarPhotometrics', 'SubhaloMassType', 'SubhaloVel']
 sub = il.groupcat.loadSubhalos(HOME,SNAPSHOT, fields=flds)
 mass = sub[flds[2]][:]*1e10/LITTLE_H # solar masses
@@ -43,18 +47,14 @@ total_mass = np.sum(mass, axis=1)
 gr = sub[flds[1]][:,4] - sub[flds[1]][:,5]
 pos = sub[flds[0]][:]/1e3 * SCALE # Mpc/h, 52 MB
 vel = sub[flds[3]][:] # km/s, 52 MB
-print("now shifting the positions to redshift space...")
+pnt.write("now shifting the positions to redshift space...")
 rspos = pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
 del sub, flds
 
-# if we are working in redshift-space, shift the positions using the velocities
-# then create the output file, so the names are different
 
-wrs = hp.File('%snelsonrs_%s%d_%03d.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT), 'w')
-w = hp.File('%snelson_%s%d_%03d.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT), 'w')
 
-print("writing to the redshift file %snelsonrs_%s%d_%03d.final.hdf5"%(SAVE,RUN,BOX,SNAPSHOT))
-print("writing to the real space file %snelson_%s%d_%03d.final.hdf5"%(SAVE,RUN,BOX,SNAPSHOT))
+pnt.write("writing to the redshift file %snelsonrs_%s%d_%03d.final.hdf5"%(SAVE,RUN,BOX,SNAPSHOT))
+pnt.write("writing to the real space file %snelson_%s%d_%03d.final.hdf5"%(SAVE,RUN,BOX,SNAPSHOT))
 counts = []
 counts_names = []
 def create_field(fieldname, idx):
@@ -65,27 +65,27 @@ def create_field(fieldname, idx):
     def print_mem(name, obj):
         mem = sys.getsizeof(obj)
         mem = mem/1e6
-        print("\t %s is %.3eMB"%(name, mem))
+        pnt.write("\t %s is %.3eMB"%(name, mem))
         return
-    print("creating fields for %s"%fieldname)
-    print("\t now creating real-space field")
+    pnt.write("creating fields for %s"%fieldname)
+    pnt.write("\t now creating real-space field")
     field = np.zeros(GRID, dtype=np.float32)
     
     CICW(pos[idx], field, BOXSIZE, total_mass[idx])
-    print("\t now assigning the masses to the grid")
-    print("\t average mass of each subhalo: %d"%np.mean(total_mass[idx]))
+    pnt.write("\t now assigning the masses to the grid")
+    pnt.write("\t average mass of each subhalo: %d"%np.mean(total_mass[idx]))
     print_mem("mass", total_mass[idx])
     print_mem("field", field)
     print_mem("position", pos[idx])
     w.create_dataset(fieldname, data=field, compression="gzip", compression_opts=9)
     field = np.zeros(GRID, dtype=np.float32)
-    print("\t now creating redshift-space field")
-    print("\t now assigning the masses to the grid")
+    pnt.write("\t now creating redshift-space field")
+    pnt.write("\t now assigning the masses to the grid")
     CICW(rspos[idx], field, BOXSIZE, total_mass[idx]) #rspos is adjusted outside of this method
     wrs.create_dataset(fieldname, data=field)
     counts.append(np.sum(idx))
     counts_names.append(fieldname)
-    print("\t there are %d subhalos in this group"%np.sum(idx))
+    pnt.write("\t there are %d subhalos in this group"%np.sum(idx))
     return
 
 resolved_idx = lhicc.is_resolved_stmass(mass[:,4])
@@ -101,12 +101,12 @@ create_field("unresolved", np.invert(resolved_idx))
 create_field("blue", blue_idx)
 create_field("red", red_idx)
 
-print("now saving the counts")
+pnt.write("now saving the counts")
 # saving the counts
 cfile = open(SAVE+"subhalo_counts%s%d_%03d.txt"%(RUN,BOX,SNAPSHOT),'w')
 for c in range(len(counts)):
     cfile.write("%s %d\n"%(counts_names[c], counts[c]))
 
-print("now closing the files")
+pnt.write("now closing the files")
 cfile.close()
 w.close()
