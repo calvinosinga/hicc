@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#/usr/bin/env python3
 """
 Calculates the power spectrum of the fields given by a text file.
 The name of the text file is given as command-line input, .
@@ -60,8 +60,7 @@ def to_overdensity(field):
     pnt.writeTab('calculating overdensity field...')
     field = field/BOXSIZE**3
     field = field/np.mean(field).astype(np.float32)
-    field = field - 1
-    
+    field = field - 1    
     return field
     
 
@@ -197,7 +196,7 @@ else:# auto power spectrum
                 w2.create_dataset(k,data=res.Pk2D[:])
             
             pnt.writeTab("plotting 1D pk result...")
-            lpt.plot1Dpk(res.k3D, res.Pk[:,0], grid.shape[0], BOXSIZE, '1Dpk/%s%d_%03d'%(FILE1,BOX,SNAPSHOT))
+            lpt.plot1Dpk(res.k3D, res.Pk[:,0], field1.shape[0], BOXSIZE, '1Dpk/%s%d_%03d'%(FILE1,BOX,SNAPSHOT))
             pnt.writeTab("plotting 2D pk result...")
             lpt.plot2Dpk(res.kpar, res.kper, res.Pk2D[:], '2Dpk/%s%d_%03d'%(FILE1,BOX,SNAPSHOT))
             

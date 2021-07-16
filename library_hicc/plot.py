@@ -50,8 +50,7 @@ def plotslc(grid, boxsize, plotname):
     mid = int(dim/2)
     slc = np.log10(np.sum(grid[:, mid-slcidx:mid+slcidx, :], axis=1))
     slc /= slcidx*2
-    levs = [6,7,8,9,10,11,12,13,14]
-    plt.imshow(slc, levels=levs, origin='lower')
+    plt.imshow(slc, origin='lower')
     plt.savefig(PATH+plotname+'.png')
     plt.colorbar()
     return
