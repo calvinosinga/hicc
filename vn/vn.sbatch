@@ -10,5 +10,6 @@
 #SBATCH --account=astronomy-hi
 #SBATCH --mem-per-cpu=5000
 #SBATCH --mail-type=ALL
+#SBATCH --requeue
 
 python3 /lustre/cosinga/hicc/vn/vn.py $SLURM_ARRAY_TASK_ID 99 100 800 0

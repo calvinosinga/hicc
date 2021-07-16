@@ -2,13 +2,13 @@
 # this file combines the hiptl chunk files' into the final field
 
 #SBATCH --share
-#SBATCH --job-name=rshiptl_final
-#SBATCH --output=logs/rshiptl_final.log
+#SBATCH --job-name=hiptlrs_final
+#SBATCH --output=logs/hiptlrs_final.log
 #SBATCH --time=10:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
 #SBATCH --account=astronomy-hi
-#SBATCH --mem-per-cpu=50000
+#SBATCH --mem-per-cpu=10000
 #SBATCH --mail-type=ALL
 
 . ~/.profile

@@ -7,7 +7,7 @@
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
 #SBATCH --account=astronomy-hi
-#SBATCH --mem-per-cpu=50000
+#SBATCH --mem-per-cpu=10000
 #SBATCH --mail-type=ALL
 
 . ~/.profile

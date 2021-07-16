@@ -11,6 +11,7 @@
 #SBATCH --account=astronomy-hi
 #SBATCH --mem-per-cpu=5000
 #SBATCH --mail-type=ALL
+#SBATCH --requeue
 
 . ~/.profile
 python3 /lustre/cosinga/hicc/hiptl/hiptl.py $SLURM_ARRAY_TASK_ID 99 100 800 0
