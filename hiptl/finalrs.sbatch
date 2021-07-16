@@ -10,6 +10,7 @@
 #SBATCH --account=astronomy-hi
 #SBATCH --mem-per-cpu=10000
 #SBATCH --mail-type=ALL
+#SBATCH --requeue
 
 . ~/.profile
 python3 /lustre/cosinga/hicc/hiptl/combine.py hiptlrs 0 448 99 100 1
