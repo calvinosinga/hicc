@@ -12,7 +12,6 @@ This is meant to create and store plots of the pks and slices of their fields to
 PATH = '/lustre/cosinga/final_fields/plots/'
 def plot1Dpk(k, pk, res, boxsize, plotname):
     
-    keylist = list(pk.keys())
     # the nyquist frequency is N*pi/L
     nyq = res*np.pi/boxsize
     maxy = np.max(pk)

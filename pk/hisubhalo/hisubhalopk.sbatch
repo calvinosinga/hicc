@@ -12,4 +12,4 @@
 
 . ~/.profile
 python3 /lustre/cosinga/hicc/pk/pk.py auto 99 100 1 0 hisubhalo
-#python3 /lustre/cosinga/hicc/power_spectrum/pk.py auto 67 100 1 0 hisubhalo
+python3 /lustre/cosinga/hicc/power_spectrum/pk.py auto 99 100 1 0 hisubhalors
