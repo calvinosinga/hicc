@@ -22,9 +22,9 @@ GRID = (RES,RES,RES)
 
 # defining needed paths
 PTLPATH = '/lustre/cosinga/tng%d/snapdir_%03d/'%(BOX, SNAPSHOT) # where the ptl files are saved
-OUTPATH = '/lustre/cosinga/hiptl_output/' # where to save the output
-TREECOOL = '/lustre/cosinga/fg20_treecool/TREECOOL_fg_dec11'
-LOG = '/lustre/cosinga/hicc/logs/'
+OUTPATH = '/lustre/cosinga/HI-color/hicc/chunk_output/' # where to save the output
+TREECOOL = '/lustre/cosinga/HI-color/TREECOOL_fg_dec11'
+LOG = '/lustre/cosinga/HI-color/hicc/logs/v-n/'
 
 # get input file
 ptlfile = hp.File(PTLPATH+"snap_%03d.%d.hdf5" %(SNAPSHOT, CHUNK), 'r')

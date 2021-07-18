@@ -16,7 +16,7 @@ BOX = int(sys.argv[2])
 
 # defining needed paths
 HOME = '/lustre/cosinga/tng%d/'%BOX
-SAVE = '/lustre/cosinga/final_fields/plots/'
+SAVE = '/lustre/cosinga/HI-color/results/plots/aux_plots/'
 
 # getting input files
 fields = ['SubhaloMassType','SubhaloStellarPhotometrics']

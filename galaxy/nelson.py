@@ -24,8 +24,8 @@ GRID = (RES,RES,RES)
 
 # defining needed paths
 HOME = '/lustre/cosinga/tng%d/'%BOX
-SAVE = '/lustre/cosinga/final_fields/'
-LOG = '/lustre/cosinga/hicc/logs/'
+SAVE = '/lustre/cosinga/results/fields/snap_%03d/'%SNAPSHOT
+LOG = '/lustre/cosinga/HI-color/hicc/logs/galaxy/'
 
 # getting simulation defined constants
 head = il.groupcat.loadHeader(HOME,SNAPSHOT)
@@ -38,6 +38,7 @@ REDSHIFT = head['Redshift']
 wrs = hp.File('%snelsonrs_%s%d_%03d.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT), 'w')
 w = hp.File('%snelson_%s%d_%03d.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT), 'w')
 pnt = Printer(LOG+'nelson_%s%d_%03d.log'%(RUN,BOX,SNAPSHOT))
+
 # input data
 pnt.write("starting subhalo grid generation")
 flds = ['SubhaloPos', 'SubhaloStellarPhotometrics', 'SubhaloMassType', 'SubhaloVel']

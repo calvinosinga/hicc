@@ -35,9 +35,9 @@ else:
 
 
 # defining basic paths
-HOME = '/lustre/cosinga/final_fields/'
+HOME = '/lustre/cosinga/HI-color/results/fields/snap_%03d'%SNAPSHOT
 TNG = '/lustre/cosinga/tng%d'%BOX
-LOG = '/lustre/cosinga/hicc/logs/'
+LOG = '/lustre/cosinga/HI-color/hicc/logs/pk/'
 
 # getting author-defined constants
 MAS = 'CIC'
@@ -166,7 +166,7 @@ else:# auto power spectrum
         else:
             # plotting a slice of the grid
             pnt.writeTab("now starting to plot a slice of the grid...")
-            lpt.plotslc(field1, BOXSIZE, "/slices/"+'%s-%s%d_%03d.slice.')
+            lpt.plotslc(field1, BOXSIZE, "/slices/"+'%s%d_%03d.slice'%(FILE1, BOX, SNAPSHOT)
             pnt.writeTab("calculating pk for %s"%k)
             field1=to_overdensity(field1)
             res = Pk(field1, BOXSIZE, axis=AXIS, MAS=MAS)

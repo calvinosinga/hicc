@@ -9,10 +9,6 @@ import h5py as hp
 import sys
 
 
-# setting author-defined variables (not expected to change)
-BASE = '/lustre/cosinga/hiptl_output/'
-FINAL = '/lustre/cosinga/final_fields/'
-
 # getting command-line input
 PREFIX = sys.argv[1]
 START = int(sys.argv[2])
@@ -20,6 +16,10 @@ END = int(sys.argv[3])
 SNAPSHOT = int(sys.argv[4])
 BOX = int(sys.argv[5])
 STEP = int(sys.argv[6]) # tells if this is the 1st or 2nd step in combine process
+
+# setting author-defined variables (not expected to change)
+BASE = '/lustre/cosinga/HI-color/hicc/chunk_output/'
+FINAL = '/lustre/cosinga/HI-color/results/fields/snap_%03d'%SNAPSHOT
 
 # getting array of files to iterate over and getting write file
 if STEP == 0:

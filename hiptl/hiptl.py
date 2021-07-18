@@ -23,8 +23,8 @@ GRID = (RES,RES,RES)
 # defining needed paths
 HIPATH = '/lustre/diemer/illustris/hih2/'  # where the hiptl files are saved
 PTLPATH = '/lustre/cosinga/tng%d/snapdir_%03d/'%(BOX, SNAPSHOT) # where the ptl files are saved
-OUTPATH = '/lustre/cosinga/hiptl_output/' # where to save the output
-LOG = '/lustre/cosinga/hicc/logs/'
+OUTPATH = '/lustre/cosinga/chunk_output/' # where to save the output
+LOG = '/lustre/cosinga/HI-color/hicc/logs/hiptl/'
 
 # input files
 hih2file = hp.File(HIPATH+"hih2_particles_%03d.%d.hdf5" %(SNAPSHOT, CHUNK), 'r')

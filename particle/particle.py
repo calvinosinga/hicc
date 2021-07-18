@@ -21,9 +21,9 @@ AXIS = int(sys.argv[5]) # if -1, not in redshift space
 
 # defining needed paths
 PTLPATH = '/lustre/cosinga/tng%d/snapdir_%03d/'%(BOX, SNAPSHOT) # where the ptl files are saved
-OUTPATH = '/lustre/cosinga/hiptl_output/' # where to save the output
+OUTPATH = '/lustre/cosinga/HI-color/chunk_output/' # where to save the output
 HIPATH = '/lustre/diemer/illustris/hih2/'  # where the hiptl files are saved
-LOG = '/lustre/cosinga/hicc/logs/'
+LOG = '/lustre/cosinga/HI-color/hicc/logs/ptl/'
 
 # input files
 ptlfile = hp.File(PTLPATH+"snap_%03d.%d.hdf5" %(SNAPSHOT, CHUNK), 'r')

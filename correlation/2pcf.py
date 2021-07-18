@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from galaxy.nelson import HOME
 import sys
 import numpy as np
 import h5py as hp
@@ -21,9 +22,10 @@ if IS_CROSS:
     SAME_FILE = FILE1 == FILE2
 
 # defining basic paths
-HOME = '/lustre/cosinga/final_fields/'
+SAVE = '/lustre/cosinga/HI-color/results/corr/'
+HOME = '/lustre/cosinga/HI-color/results/fields/snap_%03d'%SNAPSHOT
 TNG = '/lustre/cosinga/tng%d'%BOX
-LOG = '/lustre/cosinga/hicc/logs/'
+LOG = '/lustre/cosinga/HI-color/hicc/logs/corr/'
 
 head = il.groupcat.loadHeader(TNG, SNAPSHOT)
 SCALE = head['Time'] # scale factor
@@ -42,7 +44,7 @@ def to_overdensity(field, pnt):
 
 if not IS_CROSS:
     # creating output files
-    w = hp.File(HOME+'pk/%s%d_%03d.corr.hdf5'%(FILE1,BOX,SNAPSHOT),'w')
+    w = hp.File(SAVE+'auto/%s%d_%03d.corr.hdf5'%(FILE1,BOX,SNAPSHOT),'w')
     pnt = printer.Printer(LOG+'%s%d_%03d.corr.log'%(FILE1,BOX,SNAPSHOT))
 
     # calculating auto correlation
@@ -72,7 +74,7 @@ if not IS_CROSS:
 
 else:
     # creating output files
-    w = hp.File(HOME+'pk/%s-%s%d_%03d.Xcorr.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT),'w')
+    w = hp.File(SAVE+'cross/%s-%s%d_%03d.Xcorr.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT),'w')
     pnt = printer.Printer(LOG+'%s%d_%03d.corr.log'%(FILE1,BOX,SNAPSHOT))
 
     # calculating cross-correlation

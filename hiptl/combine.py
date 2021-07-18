@@ -10,13 +10,6 @@ import sys
 from library_hicc.models import get_hiptl_models
 from library_hicc.printer import Printer
 
-# setting author-defined variables (not expected to change)
-models = get_hiptl_models()
-BASE = "/lustre/cosinga/hiptl_output/"
-FINAL = "/lustre/cosinga/final_fields/"
-LOG = '/lustre/cosinga/hicc/logs/'
-
-
 # getting command-line inputs
 PREFIX = sys.argv[1]
 START = int(sys.argv[2])
@@ -24,6 +17,12 @@ END = int(sys.argv[3])
 SNAPSHOT = int(sys.argv[4])
 BOX = int(sys.argv[5])
 STEP = int(sys.argv[6]) # tells if this is the 1st or 2nd step in combine process
+
+# setting author-defined variables (not expected to change)
+models = get_hiptl_models()
+BASE = "/lustre/cosinga/chunk_output/"
+FINAL = "/lustre/cosinga/HI-color/results/fields/snap_%03d"%SNAPSHOT
+LOG = '/lustre/cosinga/HI-color/hicc/logs/hiptl/'
 
 # getting array of files to iterate over
 if STEP == 0:

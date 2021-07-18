@@ -9,7 +9,7 @@ import copy
 """
 This is meant to create and store plots of the pks and slices of their fields to check that they make sense.
 """
-PATH = '/lustre/cosinga/final_fields/plots/'
+
 def plot1Dpk(k, pk, res, boxsize, plotname):
     
     # the nyquist frequency is N*pi/L
@@ -20,7 +20,7 @@ def plot1Dpk(k, pk, res, boxsize, plotname):
     plt.ylabel('P(k) (h/Mpc)^3')
     plt.xlabel('k (h/Mpc)')
     plt.plot((nyq,nyq), (0,maxy), 'k:')
-    plt.savefig(PATH+plotname+'.png')
+    plt.savefig(plotname+'.png')
     return
 
 def plot2Dpk(kpar, kper, pk, plotname):
@@ -38,7 +38,7 @@ def plot2Dpk(kpar, kper, pk, plotname):
     plt.xlabel("kpar (h/Mpc)")
     plt.ylabel("kper (h/Mpc)")
     plt.colorbar()
-    plt.savefig(PATH+plotname+'.png')
+    plt.savefig(plotname+'.png')
     return
 
 def plotslc(grid, boxsize, plotname):
@@ -50,7 +50,7 @@ def plotslc(grid, boxsize, plotname):
     slc = np.log10(np.sum(grid[:, mid-slcidx:mid+slcidx, :], axis=1))
     slc /= slcidx*2
     plt.imshow(slc, origin='lower')
-    plt.savefig(PATH+plotname+'.png')
+    plt.savefig(plotname+'.png')
     plt.colorbar()
     return
     
