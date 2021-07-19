@@ -47,11 +47,14 @@ keylist = list(f.keys())
 # now making slice plots
 for key in keylist:
     field = f[key][:]
-    pnt.write("making slice plot for %s"%key)
-    lpt.plotslc(field, BOXSIZE, PLOTS+'/slices/%s/%s%d_%03d'%(FILE, key, BOX, SNAPSHOT))
-    pnt.writeTab("successfully made the slice plot")
-    count = np.count_nonzero(field)
-    elms = field.shape[0]**3
-    pnt.writeTab("out of %.3e elements, %.3e are occupied"%(elms, count))
+    if not len(field.shape) == 3:
+        pnt.write("field %s is not the right shape; skipping slice plot..."%key)
+    else:
+        pnt.write("making slice plot for %s"%key)
+        lpt.plotslc(field, BOXSIZE, PLOTS+'/slices/%s/%s%d_%03d'%(FILE, key, BOX, SNAPSHOT))
+        pnt.writeTab("successfully made the slice plot")
+        count = np.count_nonzero(field)
+        elms = field.shape[0]**3
+        pnt.writeTab("out of %.3e elements, %.3e are occupied"%(elms, count))
 
 f.close()

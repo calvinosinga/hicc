@@ -59,4 +59,14 @@ def plotslc(grid, boxsize, plotname):
     plt.clf()
     return
     
-    
+def plotCorr(r, xi, res, boxsize, plotname):
+    nyq = 2*boxsize/res
+    maxy = np.max(xi)
+    plt.plot(r, xi)
+    plt.xlabel("r (Mpc/h)")
+    plt.ylabel("xi (Mpc/h)")
+    plt.loglog()
+    plt.plot((nyq, nyq), (0,maxy), 'k:')
+    plt.savefig(plotname+'.png')
+    plt.clf()
+    return
