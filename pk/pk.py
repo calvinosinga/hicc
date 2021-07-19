@@ -210,9 +210,9 @@ else:# auto power spectrum
             
             plotpath = '%s/%s%d_%03d'%(FILE1, k, BOXSIZE, SNAPSHOT)
             pnt.writeTab("plotting 1D pk result...")
-            lpt.plot1Dpk(res.k3D, res.Pk[:,0], field1.shape[0], BOXSIZE, PLOTS+'1Dpk/%s%d_%03d'%(FILE1,BOX,SNAPSHOT))
+            lpt.plot1Dpk(res.k3D, res.Pk[:,0], field1.shape[0], BOXSIZE, PLOTS+'1Dpk/'+plotpath)
             pnt.writeTab("plotting 2D pk result...")
-            lpt.plot2Dpk(res.kpar, res.kper, res.Pk2D[:], PLOTS+'2Dpk/%s%d_%03d'%(FILE1,BOX,SNAPSHOT))
+            lpt.plot2Dpk(res.kpar, res.kper, res.Pk2D[:], PLOTS+'2Dpk/'+plotpath)
 
             
     f1.close()
