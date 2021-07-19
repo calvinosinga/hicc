@@ -6,7 +6,7 @@ The name of the text file is given as command-line input, .
 
 # import statements
 import sys
-from matplotlib.pyplot import grid
+import os
 import numpy as np
 import h5py as hp
 import time
@@ -82,6 +82,12 @@ if IS_XPK:
 
     pnt.write('opened both files, size of each are %.3e and %.3e.\n starting calculations... \n'%(sys.getsizeof(f1),sys.getsizeof(f2)))
 
+    # making a directory to save the plots to...
+    if not os.path.isdir(PLOTS+'1Dpk/%s-%s/'%(FILE1, FILE2)):
+        os.mkdir(PLOTS+'1Dpk/%s-%s/'%(FILE1, FILE2))
+    
+    if not os.path.isdir(PLOTS+'2Dpk/%s-%s/'%(FILE1, FILE2)):
+        os.mkdir(PLOTS+'2Dpk/%s-%s/'%(FILE1, FILE2))
     for key1 in key1list:
         for key2 in key2list:
             pnt.write("now calculating xpk for %s-%s...\n"%(key1,key2))
@@ -133,10 +139,11 @@ if IS_XPK:
                 
                 # now creating a plot of the Xpk and 2Dxpk
                 pnt.writeTab("now creating 1Dxpk plot...")
-                lpt.plot1Dpk(res.k3D,res.XPk[:,0,0],field1.shape[0], BOXSIZE, PLOTS+'1Dpk/%s-%s%d_%03d'%(FILE1,FILE2,BOX,SNAPSHOT))
+                plotpath='%s-%s/%s-%s%d_%03d'%(FILE1, FILE2, key1,key2,BOX,SNAPSHOT)
+                lpt.plot1Dpk(res.k3D,res.XPk[:,0,0],field1.shape[0], BOXSIZE, PLOTS+'1Dpk/'+plotpath)
 
                 pnt.writeTab("now creating 2Dxpk plot...")
-                lpt.plot2Dpk(res.kpar, res.kper, res.PkX2D[:,0], PLOTS+'2Dpk/%s-%s%d_%03d'%(FILE1,FILE2,BOX,SNAPSHOT))
+                lpt.plot2Dpk(res.kpar, res.kper, res.PkX2D[:,0], PLOTS+'2Dpk/'+plotpath)
     f1.close()
     f2.close()
     
@@ -157,6 +164,13 @@ else:# auto power spectrum
     # input data
     f1 = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
     keylist = list(f1.keys())
+
+    # making a directory to save the plots to...
+    if not os.path.isdir(PLOTS+'1Dpk/%s/'%FILE1):
+        os.mkdir(PLOTS+'1Dpk/%s/'%FILE1)
+    
+    if not os.path.isdir(PLOTS+'2Dpk/%s/'%FILE1):
+        os.mkdir(PLOTS+'2Dpk/%s/'%FILE1)
     
     # iterate over each k, save its auto power to file
     for k in keylist:
@@ -165,9 +179,7 @@ else:# auto power spectrum
         if not len(field1.shape) == 3:
             pnt.writeTab("skipping pk calculation for %s; not the correct shape."%k)
         else:
-            # plotting a slice of the grid
-            pnt.writeTab("now starting to plot a slice of the grid...")
-            lpt.plotslc(field1, BOXSIZE, PLOTS+"slices/%s%d_%03d.slice"%(FILE1, BOX, SNAPSHOT))
+
             pnt.writeTab("calculating pk for %s"%k)
             field1=to_overdensity(field1)
             res = Pk(field1, BOXSIZE, axis=AXIS, MAS=MAS)
@@ -196,10 +208,12 @@ else:# auto power spectrum
                 w1.create_dataset(k,data= res.Pk[:,0])
                 w2.create_dataset(k,data=res.Pk2D[:])
             
+            plotpath = '%s/%s%d_%03d'%(FILE1, k, BOXSIZE, SNAPSHOT)
             pnt.writeTab("plotting 1D pk result...")
             lpt.plot1Dpk(res.k3D, res.Pk[:,0], field1.shape[0], BOXSIZE, PLOTS+'1Dpk/%s%d_%03d'%(FILE1,BOX,SNAPSHOT))
             pnt.writeTab("plotting 2D pk result...")
             lpt.plot2Dpk(res.kpar, res.kper, res.Pk2D[:], PLOTS+'2Dpk/%s%d_%03d'%(FILE1,BOX,SNAPSHOT))
+
             
     f1.close()
     if DIM==0:

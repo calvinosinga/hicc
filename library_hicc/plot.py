@@ -45,7 +45,7 @@ def plot2Dpk(kpar, kper, pk, plotname):
 
 def plotslc(grid, boxsize, plotname):
     cmap = copy.copy(mpl.cm.get_cmap("plasma"))
-    cmap.set_under('w')
+    # cmap.set_under('w')
     dim = grid.shape[0]
     slcidx = int(0.1*dim)
     mid = int(dim/2)
@@ -53,7 +53,8 @@ def plotslc(grid, boxsize, plotname):
     plt.imshow(slc, extent=(0,boxsize, 0, boxsize), origin='lower', cmap=cmap)
     plt.xlabel("x (Mpc/h)")
     plt.ylabel("y (Mpc/h)")
-    plt.colorbar()
+    cbar = plt.colorbar()
+    cbar.set_label("Mass (Solar Masses)")
     plt.savefig(plotname+'.png')
     plt.clf()
     return
