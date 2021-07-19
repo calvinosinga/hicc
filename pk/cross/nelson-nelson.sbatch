@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --share
-#SBATCH --mem-per-cpu=100000
+#SBATCH --mem-per-cpu=20000
 #SBATCH --job-name=nelson-nelson_xpk
 #SBATCH --time=1-10:00:00
 #SBATCH --ntasks=1
@@ -12,5 +12,5 @@
 #SBATCH --mail-user=cosinga@umd.edu
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/pk/pk.py cross 99 100 1 0 nelson_mid nelson_mid 0
-python3 /lustre/cosinga/hicc/pk/pk.py cross 99 100 0 0 nelsonrs_mid nelsonrs_mid 0
+python3 /lustre/cosinga/HI-color/hicc/pk/pk.py cross 99 100 1 0 nelson_mid nelson_mid
+python3 /lustre/cosinga/HI-color/hicc/pk/pk.py cross 99 100 0 0 nelsonrs_mid nelsonrs_mid

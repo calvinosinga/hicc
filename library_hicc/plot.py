@@ -21,6 +21,7 @@ def plot1Dpk(k, pk, res, boxsize, plotname):
     plt.xlabel('k (h/Mpc)')
     plt.plot((nyq,nyq), (0,maxy), 'k:')
     plt.savefig(plotname+'.png')
+    plt.clf()
     return
 
 def plot2Dpk(kpar, kper, pk, plotname):
@@ -39,6 +40,7 @@ def plot2Dpk(kpar, kper, pk, plotname):
     plt.ylabel("kper (h/Mpc)")
     plt.colorbar()
     plt.savefig(plotname+'.png')
+    plt.clf()
     return
 
 def plotslc(grid, boxsize, plotname):
@@ -48,10 +50,12 @@ def plotslc(grid, boxsize, plotname):
     slcidx = int(0.1*dim)
     mid = int(dim/2)
     slc = np.log10(np.sum(grid[:, mid-slcidx:mid+slcidx, :], axis=1))
-    slc /= slcidx*2
-    plt.imshow(slc, origin='lower')
-    plt.savefig(plotname+'.png')
+    plt.imshow(slc, extent=(0,boxsize, 0, boxsize), origin='lower', cmap=cmap)
+    plt.xlabel("x (Mpc/h)")
+    plt.ylabel("y (Mpc/h)")
     plt.colorbar()
+    plt.savefig(plotname+'.png')
+    plt.clf()
     return
     
     

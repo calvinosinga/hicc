@@ -35,9 +35,10 @@ else:
 
 
 # defining basic paths
-HOME = '/lustre/cosinga/HI-color/results/fields/snap_%03d'%SNAPSHOT
+HOME = '/lustre/cosinga/HI-color/results/fields/snap_%03d/'%SNAPSHOT
 TNG = '/lustre/cosinga/tng%d'%BOX
 LOG = '/lustre/cosinga/HI-color/hicc/logs/pk/'
+PLOTS = '/lustre/cosinga/HI-color/results/plots/'
 
 # getting author-defined constants
 MAS = 'CIC'
@@ -68,10 +69,10 @@ if IS_XPK:
     pnt.write("calculating the cross-power for %s, %s\n"%(FILE1, FILE2))
     # output file
     if DIM==0: # create both 1D and 2D
-        w1 = hp.File(HOME+'pk/%s-%s%d_%03d.1Dxpk.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT),'w')
-        w2 = hp.File(HOME+'pk/%s-%s%d_%03d.2Dxpk.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT),'w')
+        w1 = hp.File(HOME+'%s-%s%d_%03d.1Dxpk.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT),'w')
+        w2 = hp.File(HOME+'%s-%s%d_%03d.2Dxpk.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT),'w')
     else:
-        w = hp.File(HOME+'pk/%s-%s%d_%03d.%dDxpk.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT,DIM),'w')
+        w = hp.File(HOME+'%s-%s%d_%03d.%dDxpk.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT,DIM),'w')
 
     # input files, loop over all of the keys in each
     f1 = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
@@ -132,10 +133,10 @@ if IS_XPK:
                 
                 # now creating a plot of the Xpk and 2Dxpk
                 pnt.writeTab("now creating 1Dxpk plot...")
-                lpt.plot1Dpk(res.k3D,res.Xpk[:,0,0],field1.shape[0], BOXSIZE, '1Dpk/%s-%s%d_%03d'%(FILE1,FILE2,BOX,SNAPSHOT))
+                lpt.plot1Dpk(res.k3D,res.XPk[:,0,0],field1.shape[0], BOXSIZE, PLOTS+'1Dpk/%s-%s%d_%03d'%(FILE1,FILE2,BOX,SNAPSHOT))
 
                 pnt.writeTab("now creating 2Dxpk plot...")
-                lpt.plot2Dpk(res.kpar, res.kper, res.PkX2D[:,0], '2Dpk/%s-%s%d_%03d'%(FILE1,FILE2,BOX,SNAPSHOT))
+                lpt.plot2Dpk(res.kpar, res.kper, res.PkX2D[:,0], PLOTS+'2Dpk/%s-%s%d_%03d'%(FILE1,FILE2,BOX,SNAPSHOT))
     f1.close()
     f2.close()
     
@@ -148,10 +149,10 @@ else:# auto power spectrum
     pnt.write("starting procedure for the auto power for %s"%FILE1)
     # output file
     if DIM==0: # create both 1D and 2D
-        w1 = hp.File(HOME+'pk/%s%d_%03d.1Dpk.hdf5'%(FILE1,BOX,SNAPSHOT),'w')
-        w2 = hp.File(HOME+'pk/%s%d_%03d.2Dpk.hdf5'%(FILE1,BOX,SNAPSHOT),'w')
+        w1 = hp.File(HOME+'%s%d_%03d.1Dpk.hdf5'%(FILE1,BOX,SNAPSHOT),'w')
+        w2 = hp.File(HOME+'%s%d_%03d.2Dpk.hdf5'%(FILE1,BOX,SNAPSHOT),'w')
     else:
-        w = hp.File(HOME+'pk/%s%d_%03d.%dDpk.hdf5'%(FILE1,BOX,SNAPSHOT,DIM),'w')
+        w = hp.File(HOME+'%s%d_%03d.%dDpk.hdf5'%(FILE1,BOX,SNAPSHOT,DIM),'w')
 
     # input data
     f1 = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
@@ -166,7 +167,7 @@ else:# auto power spectrum
         else:
             # plotting a slice of the grid
             pnt.writeTab("now starting to plot a slice of the grid...")
-            lpt.plotslc(field1, BOXSIZE, "/slices/"+'%s%d_%03d.slice'%(FILE1, BOX, SNAPSHOT)
+            lpt.plotslc(field1, BOXSIZE, PLOTS+"slices/%s%d_%03d.slice"%(FILE1, BOX, SNAPSHOT))
             pnt.writeTab("calculating pk for %s"%k)
             field1=to_overdensity(field1)
             res = Pk(field1, BOXSIZE, axis=AXIS, MAS=MAS)
@@ -196,9 +197,9 @@ else:# auto power spectrum
                 w2.create_dataset(k,data=res.Pk2D[:])
             
             pnt.writeTab("plotting 1D pk result...")
-            lpt.plot1Dpk(res.k3D, res.Pk[:,0], field1.shape[0], BOXSIZE, '1Dpk/%s%d_%03d'%(FILE1,BOX,SNAPSHOT))
+            lpt.plot1Dpk(res.k3D, res.Pk[:,0], field1.shape[0], BOXSIZE, PLOTS+'1Dpk/%s%d_%03d'%(FILE1,BOX,SNAPSHOT))
             pnt.writeTab("plotting 2D pk result...")
-            lpt.plot2Dpk(res.kpar, res.kper, res.Pk2D[:], '2Dpk/%s%d_%03d'%(FILE1,BOX,SNAPSHOT))
+            lpt.plot2Dpk(res.kpar, res.kper, res.Pk2D[:], PLOTS+'2Dpk/%s%d_%03d'%(FILE1,BOX,SNAPSHOT))
             
     f1.close()
     if DIM==0:
