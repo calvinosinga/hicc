@@ -17,7 +17,7 @@ BOX = int(sys.argv[3])
 
 # defining paths
 PLOTS = '/lustre/cosinga/HI-color/results/plots/'
-FIELDS = '/lustre/cosinga/HI-color/results/fields/snap_%03d'%SNAPSHOT
+FIELDS = '/lustre/cosinga/HI-color/results/fields/snap_%03d/'%SNAPSHOT
 LOGS = '/lustre/cosinga/HI-color/hicc/logs/slices/'
 TNG = '/lustre/cosinga/tng%s'%BOX
 
@@ -38,8 +38,9 @@ if not os.path.isdir(PLOTS+"/slices/%s/"%FILE):
     pnt.write("made directory at: "+PLOTS+"/slices/%s/"%FILE)
 
 # getting input data
-pnt.write("opening input file at: "+FIELDS+FILE+'.hdf5')
-f = hp.File(FIELDS+FILE+'.hdf5','r')
+filename = FILE + "%d_%03d.final."%(BOX, SNAPSHOT)
+pnt.write("opening input file at: "+FIELDS+filename+'.hdf5')
+f = hp.File(FIELDS+filename+'.hdf5','r')
 keylist = list(f.keys())
 
 
