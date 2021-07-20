@@ -1,5 +1,3 @@
-from h5py._hl.files import File
-from pk.pk import BOXSIZE, SNAPSHOT
 import sys
 import numpy as np
 import h5py as hp
@@ -38,7 +36,7 @@ if not os.path.isdir(PLOTS+"/slices/%s/"%FILE):
     pnt.write("made directory at: "+PLOTS+"/slices/%s/"%FILE)
 
 # getting input data
-filename = FILE + "%d_%03d.final."%(BOX, SNAPSHOT)
+filename = FILE + "%d_%03d.final"%(BOX, SNAPSHOT)
 pnt.write("opening input file at: "+FIELDS+filename+'.hdf5')
 f = hp.File(FIELDS+filename+'.hdf5','r')
 keylist = list(f.keys())

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from galaxy.nelson import HOME, RES
 import sys
 import numpy as np
 import h5py as hp
@@ -86,7 +85,7 @@ if not IS_CROSS:
 
             pnt.writeTab("making correlation plot...")
             plotname = PLOTS+'%s/%s%d_%03d'%(FILE1, k, BOX, SNAPSHOT)
-            lpt.plotCorr(res.r3D, res.xi[:,0], RES, BOXSIZE, plotname)
+            lpt.plotCorr(res.r3D, res.xi[:,0], field.shape[0], BOXSIZE, plotname)
     
     w.close()
     f.close()
@@ -133,7 +132,7 @@ else:
 
                 pnt.writeTab("making Xi plot...")
                 plotname = PLOTS+'%s-%s/%s-%s%d_%03d'%(FILE1, FILE2, k1, k2, BOX, SNAPSHOT)
-                lpt.plotCorr(res.r3D, res.xi[:,0], RES, BOXSIZE, plotname)
+                lpt.plotCorr(res.r3D, res.xi[:,0], field.shape[0], BOXSIZE, plotname)
     
     w.close()
     f1.close()
