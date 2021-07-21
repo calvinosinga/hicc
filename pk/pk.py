@@ -39,6 +39,7 @@ HOME = '/lustre/cosinga/HI-color/results/fields/snap_%03d/'%SNAPSHOT
 TNG = '/lustre/cosinga/tng%d'%BOX
 LOG = '/lustre/cosinga/HI-color/hicc/logs/pk/'
 PLOTS = '/lustre/cosinga/HI-color/results/plots/'
+SAVE = '/lustre/cosinga/HI-color/results/pk/'
 
 # getting author-defined constants
 MAS = 'CIC'
@@ -67,12 +68,13 @@ def to_overdensity(field):
 
 if IS_XPK:
     pnt.write("calculating the cross-power for %s, %s\n"%(FILE1, FILE2))
+    pnt.write("creating output files...")
     # output file
     if DIM==0: # create both 1D and 2D
-        w1 = hp.File(HOME+'%s-%s%d_%03d.1Dxpk.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT),'w')
-        w2 = hp.File(HOME+'%s-%s%d_%03d.2Dxpk.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT),'w')
+        w1 = hp.File(SAVE+'cross/1Dpk/%s-%s%d_%03d.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT),'w')
+        w2 = hp.File(SAVE+'cross/2Dpk/%s-%s%d_%03d.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT),'w')
     else:
-        w = hp.File(HOME+'%s-%s%d_%03d.%dDxpk.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT,DIM),'w')
+        w = hp.File(SAVE+'cross/%dDpk/%s-%s%d_%03d.hdf5'%(DIM,FILE1,FILE2,BOX,SNAPSHOT),'w')
 
     # input files, loop over all of the keys in each
     f1 = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
@@ -156,10 +158,10 @@ else:# auto power spectrum
     pnt.write("starting procedure for the auto power for %s"%FILE1)
     # output file
     if DIM==0: # create both 1D and 2D
-        w1 = hp.File(HOME+'%s%d_%03d.1Dpk.hdf5'%(FILE1,BOX,SNAPSHOT),'w')
-        w2 = hp.File(HOME+'%s%d_%03d.2Dpk.hdf5'%(FILE1,BOX,SNAPSHOT),'w')
+        w1 = hp.File(SAVE+'auto/1Dpk/%s%d_%03d.hdf5'%(FILE1,BOX,SNAPSHOT),'w')
+        w2 = hp.File(SAVE+'auto/2Dpk/%s%d_%03d.hdf5'%(FILE1,BOX,SNAPSHOT),'w')
     else:
-        w = hp.File(HOME+'%s%d_%03d.%dDpk.hdf5'%(FILE1,BOX,SNAPSHOT,DIM),'w')
+        w = hp.File(SAVE+'auto/%dDpk/%s%d_%03d.hdf5'%(DIM,FILE1,BOX,SNAPSHOT),'w')
 
     # input data
     f1 = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
