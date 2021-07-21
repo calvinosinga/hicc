@@ -4,7 +4,7 @@
 #SBATCH --job-name=v-n_slice
 #SBATCH --time=6:00:00
 #SBATCH --ntasks=1
-#SBATCH --mem-per-cpu=5000
+#SBATCH --mem-per-cpu=15000
 #SBATCH --account=astronomy-hi
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=cosinga@umd.edu
