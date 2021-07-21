@@ -54,9 +54,6 @@ f_neut_h = hih2file['PartType0']['f_neutral_H'][:]
 for m in models:
     pnt.write('starting to calculate grid for %s'%m)
     field = np.zeros(GRID, dtype=np.float32)
-    # shifting the positions to redshift space   
-    pnt.writeTab('shifting positions to redshift space ...')
-    rspos = pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
 
     # getting the HI mass data
     h2_frac = hih2file['PartType0']['f_mol_'+m][:]
@@ -77,9 +74,15 @@ for m in models:
     # now doing the same for redshift space
     pnt.writeTab('creating a new grid for redshift-space')
     field = np.zeros(GRID, dtype=np.float32)
+
+    # shifting the positions to redshift space   
+    pnt.writeTab('shifting positions to redshift space ...')
+    rspos = pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
+
     pnt.writeTab('now assigning the redshift-space HI to a grid')
     CICW(rspos, field, BOXSIZE, masshi)
     pnt.writeTab('saving the redshift-space grid')
     wrs.create_dataset(m, data=field, compression="gzip", compression_opts=9)
 
 w.close()
+wrs.close()
