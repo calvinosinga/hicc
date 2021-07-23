@@ -5,7 +5,7 @@
 #SBATCH --job-name=hiptl
 #SBATCH --error=./logs/hiptl%a.err
 #SBATCH --output=./logs/hiptl%a.log
-#SBATCH --time=10:00:00
+#SBATCH --time=6:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
 #SBATCH --account=astronomy-hi
@@ -14,4 +14,4 @@
 #SBATCH --requeue
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/hiptl/hiptl.py $SLURM_ARRAY_TASK_ID 99 100 800 0
+python3 /lustre/cosinga/HI-color/hicc/hiptl/hiptl.py $SLURM_ARRAY_TASK_ID 99 100 800 0

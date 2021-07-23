@@ -2,9 +2,9 @@
 
 #SBATCH --share
 #SBATCH --job-name=galaxy_corr
-#SBATCH --time=1-20:00:00
+#SBATCH --time=4:00:00
 #SBATCH --ntasks=1
-#SBATCH --mem-per-cpu=10000
+#SBATCH --mem-per-cpu=15000
 #SBATCH --account=astronomy-hi
 #SBATCH --mail-type=ALL
 #SBATCH --output=galaxy_corr.dat

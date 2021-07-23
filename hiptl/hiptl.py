@@ -23,7 +23,7 @@ GRID = (RES,RES,RES)
 # defining needed paths
 HIPATH = '/lustre/diemer/illustris/hih2/'  # where the hiptl files are saved
 PTLPATH = '/lustre/cosinga/tng%d/snapdir_%03d/'%(BOX, SNAPSHOT) # where the ptl files are saved
-OUTPATH = '/lustre/cosinga/chunk_output/' # where to save the output
+OUTPATH = '/lustre/cosinga/HI-color/chunk_output/' # where to save the output
 LOG = '/lustre/cosinga/HI-color/hicc/logs/hiptl/'
 
 # input files

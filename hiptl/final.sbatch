@@ -4,7 +4,7 @@
 #SBATCH --share
 #SBATCH --job-name=hiptl_final
 #SBATCH --output=logs/hiptl_final.log
-#SBATCH --time=10:00:00
+#SBATCH --time=5:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
 #SBATCH --account=astronomy-hi
@@ -13,4 +13,4 @@
 #SBATCH --requeue
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/vn/combine.py hiptl 0 448 99 100 1
+python3 /lustre/cosinga/HI-color/hicc/hiptl/combine.py hiptl 0 448 99 100 1

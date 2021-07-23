@@ -24,7 +24,7 @@ if IS_CROSS:
 
 # defining basic paths
 SAVE = '/lustre/cosinga/HI-color/results/corr/'
-HOME = '/lustre/cosinga/HI-color/results/fields/snap_%03d'%SNAPSHOT
+HOME = '/lustre/cosinga/HI-color/results/fields/snap_%03d/'%SNAPSHOT
 TNG = '/lustre/cosinga/tng%d'%BOX
 LOG = '/lustre/cosinga/HI-color/hicc/logs/corr/'
 PLOTS = '/lustre/cosinga/HI-color/results/plots/corr/'

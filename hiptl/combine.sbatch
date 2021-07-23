@@ -16,4 +16,4 @@
 . ~/.profile
 START=$SLURM_ARRAY_TASK_ID
 END=$(($SLURM_ARRAY_TASK_ID+20))
-python3 /lustre/cosinga/hicc/hiptl/combine.py hiptl $START $END 99 100 0
+python3 /lustre/cosinga/HI-color/hicc/hiptl/combine.py hiptl $START $END 99 100 0

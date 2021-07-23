@@ -20,7 +20,7 @@ STEP = int(sys.argv[6]) # tells if this is the 1st or 2nd step in combine proces
 
 # setting author-defined variables (not expected to change)
 models = get_hiptl_models()
-BASE = "/lustre/cosinga/chunk_output/"
+BASE = "/lustre/cosinga/HI-color/chunk_output/"
 FINAL = "/lustre/cosinga/HI-color/results/fields/snap_%03d"%SNAPSHOT
 LOG = '/lustre/cosinga/HI-color/hicc/logs/hiptl/'
 
