@@ -132,11 +132,11 @@ else:
 
                 pnt.writeTab("making Xi plot...")
                 plotname = PLOTS+'%s-%s/%s-%s%d_%03d'%(FILE1, FILE2, k1, k2, BOX, SNAPSHOT)
-                lpt.plotCorr(res.r3D, res.xi[:,0], field.shape[0], BOXSIZE, plotname)
+                lpt.plotCorr(res.r3D, res.xi[:,0], field1.shape[0], BOXSIZE, plotname)
     
     w.close()
     f1.close()
     f2.close()
 
-
+pnt.write("2pcf.py finished")
 
