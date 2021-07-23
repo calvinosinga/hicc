@@ -68,10 +68,16 @@ for m in models:
     # assigning them into the field using the Mass Assignment Scheme given
     pnt.writeTab('now assigning the real-space HI to a grid')
     CICW(pos,field,BOXSIZE,masshi)
-    pnt.writeTab('saving the grid...')
+
+    pnt.writeTab('saving the grid to '+OUTPATH+'hiptl%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK)+'...')
     w.create_dataset(m, data=field, compression="gzip", compression_opts=9)
 
+pnt.write("finished with real-space grid creation")
+
+pnt.write("now starting redshift-space loop")
+for m in models:
     # now doing the same for redshift space
+    pnt.write('starting to calculate grid for %s'%m)
     pnt.writeTab('creating a new grid for redshift-space')
     field = np.zeros(GRID, dtype=np.float32)
 
@@ -81,7 +87,7 @@ for m in models:
 
     pnt.writeTab('now assigning the redshift-space HI to a grid')
     CICW(rspos, field, BOXSIZE, masshi)
-    pnt.writeTab('saving the redshift-space grid')
+    pnt.writeTab('saving the redshift-space grid to '+OUTPATH+'hiptlrs%d_%03d.%d.hdf5' %(BOX, SNAPSHOT, CHUNK)+'...')
     wrs.create_dataset(m, data=field, compression="gzip", compression_opts=9)
 
 w.close()
