@@ -49,8 +49,8 @@ gr_res = gr[res_idx]
 
 # the nelson lines definitions in gr-stmass plane
 fx = lambda x: 0.65 + 0.02*(x-10.28)
-fxdown = lambda x: 0.625 + 0.02*(x-10.28)
-fxup = lambda x: 0.675 + 0.02*(x-10.28)
+fxdown = lambda x: 0.6 + 0.02*(x-10.28)
+fxup = lambda x: 0.7 + 0.02*(x-10.28)
 
 # now making first histogram
 stmass_both = np.log10(stmass_both)
@@ -73,6 +73,7 @@ plt.clf()
 stmass_stres = np.log10(stmass_stres)
 plt.hist2d(stmass_stres,gr_stres,bins=50,norm=mpl.colors.LogNorm())
 cbar = plt.colorbar()
+cbar.set_label('Count (Galaxies)')
 
 # adding lines to show the definitions for blue/red
 x = np.linspace(np.min(stmass_stres), np.max(stmass_stres))
@@ -82,8 +83,10 @@ plt.plot(x, fxup(x), label='0.7+0.02(M-10.28)', color='darkred', linestyle='--')
 plt.legend()
 plt.xlabel('Stellar Mass')
 plt.ylabel('g-r (magnitude)')
-plt.title('Color Bimodality z=0 TNG100')
-plt.savefig(SAVE+'stmass_resolved_%d_%03d.png'%(BOX,SNAPSHOT))
+ax = plt.gca()
+ax.tick_params(which='both',direction='in')
+
+plt.savefig(SAVE+'stmass_resolved_%d_%03d.png'%(BOX,SNAPSHOT), bbox_inches='tight')
 plt.clf()
 
 # making third histogram
