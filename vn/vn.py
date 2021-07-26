@@ -53,8 +53,6 @@ vel = ptlfile['PartType0']['Velocities'][:] * np.sqrt(SCALE_FACTOR) # km/s
 
 pnt.write("creating the real-space grid...")
 field = np.zeros(GRID, dtype=np.float32)
-pnt.write("shifting the positions into redshift-space...")
-rspos = pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
 
 pnt.write("placing the real-space data into the grid...")
 CICW(pos,field,BOXSIZE,MHI)
@@ -63,6 +61,9 @@ w.create_dataset("v-n", data=field, compression="gzip", compression_opts=9)
 
 pnt.write("creating new grid for redshift-space...")
 field = np.zeros(GRID, dtype=np.float32)
+
+pnt.write("shifting the positions into redshift-space...")
+rspos = pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
 
 pnt.write("placing redshift-space data into the grid...")
 CICW(rspos,field,BOXSIZE,MHI)

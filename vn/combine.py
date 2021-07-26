@@ -20,7 +20,7 @@ STEP = int(sys.argv[6]) # tells if this is the 1st or 2nd step in combine proces
 
 # setting author-defined variables (not expected to change)
 BASE = "/lustre/cosinga/HI-color/chunk_output/"
-FINAL = "/lustre/cosinga/HI-color/results/fields/snap_%03d"%SNAPSHOT
+FINAL = "/lustre/cosinga/HI-color/results/fields/snap_%03d/"%SNAPSHOT
 LOG = '/lustre/cosinga/HI-color/hicc/logs/v-n/'
 
 # getting array of files to iterate over

@@ -5,7 +5,7 @@
 #SBATCH --array=0-440:20
 #SBATCH --job-name=v-nrs_combine
 #SBATCH --output=logs/v-nrs_combine%a.log
-#SBATCH --time=2-1:00:00
+#SBATCH --time=5:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
 #SBATCH --account=astronomy-hi
@@ -16,4 +16,4 @@
 . ~/.profile
 START=$SLURM_ARRAY_TASK_ID
 END=$(($SLURM_ARRAY_TASK_ID+20))
-python3 /lustre/cosinga/hicc/vn/combine.py v-nrs $START $END 99 100 0
+python3 /lustre/cosinga/HI-color/hicc/vn/combine.py v-nrs $START $END 99 100 0

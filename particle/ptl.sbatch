@@ -13,4 +13,4 @@
 #SBATCH --mail-type=ALL
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/particle/particle.py $SLURM_ARRAY_TASK_ID 99 100 800 0
+python3 /lustre/cosinga/HI-color/hicc/particle/particle.py $SLURM_ARRAY_TASK_ID 99 100 800 0

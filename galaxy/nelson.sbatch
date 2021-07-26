@@ -11,8 +11,8 @@
 #SBATCH --output=nelson.dat
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/galaxy/nelson.py 99 100 'mid' 800 0
-python3 /lustre/cosinga/hicc/galaxy/nelson.py 99 100 'high' 800 0
-python3 /lustre/cosinga/hicc/galaxy/nelson.py 99 100 'low' 800 0
+python3 /lustre/cosinga/HI-color/hicc/galaxy/nelson.py 99 100 'mid' 800 0
+python3 /lustre/cosinga/HI-color/hicc/galaxy/nelson.py 99 100 'high' 800 0
+python3 /lustre/cosinga/HI-color/hicc/galaxy/nelson.py 99 100 'low' 800 0
 echo 'end of nelson.sbatch file'
 

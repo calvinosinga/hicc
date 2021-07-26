@@ -11,4 +11,4 @@
 #SBATCH --mail-type=ALL
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/particle/combine.py ptlrs 0 448 99 100 1
+python3 /lustre/cosinga/HI-color/hicc/particle/combine.py ptlrs 0 448 99 100 1

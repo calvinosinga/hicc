@@ -11,4 +11,4 @@
 #SBATCH --output=pacopk.dat
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/power_spectrum/pk.py auto 99 100 1 0 paco
+python3 /lustre/cosinga/HI-color/hicc/pk/pk.py auto 99 100 1 0 paco

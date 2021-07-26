@@ -4,7 +4,7 @@
 #SBATCH --share
 #SBATCH --job-name=vn_final
 #SBATCH --output=logs/vn_final.log
-#SBATCH --time=10:00:00
+#SBATCH --time=4:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
 #SBATCH --account=astronomy-hi
@@ -13,4 +13,4 @@
 #SBATCH --requeue
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/vn/combine.py v-n 0 448 99 100 1
+python3 /lustre/cosinga/HI-color/hicc/vn/combine.py v-n 0 448 99 100 1

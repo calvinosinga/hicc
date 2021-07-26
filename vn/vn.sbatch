@@ -12,4 +12,4 @@
 #SBATCH --mail-type=ALL
 #SBATCH --requeue
 
-python3 /lustre/cosinga/hicc/vn/vn.py $SLURM_ARRAY_TASK_ID 99 100 800 0
+python3 /lustre/cosinga/HI-color/hicc/vn/vn.py $SLURM_ARRAY_TASK_ID 99 100 800 0
