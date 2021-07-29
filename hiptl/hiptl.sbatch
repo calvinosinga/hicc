@@ -9,9 +9,9 @@
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
 #SBATCH --account=astronomy-hi
-#SBATCH --mem-per-cpu=5000
+#SBATCH --mem-per-cpu=10000
 #SBATCH --mail-type=ALL
 #SBATCH --requeue
 
 . ~/.profile
-python3 /lustre/cosinga/HI-color/hicc/hiptl/hiptl.py $SLURM_ARRAY_TASK_ID 99 100 800 0
+python3 /lustre/cosinga/HI-color/hicc/hiptl/hiptl.py $SLURM_ARRAY_TASK_ID 99 100 1200 0

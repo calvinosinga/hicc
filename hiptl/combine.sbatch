@@ -5,11 +5,11 @@
 #SBATCH --array=0-440:20
 #SBATCH --job-name=hiptl_combine
 #SBATCH --output=logs/hiptl_combine%a.log
-#SBATCH --time=2-1:00:00
+#SBATCH --time=21:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
 #SBATCH --account=astronomy-hi
-#SBATCH --mem-per-cpu=10000
+#SBATCH --mem-per-cpu=20000
 #SBATCH --mail-type=ALL
 #SBATCH --requeue
 
