@@ -24,7 +24,7 @@ GRID = (RES,RES,RES)
 
 # defining needed paths
 HOME = '/lustre/cosinga/tng%d/'%BOX
-SAVE = '/lustre/cosinga/results/fields/snap_%03d/'%SNAPSHOT
+SAVE = '/lustre/cosinga/HI-color/results/fields/snap_%03d/'%SNAPSHOT
 LOG = '/lustre/cosinga/HI-color/hicc/logs/galaxy/'
 
 # getting simulation defined constants
