@@ -11,8 +11,6 @@
 #SBATCH --error=./errors/nelson.dat
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/galaxy/nelson.py $SNAP $BOX 'mid' $RES -1
-python3 /lustre/cosinga/hicc/galaxy/nelson.py $SNAP $BOX 'high' $RES -1
-python3 /lustre/cosinga/hicc/galaxy/nelson.py $SNAP $BOX 'low' $RES -1
-# really only want the main one in redshift space
-python3 /lustre/cosinga/hicc/galaxy/nelson.py $SNAP $BOX 'mid' $RES $AXIS
+python3 /lustre/cosinga/HI-color/hicc/galaxy/nelson.py $SNAP $BOX 'mid' $RES $AXIS
+python3 /lustre/cosinga/HI-color/hicc/galaxy/nelson.py $SNAP $BOX 'high' $RES $AXIS
+python3 /lustre/cosinga/HI-color/hicc/galaxy/nelson.py $SNAP $BOX 'low' $RES $AXIS

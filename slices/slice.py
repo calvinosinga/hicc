@@ -41,18 +41,25 @@ pnt.write("opening input file at: "+FIELDS+filename+'.hdf5')
 f = hp.File(FIELDS+filename+'.hdf5','r')
 keylist = list(f.keys())
 
-
+def coarse_grid(grid):
+    grid = grid[1::2,:,:]+grid[::2,:,:]
+    grid = grid[:,1::2,:]+grid[:,::2,:]
+    grid = grid[:,:,1::2]+grid[:,:,::2]
 # now making slice plots
 for key in keylist:
     field = f[key][:]
     if not len(field.shape) == 3:
         pnt.write("field %s is not the right shape; skipping slice plot..."%key)
     else:
+        count = np.count_nonzero(field)
+        elms = field.shape[0]**3
+        occupation = count/elms
+        if occupation < .001:
+            field = coarse_grid(field)
+        pnt.writeTab("out of %.3e elements, %.3e are occupied"%(elms, count))
         pnt.write("making slice plot for %s"%key)
         lpt.plotslc(field, BOXSIZE, PLOTS+'/slices/%s/%s%d_%03d'%(FILE, key, BOX, SNAPSHOT))
         pnt.writeTab("successfully made the slice plot")
-        count = np.count_nonzero(field)
-        elms = field.shape[0]**3
-        pnt.writeTab("out of %.3e elements, %.3e are occupied"%(elms, count))
+
 
 f.close()

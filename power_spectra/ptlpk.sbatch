@@ -11,5 +11,5 @@
 #SBATCH --error=./errors/ptlpk.err
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/pk/pk.py auto $SNAP $BOX 1 $AXIS ptl
-python3 /lustre/cosinga/hicc/pk/pk.py auto $SNAP $BOX 0 $AXIS ptlrs
+python3 /lustre/cosinga/HI-color/hicc/pk/pk.py auto $SNAP $BOX 1 $AXIS ptl
+python3 /lustre/cosinga/HI-color/hicc/pk/pk.py auto $SNAP $BOX 0 $AXIS ptlrs

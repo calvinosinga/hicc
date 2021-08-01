@@ -11,5 +11,4 @@
 #SBATCH --output=./outlogs/hisubhalo.dat
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/hisubhalo/hisubhalo.py $SNAP $BOX $RES -1
-python3 /lustre/cosinga/hicc/hisubhalo/hisubhalo.py $SNAP $BOX $RES $AXIS
+python3 /lustre/cosinga/HI-color/hicc/hisubhalo/hisubhalo.py $SNAP $BOX $RES $AXIS

@@ -9,7 +9,7 @@
 #SBATCH --mail-user=cosinga@umd.edu
 #SBATCH --account=astronomy-hi
 #SBATCH --mail-type=ALL
+#SBATCH --requeue
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/particle/particle.py $SLURM_ARRAY_TASK_ID $SNAP $BOX $RES -1
-python3 /lustre/cosinga/hicc/particle/particle.py $SLURM_ARRAY_TASK_ID $SNAP $BOX $RES $AXIS
+python3 /lustre/cosinga/HI-color/hicc/particle/particle.py $SLURM_ARRAY_TASK_ID $SNAP $BOX $RES $AXIS

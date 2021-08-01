@@ -11,5 +11,5 @@
 #SBATCH --mail-user=cosinga@umd.edu
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/pk/pk.py cross $SNAP $BOX 1 $AXIS hisubhalo ptl 0
-python3 /lustre/cosinga/hicc/pk/pk.py cross $SNAP $BOX 0 $AXIS hisubhalo ptl 0
+python3 /lustre/cosinga/HI-color/hicc/pk/pk.py cross $SNAP $BOX 1 $AXIS hisubhalo ptl
+python3 /lustre/cosinga/HI-color/hicc/pk/pk.py cross $SNAP $BOX 0 $AXIS hisubhalors ptlrs

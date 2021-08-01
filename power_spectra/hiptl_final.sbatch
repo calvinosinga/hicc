@@ -12,5 +12,5 @@
 #SBATCH --mail-type=ALL
 
 . ~/.profile
-python3 /lustre/cosinga/hicc/hiptl/combine.py hiptl 0 $NUMFILES $SNAP $BOX 1
-python3 /lustre/cosinga/hicc/hiptl/combine.py hiptlrs 0 $NUMFILES $SNAP $BOX 1
+python3 /lustre/cosinga/HI-color/hicc/hiptl/combine.py hiptl 0 $NUMFILES $SNAP $BOX 1
+python3 /lustre/cosinga/HI-color/hicc/hiptl/combine.py hiptlrs 0 $NUMFILES $SNAP $BOX 1

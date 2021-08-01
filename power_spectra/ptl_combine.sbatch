@@ -9,9 +9,10 @@
 #SBATCH --mail-user=cosinga@umd.edu
 #SBATCH --account=astronomy-hi
 #SBATCH --mail-type=ALL
+#SBATCH --requeue
 
 . ~/.profile
 START=$SLURM_ARRAY_TASK_ID
 END=$(($SLURM_ARRAY_TASK_ID+20))
-python3 /lustre/cosinga/hicc/particle/combine.py ptl $START $END $SNAP $BOX 0
-python3 /lustre/cosinga/hicc/particle/combine.py ptlrs $START $END $SNAP $BOX 1
+python3 /lustre/cosinga/HI-color/hicc/particle/combine.py ptl $START $END $SNAP $BOX 0
+python3 /lustre/cosinga/HI-color/hicc/particle/combine.py ptlrs $START $END $SNAP $BOX 0
