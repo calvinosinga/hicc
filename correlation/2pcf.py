@@ -38,8 +38,6 @@ del head
 # author-given mass-assignment scheme
 MAS = "CIC"
 
-# creating a directory to store plots if necessary
-
 def to_overdensity(field, pnt):
     pnt.writeTab("calculating overdensity...")
     field = field/BOXSIZE**3
@@ -51,22 +49,32 @@ def to_overdensity(field, pnt):
     return field
 
 if not IS_CROSS:
-    # creating output files
-    w = hp.File(SAVE+'auto/%s%d_%03d.corr.hdf5'%(FILE1,BOX,SNAPSHOT),'w')
-    pnt = printer.Printer(LOG+'%s%d_%03d.corr.log'%(FILE1,BOX,SNAPSHOT))
 
-    # calculating auto correlation
-    pnt.write("calculating auto correlation for %s"%FILE1)
-    
     # getting input data
     f = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
     keylist = list(f.keys())
+
+    # getting the resolution of the fields to name the output file
+    res = 0
+    i = 0
+    while res == 0:
+        if len(f[keylist[i]].shape) == 3:
+            res = f[keylist[i]].shape[0]
+            break
+        else:
+            i += 1
+    
+    # creating output files
+    w = hp.File(SAVE+'auto/%s%d_%03d.%dres.hdf5'%(FILE1,BOX,SNAPSHOT,res),'w')
+    pnt = printer.Printer(LOG+'%s%d_%03d.%dres.corr.log'%(FILE1,BOX,SNAPSHOT,res))
 
     # creating a directory to save plots to...
     if not os.path.isdir(PLOTS+'%s/'%FILE1):
         pnt.write("creating corr plot directory at: "+PLOTS+'1Dpk/%s/'%FILE1)
         os.mkdir(PLOTS+'%s/'%FILE1)
-    
+
+    # calculating auto correlation
+    pnt.write("calculating auto correlation for %s"%FILE1)    
     
     for k in keylist:
         field = f[k][:]
@@ -92,18 +100,28 @@ if not IS_CROSS:
 
 
 else:
-    # creating output files
-    w = hp.File(SAVE+'cross/%s-%s%d_%03d.Xcorr.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT),'w')
-    pnt = printer.Printer(LOG+'%s-%s%d_%03d.corr.log'%(FILE1,FILE2,BOX,SNAPSHOT))
-
-    # calculating cross-correlation
-    pnt.write("calculating X-correlation for %s, %s"%(FILE1, FILE2))
-
     # getting input data
     f1 = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
     f2 = hp.File(HOME+FILE2+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
     keylist1 = list(f1.keys())
     keylist2 = list(f2.keys())
+
+    # getting the resolution of the fields to name the output file
+    res = 0
+    i = 0
+    while res == 0:
+        if len(f1[keylist1[i]].shape) == 3:
+            res = f1[keylist1[i]].shape[0]
+            break
+        else:
+            i += 1
+    
+    # creating output files
+    w = hp.File(SAVE+'cross/%s-%s%d_%03d.%dres.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT,res),'w')
+    pnt = printer.Printer(LOG+'%s-%s%d_%03d.%dres.Xcorr.log'%(FILE1,FILE2,BOX,SNAPSHOT,res))
+
+    # calculating cross-correlation
+    pnt.write("calculating X-correlation for %s, %s"%(FILE1, FILE2))
 
     # making a directory to save the plots to...
     if not os.path.isdir(PLOTS+'%s-%s/'%(FILE1, FILE2)):

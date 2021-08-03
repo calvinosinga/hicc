@@ -67,14 +67,6 @@ def to_overdensity(field):
     
 
 if IS_XPK:
-    pnt.write("calculating the cross-power for %s, %s\n"%(FILE1, FILE2))
-    pnt.write("creating output files...")
-    # output file
-    if DIM==0: # create both 1D and 2D
-        w1 = hp.File(SAVE+'cross/1Dpk/%s-%s%d_%03d.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT),'w')
-        w2 = hp.File(SAVE+'cross/2Dpk/%s-%s%d_%03d.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT),'w')
-    else:
-        w = hp.File(SAVE+'cross/%dDpk/%s-%s%d_%03d.hdf5'%(DIM,FILE1,FILE2,BOX,SNAPSHOT),'w')
 
     # input files, loop over all of the keys in each
     f1 = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
@@ -84,12 +76,32 @@ if IS_XPK:
 
     pnt.write('opened both files, size of each are %.3e and %.3e.\n starting calculations... \n'%(sys.getsizeof(f1),sys.getsizeof(f2)))
 
+    # getting the resolution of the fields to name the output file
+    res = 0
+    i = 0
+    while res == 0:
+        if len(f1[key1list[i]].shape) == 3:
+            res = f1[key1list[i]].shape[0]
+            break
+        else:
+            i += 1
+    
+    pnt.write("creating output files...")
+    # output file
+    if DIM==0: # create both 1D and 2D
+        w1 = hp.File(SAVE+'cross/1Dpk/%s-%s%d_%03d.%dres.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT,res),'w')
+        w2 = hp.File(SAVE+'cross/2Dpk/%s-%s%d_%03d.%dres.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT,res),'w')
+    else:
+        w = hp.File(SAVE+'cross/%dDpk/%s-%s%d_%03d.%dres.hdf5'%(DIM,FILE1,FILE2,BOX,SNAPSHOT,res),'w')
+
     # making a directory to save the plots to...
     if not os.path.isdir(PLOTS+'1Dpk/%s-%s/'%(FILE1, FILE2)):
         os.mkdir(PLOTS+'1Dpk/%s-%s/'%(FILE1, FILE2))
     
     if not os.path.isdir(PLOTS+'2Dpk/%s-%s/'%(FILE1, FILE2)):
         os.mkdir(PLOTS+'2Dpk/%s-%s/'%(FILE1, FILE2))
+    
+    pnt.write("calculating the cross-power for %s, %s\n"%(FILE1, FILE2))
     for key1 in key1list:
         for key2 in key2list:
             pnt.write("now calculating xpk for %s-%s...\n"%(key1,key2))
@@ -155,17 +167,28 @@ if IS_XPK:
     else:
         w.close()
 else:# auto power spectrum
-    pnt.write("starting procedure for the auto power for %s"%FILE1)
-    # output file
-    if DIM==0: # create both 1D and 2D
-        w1 = hp.File(SAVE+'auto/1Dpk/%s%d_%03d.hdf5'%(FILE1,BOX,SNAPSHOT),'w')
-        w2 = hp.File(SAVE+'auto/2Dpk/%s%d_%03d.hdf5'%(FILE1,BOX,SNAPSHOT),'w')
-    else:
-        w = hp.File(SAVE+'auto/%dDpk/%s%d_%03d.hdf5'%(DIM,FILE1,BOX,SNAPSHOT),'w')
-
+    
     # input data
     f1 = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
     keylist = list(f1.keys())
+
+    # getting the resolution of the fields to name the output file
+    res = 0
+    i = 0
+    while res == 0:
+        if len(f1[keylist[i]].shape) == 3:
+            res = f1[keylist[i]].shape[0]
+            break
+        else:
+            i += 1
+
+
+    # output file
+    if DIM==0: # create both 1D and 2D
+        w1 = hp.File(SAVE+'auto/1Dpk/%s%d_%03d.%dres.hdf5'%(FILE1,BOX,SNAPSHOT,res),'w')
+        w2 = hp.File(SAVE+'auto/2Dpk/%s%d_%03d.%dres.hdf5'%(FILE1,BOX,SNAPSHOT,res),'w')
+    else:
+        w = hp.File(SAVE+'auto/%dDpk/%s%d_%03d.%dres.hdf5'%(DIM,FILE1,BOX,SNAPSHOT,res),'w')
 
     # making a directory to save the plots to...
     if not os.path.isdir(PLOTS+'1Dpk/%s/'%FILE1):
@@ -174,6 +197,7 @@ else:# auto power spectrum
     if not os.path.isdir(PLOTS+'2Dpk/%s/'%FILE1):
         os.mkdir(PLOTS+'2Dpk/%s/'%FILE1)
     
+    pnt.write("starting procedure for the auto power for %s"%FILE1)
     # iterate over each k, save its auto power to file
     for k in keylist:
         pnt.write("starting pk calculation for %s"%k)

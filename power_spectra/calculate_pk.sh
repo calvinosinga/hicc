@@ -11,39 +11,39 @@ rm ./outlogs/*.dat
 # check to make sure input is correct
 if [ -z "$1" ]
 then
-    echo "$1 is not provided: needs snapshot 99,67,50,33"
+    printf "$1 is not provided: needs snapshot 99,67,50,33\n"
     exit 125
 else
-    echo "snapshot: $1"
+    printf "snapshot: $1\n"
     
 fi
 if [ -z "$2" ]
 then
-    echo "$2 is not provided: needs box length: 100,300,50"
+    printf "$2 is not provided: needs box length: 100,300,50\n"
     exit 125
 else
-    echo "box length: $2"
+    printf "box length: $2\n"
 fi
 if [ -z "$3" ]
 then
-    echo "$3 is not provided: needs axis for line-of-sight - either 0,1,2 although typically 0"
+    printf "$3 is not provided: needs axis for line-of-sight - either 0,1,2 although typically 0\n"
     exit 125
 else
-    echo "axis: $3"
+    printf "axis: $3\n"
 fi
 if [ -z "$4" ]
 then
-    echo "command-line arg needed: number of files: 448-TNG100, 680-TNG50, 600-TNG300"
+    printf "command-line arg needed: number of files: 448-TNG100, 680-TNG50, 600-TNG300 \n"
     exit 125
 else
-    echo "numfiles: $4"
+    printf "numfiles: $4\n"
 fi
 if [ -z "$5" ]
 then
-    echo "command-line arg needed: grid resolution"
+    printf "command-line arg needed: grid resolution\n"
     exit 125
 else
-    echo "resolution of grid: $5"
+    printf "resolution of grid: $5\n"
 fi
 
 ARRAYNO=$(($4-1))
@@ -134,9 +134,6 @@ sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$vnfinal:$ptlfin
 
 # v-n-galaxy xpk
 sbatch --export=ALL,SNAP=$1,BOX=$2,AXIS=$3 --dependency=afterok:$vnfinal:$galgrid --mem-per-cpu=$XPKMEM v-n-nelsonxpk.sbatch
-
-# make slices plot
-sbatch --export=ALL,SNAP=$1,BOX=$2 --dependency=afterok:$galgrid:$hisubgrid:$vnfinal:$ptlfinal:$hiptlfinal --mem-per-cpu=$PKMEM slices.sbatch
 
 # make gr-stmass plots
 python /lustre/cosinga/HI-color/hicc/color-stmass/gr-stmass.py $1 $2 &

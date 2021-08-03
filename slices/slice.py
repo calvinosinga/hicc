@@ -45,6 +45,7 @@ def coarse_grid(grid):
     grid = grid[1::2,:,:]+grid[::2,:,:]
     grid = grid[:,1::2,:]+grid[:,::2,:]
     grid = grid[:,:,1::2]+grid[:,:,::2]
+    return grid
 # now making slice plots
 for key in keylist:
     field = f[key][:]
@@ -55,10 +56,12 @@ for key in keylist:
         elms = field.shape[0]**3
         occupation = count/elms
         if occupation < .001:
+            pnt.writeTab("found that this grid is too sparse, converting to a smaller grid")
             field = coarse_grid(field)
+        res = field.shape[0]
         pnt.writeTab("out of %.3e elements, %.3e are occupied"%(elms, count))
-        pnt.write("making slice plot for %s"%key)
-        lpt.plotslc(field, BOXSIZE, PLOTS+'/slices/%s/%s%d_%03d'%(FILE, key, BOX, SNAPSHOT))
+        pnt.writeTab("making slice plot for %s"%key)
+        lpt.plotslc(field, BOXSIZE, PLOTS+'/slices/%s/%s%d_%03d.%dres'%(FILE, key, BOX, SNAPSHOT, res))
         pnt.writeTab("successfully made the slice plot")
 
 
