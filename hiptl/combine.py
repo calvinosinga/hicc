@@ -10,6 +10,14 @@ import sys
 from library_hicc.models import get_hiptl_models
 from library_hicc.printer import Printer
 
+# this is giving memory error for some unknown reason, checking for why
+import os, psutil
+process = psutil.Process(os.getpid())
+
+def mem_to_string():
+    mem = process.memory_info().rss
+    mem = mem/1e6
+    return "%.3e"%mem
 # getting command-line inputs
 PREFIX = sys.argv[1]
 START = int(sys.argv[2])
@@ -38,15 +46,21 @@ elif STEP == 1:
 else:
     raise ValueError("the STEP input must be 0 or 1")
 
+pnt.write("just finished loading paths, cmd-line, creating output files: has memory total of:"+mem_to_string())
 pnt.write('first file: ' + files[0])
 pnt.write('last file: ' + files[-1])
 f = hp.File(BASE+files[0], 'r')
 keylist = list(f.keys())
 GRID = f[models[0]][:].shape
+
+pnt.write("just loaded input, about to start loop:"+mem_to_string())
+
 # sum each model's grid individually
 for m in models:
+    pnt.write("starting model "+m+"\tmem="+mem_to_string())
     total = np.zeros(GRID, dtype=np.float32)
-    pnt.write("starting model "+m)
+
+    pnt.writeTab("created empty array:"+mem_to_string())
     for i in files:
         # it is expected that the last job will find nonexistent files
         try:
@@ -54,9 +68,12 @@ for m in models:
         except IOError:
             pnt.writeTab('did not find the file %s'%i)
         else:
-            total += f[m][:]
             pnt.writeTab('found file %s, adding to grid'%i)
+            pnt.writeTab("just loaded file:"+mem_to_string())
+            total += f[m][:]
+            pnt.writeTab("added to running total:"+mem_to_string())
             pnt.writeTab("new sum:" + str(np.sum(total)))
             f.close()
     w.create_dataset(m, data=total, compression="gzip", compression_opts=9)
+    pnt.writeTab("saved total to output file"+mem_to_string())
 w.close()
