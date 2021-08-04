@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #SBATCH --share
-#SBATCH --job-name=ptl_combine
-#SBATCH --output=./outlogs/ptl_combine.dat
-#SBATCH --error=./errors/ptl_combine.err
+#SBATCH --job-name=ptl_combine%a
+#SBATCH --output=./outlogs/ptl_combine%a.dat
+#SBATCH --error=./errors/ptl_combine%a.err
 #SBATCH --time=10:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu

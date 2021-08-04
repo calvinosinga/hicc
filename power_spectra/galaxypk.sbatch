@@ -33,10 +33,10 @@ printf "finished auto correlation calculation for nelson_mid in redshift-space\n
 
 printf "now making slice plots...\n"
 
-python3 /lustre/cosinga/HI-color/hicc/slices/slice.py auto nelson_mid $SNAP $BOX 
+python3 /lustre/cosinga/HI-color/hicc/slices/slice.py nelson_mid $SNAP $BOX 
 printf "made slice plots for nelson_mid\n"
 
-python3 /lustre/cosinga/HI-color/hicc/slices/slice.py auto nelsonrs_mid $SNAP $BOX
+python3 /lustre/cosinga/HI-color/hicc/slices/slice.py nelsonrs_mid $SNAP $BOX
 printf "made slice plots for nelsonrs_mid\n"
 
 printf "finished operations for galaxies!"

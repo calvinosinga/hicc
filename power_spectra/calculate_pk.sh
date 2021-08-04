@@ -8,6 +8,16 @@ mkdir errors
 
 rm ./errors/*.err
 rm ./outlogs/*.dat
+
+rm /lustre/cosinga/HI-color/hicc/logs/corr/*
+rm /lustre/cosinga/HI-color/hicc/logs/galaxy/*
+rm /lustre/cosinga/HI-color/hicc/logs/hiptl/*
+rm /lustre/cosinga/HI-color/hicc/logs/hisubhalo/*
+rm /lustre/cosinga/HI-color/hicc/logs/pk/*
+rm /lustre/cosinga/HI-color/hicc/logs/ptl/*
+rm /lustre/cosinga/HI-color/hicc/logs/slices/*
+rm /lustre/cosinga/HI-color/hicc/logs/v-n/*
+
 # check to make sure input is correct
 
 printf "usage: bash calculate_pk.sh [snapshot] [boxsize] [axis] [numfiles] [grid_resolution]\n"

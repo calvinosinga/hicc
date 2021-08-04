@@ -16,6 +16,11 @@ from Pk_library import XPk
 import library_hicc.plot as lpt
 from library_hicc.printer import Printer
 
+# attempting to look for memory problems
+import psutil
+
+process = psutil.Process(os.getpid())
+
 # reading command line inputs
 start = time.time()
 AUTO_OR_XPK = sys.argv[1]
@@ -46,9 +51,17 @@ MAS = 'CIC'
 
 # memory issues, create log file to write to
 if IS_XPK:
-    pnt = Printer(LOG+"%s-%spk_log.log"%(FILE1,FILE2))
+    pnt = Printer(LOG+"%s-%spk.log"%(FILE1,FILE2))
 else:
     pnt = Printer(LOG+"%spk.log"%(FILE1))
+
+def mem_to_printer(prefix):
+    mem = process.memory_info().rss
+    mem = mem/1e6
+    memstring = "%.3e"%mem
+    pnt.write(prefix+memstring)
+
+mem_to_printer("finished loading command-line args and paths:")
 
 # getting simulation defined constants
 head = il.groupcat.loadHeader(TNG, SNAPSHOT)
@@ -60,9 +73,11 @@ pnt.write("got simulation-defined constants")
 
 def to_overdensity(field):
     pnt.writeTab('calculating overdensity field...')
+    mem_to_printer("starting overdensity calculation:")
     field = field/BOXSIZE**3
     field = field/np.mean(field).astype(np.float32)
     field = field - 1    
+    mem_to_printer("finished overdensity calculation:")
     return field
     
 
@@ -74,8 +89,8 @@ if IS_XPK:
     f2 = hp.File(HOME+FILE2+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
     key2list = list(f2.keys())
 
-    pnt.write('opened both files, size of each are %.3e and %.3e.\n starting calculations... \n'%(sys.getsizeof(f1),sys.getsizeof(f2)))
-
+    #pnt.write('opened both files, size of each are %.3e and %.3e.\n starting calculations... \n'%(sys.getsizeof(f1),sys.getsizeof(f2)))
+    mem_to_printer("finished loading the files:")
     # getting the resolution of the fields to name the output file
     res = 0
     i = 0
@@ -101,6 +116,7 @@ if IS_XPK:
     if not os.path.isdir(PLOTS+'2Dpk/%s-%s/'%(FILE1, FILE2)):
         os.mkdir(PLOTS+'2Dpk/%s-%s/'%(FILE1, FILE2))
     
+    mem_to_printer("made output files:")
     pnt.write("calculating the cross-power for %s, %s\n"%(FILE1, FILE2))
     for key1 in key1list:
         for key2 in key2list:
@@ -108,8 +124,10 @@ if IS_XPK:
             # get the fields
             field1 = f1[key1][:]
             pnt.writeTab("committed the first field, size=%.3e\n"%sys.getsizeof(field1))
+            mem_to_printer("got the first field:")
             field2 = f2[key2][:]
             pnt.writeTab("committed the second field, size=%.3e\n"%sys.getsizeof(field2))
+            mem_to_printer("got the second field:")
 
             if SAME_FILE and key1 == key2:
                 pnt.writeTab("skipping xpk calculation for %s, %s; just auto power"%(key1, key2))
@@ -126,7 +144,7 @@ if IS_XPK:
                 # compute the xpk
                 res = XPk([field1,field2], BOXSIZE, axis=AXIS, MAS=[MAS, MAS])
                 pnt.writeTab("just got the xpk result, size = %.3e\n"%sys.getsizeof(res))
-
+                mem_to_printer("just got xpk result:")
                 # if this is the first calculation, save the wavenumbers
                 if key1 == key1list[0] and key2 == key2list[0]:
                     # if in 1D, just need 1 k, otherwise need kper and kpar
@@ -150,7 +168,7 @@ if IS_XPK:
                     w1.create_dataset("%s-%s"%(key1, key2),data= res.XPk[:,0,0])
                     w2.create_dataset("%s-%s"%(key1, key2),data=res.PkX2D[:,0])
                     # 2D only has a field index, no "ell" index
-                
+                mem_to_printer("finished saving the results: ")
                 # now creating a plot of the Xpk and 2Dxpk
                 pnt.writeTab("now creating 1Dxpk plot...")
                 plotpath='%s-%s/%s-%s%d_%03d'%(FILE1, FILE2, key1,key2,BOX,SNAPSHOT)
@@ -172,6 +190,7 @@ else:# auto power spectrum
     f1 = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
     keylist = list(f1.keys())
 
+    mem_to_printer("finished loading the file:")
     # getting the resolution of the fields to name the output file
     res = 0
     i = 0
@@ -196,7 +215,7 @@ else:# auto power spectrum
     
     if not os.path.isdir(PLOTS+'2Dpk/%s/'%FILE1):
         os.mkdir(PLOTS+'2Dpk/%s/'%FILE1)
-    
+    mem_to_printer("finished creating output files:")
     pnt.write("starting procedure for the auto power for %s"%FILE1)
     # iterate over each k, save its auto power to file
     for k in keylist:
@@ -209,7 +228,7 @@ else:# auto power spectrum
             pnt.writeTab("calculating pk for %s"%k)
             field1=to_overdensity(field1)
             res = Pk(field1, BOXSIZE, axis=AXIS, MAS=MAS)
-
+            mem_to_printer("finished the creation of")
             # if first calculation, save the wavenumbers
             if k == keylist[0]:
                 pnt.writeTab("saving the wavenumbers...")
@@ -233,7 +252,7 @@ else:# auto power spectrum
             elif DIM == 0:
                 w1.create_dataset(k,data= res.Pk[:,0])
                 w2.create_dataset(k,data=res.Pk2D[:])
-            
+            mem_to_printer("finished saving the result:")
             plotpath = '%s/%s%d_%03d'%(FILE1, k, BOXSIZE, SNAPSHOT)
             pnt.writeTab("plotting 1D pk result...")
             lpt.plot1Dpk(res.k3D, res.Pk[:,0], field1.shape[0], BOXSIZE, PLOTS+'1Dpk/'+plotpath)
