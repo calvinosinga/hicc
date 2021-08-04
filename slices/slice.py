@@ -46,6 +46,7 @@ def coarse_grid(grid):
     grid = grid[:,1::2,:]+grid[:,::2,:]
     grid = grid[:,:,1::2]+grid[:,:,::2]
     return grid
+
 # now making slice plots
 for key in keylist:
     field = f[key][:]

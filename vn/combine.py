@@ -11,6 +11,8 @@ from library_hicc.models import get_hiptl_models
 from library_hicc.printer import Printer
 
 # getting command-line inputs
+# for whatever reason this is giving an error
+print(sys.argv)
 PREFIX = sys.argv[1]
 START = int(sys.argv[2])
 END = int(sys.argv[3])

@@ -40,7 +40,6 @@ w = hp.File('%snelson_%s%d_%03d.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT), 'w')
 pnt = Printer(LOG+'nelson_%s%d_%03d.log'%(RUN,BOX,SNAPSHOT))
 
 # input data
-pnt.write("starting subhalo grid generation")
 flds = ['SubhaloPos', 'SubhaloStellarPhotometrics', 'SubhaloMassType', 'SubhaloVel']
 sub = il.groupcat.loadSubhalos(HOME,SNAPSHOT, fields=flds)
 mass = sub[flds[2]][:]*1e10/LITTLE_H # solar masses
@@ -51,6 +50,21 @@ vel = sub[flds[3]][:] # km/s, 52 MB
 pnt.write("now shifting the positions to redshift space...")
 rspos = pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
 del sub, flds
+
+# getting dust-adjusted photometric data
+dustfile = "Subhalo_StellarPhot_p07c_cf00dust_res_conv_ns1_rad30pkpc_%03d.hdf5"%SNAPSHOT
+f = hp.File(HOME+"postprocessing/stellar_light/"+dustfile)
+dustPhoto = f['Subhalo_StellarPhot_p07c_cf00dust_res_conv_ns1_rad30pkpc']
+
+# get the angles for each of the line-of-sights that the dust was computed for
+proj = dict(dustPhoto.attrs)['projVecs']
+
+# get the line-of-sight for the power spectrum calculation
+los = np.zeros(3)
+los[AXIS] += 1
+
+# find the projection that is the closest to the pk's line of sight
+dist = 
 
 
 
@@ -88,6 +102,8 @@ def create_field(fieldname, idx):
     counts_names.append(fieldname)
     pnt.write("\t there are %d subhalos in this group"%np.sum(idx))
     return
+
+pnt.write("starting subhalo grid generation")
 
 resolved_idx = lhicc.is_resolved_stmass(mass[:,4])
 red_idx = lhicc.is_red_nelson(gr,mass[:,4],RUN)
