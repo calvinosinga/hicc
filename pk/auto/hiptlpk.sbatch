@@ -4,7 +4,7 @@
 #SBATCH --job-name=hiptlpk
 #SBATCH --time=8:00:00
 #SBATCH --ntasks=1
-#SBATCH --mem-per-cpu=10000
+#SBATCH --mem-per-cpu=25000
 #SBATCH --account=astronomy-hi
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=cosinga@umd.edu

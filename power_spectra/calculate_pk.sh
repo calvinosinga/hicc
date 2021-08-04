@@ -9,6 +9,8 @@ mkdir errors
 rm ./errors/*.err
 rm ./outlogs/*.dat
 # check to make sure input is correct
+
+printf "usage: bash calculate_pk.sh [snapshot] [boxsize] [axis] [numfiles] [grid_resolution]\n"
 if [ -z "$1" ]
 then
     printf "$1 is not provided: needs snapshot 99,67,50,33\n"
@@ -43,7 +45,7 @@ then
     printf "command-line arg needed: grid resolution\n"
     exit 125
 else
-    printf "resolution of grid: $5\n"
+    printf "resolution of grid: $5\n\n"
 fi
 
 ARRAYNO=$(($4-1))
@@ -52,12 +54,6 @@ COMBINE_ARRAY=$(($4-$4%20))
 GRIDMEM=$(($5*$5*$5*4/1000000+10000))
 PKMEM=$(($GRIDMEM*2))
 XPKMEM=$(($PKMEM*2))
-
-printf "The snapshot given: $1\n"
-printf "The box given: $2\n"
-printf "The axis given: $3\n"
-printf "The number of files given: $4\n"
-printf "The grid resolution given $5\n\n"
 
 printf "The number of array jobs (should be one less than numfiles): $ARRAYNO\n"
 printf "The number of combine arrays: $COMBINE_ARRAY\n\n"

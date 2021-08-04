@@ -2,7 +2,7 @@
 # this file combines the v-n chunk files' into smaller chunks
 
 #SBATCH --share
-#SBATCH --job-name=v-n_combine
+#SBATCH --job-name=v-n_final
 #SBATCH --time=5:00:00
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
