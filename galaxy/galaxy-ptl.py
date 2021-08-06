@@ -28,7 +28,7 @@ SAVE = '/lustre/cosinga/HI-color/results/fields/snap_%03d/'%SNAPSHOT
 LOG = '/lustre/cosinga/HI-color/hicc/logs/galaxy/'
 
 # getting simulation defined constants
-f= hp.File(HOME+'snapdir_%03d/snap_%03d.0.hdf5'%(SNAPSHOT,SNAPSHOT), 'f')
+f= hp.File(HOME+'snapdir_%03d/snap_%03d.0.hdf5'%(SNAPSHOT,SNAPSHOT), 'r')
 head = dict(f['Header'].attrs)
 
 LITTLE_H = head['HubbleParam'] # 100 km/s/Mpc
@@ -101,13 +101,15 @@ blue_mask *= resolved_mask
 # creating the fields for blue-ptl, red-ptl, resolved-ptl
 masks = [blue_mask, red_mask, resolved_mask]
 names = ['blue', 'red', 'resolved']
-ptltypes = [0,1,3,4,5]
+ptltypes = [0,1,4,5]
 for m in range(len(masks)):
     grid = np.zeros(GRID, dtype=np.float32)
     gridrs = np.zeros(GRID, dtype=np.float32)
     for i in range(len(masks[m])):
         if masks[m][i]:
             for p in ptltypes:
+                print(p)
+                
                 if p==1:
                     ptldata=il.snapshot.loadSubhalo(HOME, SNAPSHOT, i, p, fields=['Coordinates','Velocities'])
                     mass = np.ones(len(ptldata['Coordinates']), dtype=np.float32)*DMPTL
