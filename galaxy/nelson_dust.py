@@ -54,7 +54,7 @@ del sub, flds
 # getting dust-adjusted photometric data
 dustfile = "Subhalo_StellarPhot_p07c_cf00dust_res_conv_ns1_rad30pkpc_%03d.hdf5"%SNAPSHOT
 f = hp.File(HOME+"postprocessing/stellar_light/"+dustfile)
-dustPhoto = f['Subhalo_StellarPhot_p07c_cf00dust_res_conv_ns1_rad30pkpc'][:]
+dustPhoto = f['Subhalo_StellarPhot_p07c_cf00dust_res_conv_ns1_rad30pkpc']
 
 # get the angles for each of the line-of-sights that the dust was computed for
 proj = dict(dustPhoto.attrs)['projVecs']

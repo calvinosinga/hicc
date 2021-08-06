@@ -35,8 +35,8 @@ gr = sub[fields[1]][:,4] - sub[fields[1]][:,5]
 
 # getting dust gr
 dustfile = "Subhalo_StellarPhot_p07c_cf00dust_res_conv_ns1_rad30pkpc_%03d.hdf5"%SNAPSHOT
-f = hp.File(HOME+"postprocessing/stellar_light/"+dustfile)
-dustPhoto = f['Subhalo_StellarPhot_p07c_cf00dust_res_conv_ns1_rad30pkpc'][:]
+f = hp.File(HOME+"postprocessing/stellar_light/"+dustfile, 'r')
+dustPhoto = f['Subhalo_StellarPhot_p07c_cf00dust_res_conv_ns1_rad30pkpc']
 proj = dict(dustPhoto.attrs)['projVecs']
 los = np.zeros_like(proj)
 los[:,AXIS] += 1

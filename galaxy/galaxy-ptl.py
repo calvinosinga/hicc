@@ -28,12 +28,14 @@ SAVE = '/lustre/cosinga/HI-color/results/fields/snap_%03d/'%SNAPSHOT
 LOG = '/lustre/cosinga/HI-color/hicc/logs/galaxy/'
 
 # getting simulation defined constants
-head = il.groupcat.loadHeader(HOME,SNAPSHOT)
+f= hp.File(HOME+'snapdir_%03d/snap_%03d.0.hdf5'%(SNAPSHOT,SNAPSHOT), 'f')
+head = dict(f['Header'].attrs)
+
 LITTLE_H = head['HubbleParam'] # 100 km/s/Mpc
 SCALE = head['Time'] # scale factor
 BOXSIZE = head['BoxSize']/1e3 * SCALE #Mpc/h
 REDSHIFT = head['Redshift']
-
+DMPTL = head['MassTable'][1]*1e10/LITTLE_H
 # output files
 wrs = hp.File('%snelsonrs_%s_ptl%d_%03d.%dres.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT,RES), 'w')
 w = hp.File('%snelson_%s_ptl%d_%03d.%dres.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT,RES), 'w')
@@ -47,6 +49,7 @@ total_mass = np.sum(mass, axis=1)
 gr = sub[flds[1]][:,4] - sub[flds[1]][:,5]
 pos = sub[flds[0]][:]/1e3 * SCALE # Mpc/h, 52 MB
 vel = sub[flds[3]][:] # km/s, 52 MB
+
 # pnt.write("now shifting the positions to redshift space...")
 # rspos = pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
 del sub, flds
@@ -102,11 +105,15 @@ ptltypes = [0,1,3,4,5]
 for m in range(len(masks)):
     grid = np.zeros(GRID, dtype=np.float32)
     gridrs = np.zeros(GRID, dtype=np.float32)
-    for i in range(len(m)):
+    for i in range(len(masks[m])):
         if masks[m][i]:
             for p in ptltypes:
-                ptldata = il.snapshot.loadSubhalo(HOME, SNAPSHOT, i, p, fields=['Masses','Coordinates','Velocities'])
-                mass = ptldata['Masses']*1e10/LITTLE_H
+                if p==1:
+                    ptldata=il.snapshot.loadSubhalo(HOME, SNAPSHOT, i, p, fields=['Coordinates','Velocities'])
+                    mass = np.ones(len(ptldata['Coordinates']), dtype=np.float32)*DMPTL
+                else:
+                    ptldata = il.snapshot.loadSubhalo(HOME, SNAPSHOT, i, p, fields=['Masses','Coordinates','Velocities'])
+                    mass = ptldata['Masses']*1e10/LITTLE_H
                 pos = ptldata['Coordinates']/1e3 * SCALE
                 vel = ptldata['Velocities'] * np.sqrt(SCALE)
                 

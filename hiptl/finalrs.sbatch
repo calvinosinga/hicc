@@ -8,7 +8,7 @@
 #SBATCH --ntasks=1
 #SBATCH --mail-user=cosinga@umd.edu
 #SBATCH --account=astronomy-hi
-#SBATCH --mem-per-cpu=20000
+#SBATCH --mem-per-cpu=720000
 #SBATCH --mail-type=ALL
 #SBATCH --requeue
 

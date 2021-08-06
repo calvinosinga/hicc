@@ -4,7 +4,7 @@
 #SBATCH --job-name=nelson-v-n_xpk
 #SBATCH --time=10:00:00
 #SBATCH --ntasks=1
-#SBATCH --mem-per-cpu=50000
+#SBATCH --mem-per-cpu=210000
 #SBATCH --account=astronomy-hi
 #SBATCH --mail-type=ALL
 #SBATCH --output=nelson-v-n_xpk.dat

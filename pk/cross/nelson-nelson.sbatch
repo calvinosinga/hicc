@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --share
-#SBATCH --mem-per-cpu=50000
+#SBATCH --mem-per-cpu=210000
 #SBATCH --job-name=nelson-nelson_xpk
 #SBATCH --time=1-10:00:00
 #SBATCH --ntasks=1
