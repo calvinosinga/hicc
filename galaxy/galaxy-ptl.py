@@ -108,21 +108,22 @@ for m in range(len(masks)):
     for i in range(len(masks[m])):
         if masks[m][i]:
             for p in ptltypes:
-                print(p)
-                
-                if p==1:
-                    ptldata=il.snapshot.loadSubhalo(HOME, SNAPSHOT, i, p, fields=['Coordinates','Velocities'])
-                    mass = np.ones(len(ptldata['Coordinates']), dtype=np.float32)*DMPTL
+                try:
+                    if p==1:
+                        ptldata=il.snapshot.loadSubhalo(HOME, SNAPSHOT, i, p, fields=['Coordinates','Velocities'])
+                        mass = np.ones(len(ptldata['Coordinates']), dtype=np.float32)*DMPTL
+                    else:
+                        ptldata = il.snapshot.loadSubhalo(HOME, SNAPSHOT, i, p, fields=['Masses','Coordinates','Velocities'])
+                        mass = ptldata['Masses']*1e10/LITTLE_H
+                    pos = ptldata['Coordinates']/1e3 * SCALE
+                    vel = ptldata['Velocities'] * np.sqrt(SCALE)
+                except KeyError:
+                    print("error thrown on %s subhalo: %d, ptltype: %d; likely there are just no particles of this type in this subhalo?")
                 else:
-                    ptldata = il.snapshot.loadSubhalo(HOME, SNAPSHOT, i, p, fields=['Masses','Coordinates','Velocities'])
-                    mass = ptldata['Masses']*1e10/LITTLE_H
-                pos = ptldata['Coordinates']/1e3 * SCALE
-                vel = ptldata['Velocities'] * np.sqrt(SCALE)
-                
-                CICW(pos, grid, BOXSIZE, mass)
+                    CICW(pos, grid, BOXSIZE, mass)
 
-                rspos = pos_redshift_space(pos, vel, BOXSIZE, LITTLE_H*100, REDSHIFT, AXIS)
-                CICW(rspos, gridrs, BOXSIZE, mass)
+                    rspos = pos_redshift_space(pos, vel, BOXSIZE, LITTLE_H*100, REDSHIFT, AXIS)
+                    CICW(rspos, gridrs, BOXSIZE, mass)
 
     w.create_dataset(names[m], data=grid, compression="gzip", compression_opts=9)
     wrs.create_dataset(names[m], data=gridrs, compression="gzip", compression_opts=9)
