@@ -63,7 +63,7 @@ COMBINE_ARRAY=$(($4-$4%20))
 
 GRIDMEM=$(($5*$5*$5*4/1000000+10000))
 COMBINEMEM=$(($GRIDMEM*2))
-PKMEM=$(($GRIDMEM*2))
+PKMEM=$(($GRIDMEM*2+15000))
 XPKMEM=$(($PKMEM*2))
 
 printf "The number of array jobs (should be one less than numfiles): $ARRAYNO\n"

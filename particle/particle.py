@@ -58,7 +58,7 @@ pnt.write('starting loop for real-space...')
 for p in ptltype:
     pnt.writeTab("getting data for %s"%p)
     if '1' in p:
-        mass = np.ones(nptl[1]) * DMPTL
+        mass = np.ones(nptl[1], dtype=np.float32) * DMPTL
     else:
         mass = ptlfile[p]['Masses'][:]*1e10/LITTLE_H # solar masses
     pos = ptlfile[p]['Coordinates'][:]/1e3 * SCALE # Mpc/h

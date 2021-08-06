@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib as mpl
 import copy
+import h5py as hp
 
 """
 This is meant to create and store plots of the pks and slices of their fields to check that they make sense.
@@ -50,6 +51,9 @@ def plotslc(grid, boxsize, plotname):
     slcidx = int(0.1*dim)
     mid = int(dim/2)
     slc = np.log10(np.sum(grid[:, mid-slcidx:mid+slcidx, :], axis=1))
+    w = hp.File(plotname+'.hdf5', 'w')
+    w.create_dataset('slice', data=slc)
+    w.close()
     plt.imshow(slc, extent=(0,boxsize, 0, boxsize), origin='lower', cmap=cmap)
     plt.xlabel("x (Mpc/h)")
     plt.ylabel("y (Mpc/h)")
