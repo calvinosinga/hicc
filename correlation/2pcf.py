@@ -16,10 +16,12 @@ AUTO_OR_CROSS = sys.argv[1]
 SNAPSHOT = int(sys.argv[2])
 BOX = int(sys.argv[3])
 AXIS = int(sys.argv[4])
-FILE1 = sys.argv[5]
+RES = int(sys.argv[5])
+FILE1 = sys.argv[6]
+
 IS_CROSS = AUTO_OR_CROSS == "cross"
 if IS_CROSS:
-    FILE2 = sys.argv[6]
+    FILE2 = sys.argv[7]
     SAME_FILE = FILE1 == FILE2
 
 # defining basic paths
@@ -51,22 +53,12 @@ def to_overdensity(field, pnt):
 if not IS_CROSS:
 
     # getting input data
-    f = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
+    f = hp.File(HOME+FILE1+'%d_%03d.%dres.final.hdf5'%(BOX, SNAPSHOT,RES),'r')
     keylist = list(f.keys())
-
-    # getting the resolution of the fields to name the output file
-    res = 0
-    i = 0
-    while res == 0:
-        if len(f[keylist[i]].shape) == 3:
-            res = f[keylist[i]].shape[0]
-            break
-        else:
-            i += 1
     
     # creating output files
-    w = hp.File(SAVE+'auto/%s%d_%03d.%dres.hdf5'%(FILE1,BOX,SNAPSHOT,res),'w')
-    pnt = printer.Printer(LOG+'%s%d_%03d.%dres.corr.log'%(FILE1,BOX,SNAPSHOT,res))
+    w = hp.File(SAVE+'auto/%s%d_%03d.%dres.hdf5'%(FILE1,BOX,SNAPSHOT,RES),'w')
+    pnt = printer.Printer(LOG+'%s%d_%03d.%dres.corr.log'%(FILE1,BOX,SNAPSHOT,RES))
 
     # creating a directory to save plots to...
     if not os.path.isdir(PLOTS+'%s/'%FILE1):
@@ -101,24 +93,14 @@ if not IS_CROSS:
 
 else:
     # getting input data
-    f1 = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
-    f2 = hp.File(HOME+FILE2+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
+    f1 = hp.File(HOME+FILE1+'%d_%03d.%dres.final.hdf5'%(BOX, SNAPSHOT,RES),'r')
+    f2 = hp.File(HOME+FILE2+'%d_%03d.%dres.final.hdf5'%(BOX, SNAPSHOT,RES),'r')
     keylist1 = list(f1.keys())
     keylist2 = list(f2.keys())
-
-    # getting the resolution of the fields to name the output file
-    res = 0
-    i = 0
-    while res == 0:
-        if len(f1[keylist1[i]].shape) == 3:
-            res = f1[keylist1[i]].shape[0]
-            break
-        else:
-            i += 1
     
     # creating output files
-    w = hp.File(SAVE+'cross/%s-%s%d_%03d.%dres.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT,res),'w')
-    pnt = printer.Printer(LOG+'%s-%s%d_%03d.%dres.Xcorr.log'%(FILE1,FILE2,BOX,SNAPSHOT,res))
+    w = hp.File(SAVE+'cross/%s-%s%d_%03d.%dres.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT,RES),'w')
+    pnt = printer.Printer(LOG+'%s-%s%d_%03d.%dres.Xcorr.log'%(FILE1,FILE2,BOX,SNAPSHOT,RES))
 
     # calculating cross-correlation
     pnt.write("calculating X-correlation for %s, %s"%(FILE1, FILE2))

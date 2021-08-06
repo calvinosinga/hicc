@@ -43,3 +43,7 @@ def is_resolved_gas_stmass(stmass, gasmass):
     resolved_in_stmass = stmass > refmass
     resolved_in_gasmass = gasmass > refmass
     return resolved_in_gasmass * resolved_in_stmass
+
+def is_resolved_dust_min(stmass):
+    refmass = 1e9 #solar masses
+    return stmass > refmass 

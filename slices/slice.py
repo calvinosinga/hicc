@@ -12,6 +12,7 @@ import illustris_python as il
 FILE = sys.argv[1]
 SNAPSHOT = int(sys.argv[2])
 BOX = int(sys.argv[3])
+RES = int(sys.argv[4])
 
 # defining paths
 PLOTS = '/lustre/cosinga/HI-color/results/plots/'
@@ -20,7 +21,7 @@ LOGS = '/lustre/cosinga/HI-color/hicc/logs/slices/'
 TNG = '/lustre/cosinga/tng%s'%BOX
 
 # making printer
-pnt = Printer(LOGS+"%s.log"%FILE)
+pnt = Printer(LOGS+"%s.%dres.log"%(FILE,RES))
 pnt.write("printer made")
 
 # getting sim data
@@ -36,7 +37,7 @@ if not os.path.isdir(PLOTS+"/slices/%s/"%FILE):
     pnt.write("made directory at: "+PLOTS+"/slices/%s/"%FILE)
 
 # getting input data
-filename = FILE + "%d_%03d.final"%(BOX, SNAPSHOT)
+filename = FILE + "%d_%03d.%dres.final"%(BOX, SNAPSHOT,RES)
 pnt.write("opening input file at: "+FIELDS+filename+'.hdf5')
 f = hp.File(FIELDS+filename+'.hdf5','r')
 keylist = list(f.keys())
@@ -59,10 +60,9 @@ for key in keylist:
         if occupation < .001:
             pnt.writeTab("found that this grid is too sparse, converting to a smaller grid")
             field = coarse_grid(field)
-        res = field.shape[0]
         pnt.writeTab("out of %.3e elements, %.3e are occupied"%(elms, count))
         pnt.writeTab("making slice plot for %s"%key)
-        lpt.plotslc(field, BOXSIZE, PLOTS+'/slices/%s/%s%d_%03d.%dres'%(FILE, key, BOX, SNAPSHOT, res))
+        lpt.plotslc(field, BOXSIZE, PLOTS+'/slices/%s/%s%d_%03d.%dres'%(FILE, key, BOX, SNAPSHOT, RES))
         pnt.writeTab("successfully made the slice plot")
 
 

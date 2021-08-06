@@ -39,28 +39,29 @@ if STEP == 0:
     filenos = np.arange(START, END)
     files = ['%s%d_%03d.%d.hdf5'%(PREFIX, BOX, SNAPSHOT, i) for i in filenos]
 elif STEP == 1:
-    w = hp.File(FINAL+'%s%d_%03d.final.hdf5'%(PREFIX, BOX, SNAPSHOT),'w')
-    pnt = Printer(LOG+'%s%d_%03d.final.log'%(PREFIX, BOX, SNAPSHOT))
     filenos = np.arange(START, END, 20)
     files = ['%s%d_%03d.%d.%d.hdf5'%(PREFIX, BOX, SNAPSHOT, i, i+20) for i in filenos]
 else:
     raise ValueError("the STEP input must be 0 or 1")
 
-pnt.write("just finished loading paths, cmd-line, creating output files: has memory total of:"+mem_to_string())
-pnt.write('first file: ' + files[0])
-pnt.write('last file: ' + files[-1])
+
 f = hp.File(BASE+files[0], 'r')
 keylist = list(f.keys())
 GRID = f[models[0]][:].shape
 
+if STEP==1:
+    w = hp.File(FINAL+'%s%d_%03d.%dres.final.hdf5'%(PREFIX, BOX, SNAPSHOT,GRID[0]),'w')
+    pnt = Printer(LOG+'%s%d_%03d.%dres.final.log'%(PREFIX, BOX, SNAPSHOT,GRID[0]))
+    
 pnt.write("just loaded input, about to start loop:"+mem_to_string())
-
+# after input loading, has memory of 47.2MB
 # sum each model's grid individually
 for m in models:
     pnt.write("starting model "+m+"\tmem="+mem_to_string())
     total = np.zeros(GRID, dtype=np.float32)
 
     pnt.writeTab("created empty array:"+mem_to_string())
+    # now using 3.5 GB
     for i in files:
         # it is expected that the last job will find nonexistent files
         try:

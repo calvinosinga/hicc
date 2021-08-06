@@ -9,10 +9,12 @@ import matplotlib.pyplot as plt
 import sys
 import library_hicc.color as lhicc
 import matplotlib as mpl
+import h5py as hp
 
 # reading command-line inputs
 SNAPSHOT = int(sys.argv[1])
 BOX = int(sys.argv[2])
+AXIS = int(sys.argv[3])
 
 # defining needed paths
 HOME = '/lustre/cosinga/tng%d/'%BOX
@@ -30,6 +32,20 @@ LITTLE_H = head['HubbleParam']
 stmass = sub[fields[0]][:,4]*1e10/LITTLE_H
 gasmass = sub[fields[0]][:,0]*1e10/LITTLE_H
 gr = sub[fields[1]][:,4] - sub[fields[1]][:,5]
+
+# getting dust gr
+dustfile = "Subhalo_StellarPhot_p07c_cf00dust_res_conv_ns1_rad30pkpc_%03d.hdf5"%SNAPSHOT
+f = hp.File(HOME+"postprocessing/stellar_light/"+dustfile)
+dustPhoto = f['Subhalo_StellarPhot_p07c_cf00dust_res_conv_ns1_rad30pkpc'][:]
+proj = dict(dustPhoto.attrs)['projVecs']
+los = np.zeros_like(proj)
+los[:,AXIS] += 1
+
+dist = np.sum((proj-los)**2,axis=1)
+minidx = np.argmin(dist)
+gr_dust = dustPhoto[:, 1, minidx]-dustPhoto[:, 2, minidx]
+dust_resolved = np.invert(np.isnan(gr_dust))
+stmass_dust = stmass[dust_resolved]
 
 # removing the unresolved subhalos in both gas AND stmass
 # TODO: maybe find the % of each bin that is resolved/unresolved
@@ -51,6 +67,16 @@ gr_res = gr[res_idx]
 fx = lambda x: 0.65 + 0.02*(x-10.28)
 fxdown = lambda x: 0.6 + 0.02*(x-10.28)
 fxup = lambda x: 0.7 + 0.02*(x-10.28)
+
+# saving the plot information
+w = hp.File(SAVE+'gr-stmass_%d_%03d.hdf5'%(BOX,SNAPSHOT), 'w')
+w.create_dataset("stellar_mass", data=stmass)
+w.create_dataset("gr", data=gr)
+w.create_dataset("gr_dust", data=gr_dust)
+w.create_dataset("stmass_and_gas_idx", data=both_idx)
+w.create_dataset("stmass_or_gas_idx", data=res_idx)
+w.create_dataset("stmass_idx", data=stres_idx)
+w.create_dataset("dust_idx", data=dust_resolved)
 
 # now making first histogram
 stmass_both = np.log10(stmass_both)
@@ -106,3 +132,4 @@ plt.ylabel('g-r (magnitude)')
 plt.title('Resolved in Stellar Mass or Gas Mass')
 plt.savefig(SAVE+'gas_or_stmass_resolved_%d_%03d.png'%(BOX,SNAPSHOT))
 plt.clf()
+

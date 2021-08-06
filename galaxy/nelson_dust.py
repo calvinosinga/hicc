@@ -35,9 +35,9 @@ BOXSIZE = head['BoxSize']/1e3 * SCALE #Mpc/h
 REDSHIFT = head['Redshift']
 
 # output files
-wrs = hp.File('%snelsonrs_%s%d_%03d.%dres.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT,RES), 'w')
-w = hp.File('%snelson_%s%d_%03d.%dres.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT,RES), 'w')
-pnt = Printer(LOG+'nelson_%s%d_%03d.%dres.log'%(RUN,BOX,SNAPSHOT,RES))
+wrs = hp.File('%snelsonrs_%s_dust%d_%03d.%dres.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT,RES), 'w')
+w = hp.File('%snelson_%s_dust%d_%03d.%dres.final.hdf5'%(SAVE,RUN,BOX,SNAPSHOT, RES), 'w')
+pnt = Printer(LOG+'nelson_%s_dust%d_%03d.%dres.log'%(RUN,BOX,SNAPSHOT,RES))
 
 # input data
 flds = ['SubhaloPos', 'SubhaloStellarPhotometrics', 'SubhaloMassType', 'SubhaloVel']
@@ -51,8 +51,29 @@ pnt.write("now shifting the positions to redshift space...")
 rspos = pos_redshift_space(pos, vel, BOXSIZE, 100*LITTLE_H, REDSHIFT, AXIS)
 del sub, flds
 
+# getting dust-adjusted photometric data
+dustfile = "Subhalo_StellarPhot_p07c_cf00dust_res_conv_ns1_rad30pkpc_%03d.hdf5"%SNAPSHOT
+f = hp.File(HOME+"postprocessing/stellar_light/"+dustfile)
+dustPhoto = f['Subhalo_StellarPhot_p07c_cf00dust_res_conv_ns1_rad30pkpc'][:]
+
+# get the angles for each of the line-of-sights that the dust was computed for
+proj = dict(dustPhoto.attrs)['projVecs']
+
+# get the line-of-sight for the power spectrum calculation
+los = np.zeros_like(proj)
+los[:,AXIS] += 1
+
+# find the projection that is the closest to the pk's line of sight
+dist = np.sum((proj-los)**2,axis=1)
+minidx = np.argmin(dist)
+
+pnt.write("the projection found was "+str(proj[minidx]))
+
+gr = dustPhoto[:, 1, minidx]-dustPhoto[:, 2, minidx]
+
 pnt.write("writing to the redshift file %snelsonrs_%s%d_%03d.final.hdf5"%(SAVE,RUN,BOX,SNAPSHOT))
 pnt.write("writing to the real space file %snelson_%s%d_%03d.final.hdf5"%(SAVE,RUN,BOX,SNAPSHOT))
+
 counts = []
 counts_names = []
 def create_field(fieldname, mask):
@@ -60,11 +81,7 @@ def create_field(fieldname, mask):
     Creates a field using the only the indices provided, saved to 
     the output file w using the fieldname as the key.
     """
-    def print_mem(name, obj):
-        mem = sys.getsizeof(obj)
-        mem = mem/1e6
-        pnt.write("\t %s is %.3eMB"%(name, mem))
-        return
+
     pnt.write("creating fields for %s"%fieldname)
     pnt.write("\t now creating real-space field")
     field = np.zeros(GRID, dtype=np.float32)
@@ -72,9 +89,6 @@ def create_field(fieldname, mask):
     CICW(pos[mask], field, BOXSIZE, total_mass[mask])
     pnt.write("\t now assigning the masses to the grid")
     pnt.write("\t average mass of each subhalo: %d"%np.mean(total_mass[mask]))
-    print_mem("mass", total_mass[mask])
-    print_mem("field", field)
-    print_mem("position", pos[mask])
     w.create_dataset(fieldname, data=field, compression="gzip", compression_opts=9)
     field = np.zeros(GRID, dtype=np.float32)
     pnt.write("\t now creating redshift-space field")
@@ -88,7 +102,7 @@ def create_field(fieldname, mask):
 
 pnt.write("starting subhalo grid generation")
 
-resolved_mask = lhicc.is_resolved_stmass(mass[:,4])
+resolved_mask = np.invert(np.isnan(gr))
 red_mask = lhicc.is_red_nelson(gr,mass[:,4],RUN)
 blue_mask = np.invert(red_mask)
 red_mask *= resolved_mask # removes unresolved true values

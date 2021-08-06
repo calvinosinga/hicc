@@ -11,26 +11,26 @@
 #SBATCH --mail-user=cosinga@umd.edu
 
 . ~/.profile
-python3 /lustre/cosinga/HI-color/hicc/pk/pk.py auto $SNAP $BOX 1 $AXIS hisubhalo
+python3 /lustre/cosinga/HI-color/hicc/pk/pk.py auto $SNAP $BOX 1 $AXIS $RES hisubhalo
 printf "finished hisubhalo pk calculation \n"
 
-python3 /lustre/cosinga/HI-color/hicc/pk/pk.py auto $SNAP $BOX 0 $AXIS hisubhalors
+python3 /lustre/cosinga/HI-color/hicc/pk/pk.py auto $SNAP $BOX 0 $AXIS $RES hisubhalors
 printf "finished hisubhalors pk calculation \n"
 
 printf "now starting correlation calculations\n"
 
-python3 /lustre/cosinga/HI-color/hicc/correlation/2pcf.py auto $SNAP $BOX $AXIS hisubhalo
+python3 /lustre/cosinga/HI-color/hicc/correlation/2pcf.py auto $SNAP $BOX $AXIS $RES hisubhalo
 printf "finished hisubhalo correlation\n"
 
-python3 /lustre/cosinga/HI-color/hicc/correlation/2pcf.py auto $SNAP $BOX $AXIS hisubhalors
+python3 /lustre/cosinga/HI-color/hicc/correlation/2pcf.py auto $SNAP $BOX $AXIS $RES hisubhalors
 printf "finished hisubhalors correlation\n"
 
 printf "now making slice plots\n"
 
-python3 /lustre/cosinga/HI-color/hicc/slices/slice.py hisubhalo $SNAP $BOX
+python3 /lustre/cosinga/HI-color/hicc/slices/slice.py hisubhalo $SNAP $BOX $RES 
 printf "made hisubhalo slice plot\n"
 
-python3 /lustre/cosinga/HI-color/hicc/slices/slice.py hisubhalors $SNAP $BOX
+python3 /lustre/cosinga/HI-color/hicc/slices/slice.py hisubhalors $SNAP $BOX $RES 
 printf "made hisubhalors slice plot\n"
 
 printf "finished hisubhalo analysis!"

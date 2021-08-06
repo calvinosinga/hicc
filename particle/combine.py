@@ -27,7 +27,7 @@ if STEP == 0:
     filenos = np.arange(START, END)
     files = ['%s%d_%03d.%d.hdf5'%(PREFIX, BOX, SNAPSHOT, i) for i in filenos]
 elif STEP == 1:
-    w = hp.File(FINAL+'%s%d_%03d.final.hdf5'%(PREFIX, BOX, SNAPSHOT),'w')
+    
     filenos = np.arange(START, END, 20)
     files = ['%s%d_%03d.%d.%d.hdf5'%(PREFIX, BOX, SNAPSHOT, i, i+20) for i in filenos]
 else:
@@ -39,7 +39,9 @@ print('last file: ' + files[-1])
 # array of files to iterate over
 ff = hp.File(BASE+files[0],'r')
 keylist = list(ff.keys()) # getting the keys from first file
-
+RES = ff[keylist[0]].shape[0]
+if STEP==1:
+    w = hp.File(FINAL+'%s%d_%03d.%dres.final.hdf5'%(PREFIX, BOX, SNAPSHOT,RES),'w')
 # currently having some memory issues, outputting some logs into a new file
 for k in keylist:
     total = np.zeros_like(ff[k][:], dtype=np.float32)

@@ -28,9 +28,10 @@ SNAPSHOT = int(sys.argv[2])
 BOX = int(sys.argv[3])
 DIM = int(sys.argv[4])
 AXIS = int(sys.argv[5])
-FILE1 = sys.argv[6]
+RES = int(sys.argv[6])
+FILE1 = sys.argv[7]
 if AUTO_OR_XPK == "cross":
-    FILE2 = sys.argv[7]
+    FILE2 = sys.argv[8]
     IS_XPK = True
     SAME_FILE = FILE1 == FILE2
 elif AUTO_OR_XPK == "auto":
@@ -51,9 +52,9 @@ MAS = 'CIC'
 
 # memory issues, create log file to write to
 if IS_XPK:
-    pnt = Printer(LOG+"%s-%spk.log"%(FILE1,FILE2))
+    pnt = Printer(LOG+"%s-%spk.%dres.log"%(FILE1,FILE2,RES))
 else:
-    pnt = Printer(LOG+"%spk.log"%(FILE1))
+    pnt = Printer(LOG+"%spk.%dres.log"%(FILE1,RES))
 
 def mem_to_printer(prefix):
     mem = process.memory_info().rss
@@ -84,30 +85,22 @@ def to_overdensity(field):
 if IS_XPK:
 
     # input files, loop over all of the keys in each
-    f1 = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
+    f1 = hp.File(HOME+FILE1+'%d_%03d.%dres.final.hdf5'%(BOX, SNAPSHOT,RES),'r')
     key1list = list(f1.keys())
-    f2 = hp.File(HOME+FILE2+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
+    f2 = hp.File(HOME+FILE2+'%d_%03d.%dres.final.hdf5'%(BOX, SNAPSHOT,RES),'r')
     key2list = list(f2.keys())
 
     #pnt.write('opened both files, size of each are %.3e and %.3e.\n starting calculations... \n'%(sys.getsizeof(f1),sys.getsizeof(f2)))
     mem_to_printer("finished loading the files:")
-    # getting the resolution of the fields to name the output file
-    res = 0
-    i = 0
-    while res == 0:
-        if len(f1[key1list[i]].shape) == 3:
-            res = f1[key1list[i]].shape[0]
-            break
-        else:
-            i += 1
+
     
     pnt.write("creating output files...")
     # output file
     if DIM==0: # create both 1D and 2D
-        w1 = hp.File(SAVE+'cross/1Dpk/%s-%s%d_%03d.%dres.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT,res),'w')
-        w2 = hp.File(SAVE+'cross/2Dpk/%s-%s%d_%03d.%dres.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT,res),'w')
+        w1 = hp.File(SAVE+'cross/1Dpk/%s-%s%d_%03d.%dres.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT,RES),'w')
+        w2 = hp.File(SAVE+'cross/2Dpk/%s-%s%d_%03d.%dres.hdf5'%(FILE1,FILE2,BOX,SNAPSHOT,RES),'w')
     else:
-        w = hp.File(SAVE+'cross/%dDpk/%s-%s%d_%03d.%dres.hdf5'%(DIM,FILE1,FILE2,BOX,SNAPSHOT,res),'w')
+        w = hp.File(SAVE+'cross/%dDpk/%s-%s%d_%03d.%dres.hdf5'%(DIM,FILE1,FILE2,BOX,SNAPSHOT,RES),'w')
 
     # making a directory to save the plots to...
     if not os.path.isdir(PLOTS+'1Dpk/%s-%s/'%(FILE1, FILE2)):
@@ -187,27 +180,17 @@ if IS_XPK:
 else:# auto power spectrum
     
     # input data
-    f1 = hp.File(HOME+FILE1+'%d_%03d.final.hdf5'%(BOX, SNAPSHOT),'r')
+    f1 = hp.File(HOME+FILE1+'%d_%03d.%dres.final.hdf5'%(BOX, SNAPSHOT,RES),'r')
     keylist = list(f1.keys())
 
     mem_to_printer("finished loading the file:")
-    # getting the resolution of the fields to name the output file
-    res = 0
-    i = 0
-    while res == 0:
-        if len(f1[keylist[i]].shape) == 3:
-            res = f1[keylist[i]].shape[0]
-            break
-        else:
-            i += 1
-
 
     # output file
     if DIM==0: # create both 1D and 2D
-        w1 = hp.File(SAVE+'auto/1Dpk/%s%d_%03d.%dres.hdf5'%(FILE1,BOX,SNAPSHOT,res),'w')
-        w2 = hp.File(SAVE+'auto/2Dpk/%s%d_%03d.%dres.hdf5'%(FILE1,BOX,SNAPSHOT,res),'w')
+        w1 = hp.File(SAVE+'auto/1Dpk/%s%d_%03d.%dres.hdf5'%(FILE1,BOX,SNAPSHOT,RES),'w')
+        w2 = hp.File(SAVE+'auto/2Dpk/%s%d_%03d.%dres.hdf5'%(FILE1,BOX,SNAPSHOT,RES),'w')
     else:
-        w = hp.File(SAVE+'auto/%dDpk/%s%d_%03d.%dres.hdf5'%(DIM,FILE1,BOX,SNAPSHOT,res),'w')
+        w = hp.File(SAVE+'auto/%dDpk/%s%d_%03d.%dres.hdf5'%(DIM,FILE1,BOX,SNAPSHOT,RES),'w')
 
     # making a directory to save the plots to...
     if not os.path.isdir(PLOTS+'1Dpk/%s/'%FILE1):

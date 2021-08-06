@@ -11,26 +11,26 @@
 #SBATCH --error=./errors/ptlpk.err
 
 . ~/.profile
-python3 /lustre/cosinga/HI-color/hicc/pk/pk.py auto $SNAP $BOX 1 $AXIS ptl
+python3 /lustre/cosinga/HI-color/hicc/pk/pk.py auto $SNAP $BOX 1 $AXIS $RES ptl
 printf "finished ptl pk calculation \n"
 
-python3 /lustre/cosinga/HI-color/hicc/pk/pk.py auto $SNAP $BOX 0 $AXIS ptlrs
+python3 /lustre/cosinga/HI-color/hicc/pk/pk.py auto $SNAP $BOX 0 $AXIS $RES ptlrs
 printf "finished ptlrs pk calculation \n"
 
 printf "now starting correlation calculations\n"
 
-python3 /lustre/cosinga/HI-color/hicc/correlation/2pcf.py auto $SNAP $BOX $AXIS ptl
+python3 /lustre/cosinga/HI-color/hicc/correlation/2pcf.py auto $SNAP $BOX $AXIS $RES ptl
 printf "finished ptl correlation\n"
 
-python3 /lustre/cosinga/HI-color/hicc/correlation/2pcf.py auto $SNAP $BOX $AXIS ptlrs
+python3 /lustre/cosinga/HI-color/hicc/correlation/2pcf.py auto $SNAP $BOX $AXIS $RES ptlrs
 printf "finished ptlrs correlation\n"
 
 printf "now making slice plots\n"
 
-python3 /lustre/cosinga/HI-color/hicc/slices/slice.py ptl $SNAP $BOX
+python3 /lustre/cosinga/HI-color/hicc/slices/slice.py ptl $SNAP $BOX $RES 
 printf "made ptl slice plot\n"
 
-python3 /lustre/cosinga/HI-color/hicc/slices/slice.py ptlrs $SNAP $BOX
+python3 /lustre/cosinga/HI-color/hicc/slices/slice.py ptlrs $SNAP $BOX $RES 
 printf "made ptlrs slice plot\n"
 
 printf "finished ptl analysis!"

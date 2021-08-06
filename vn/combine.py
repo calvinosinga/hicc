@@ -32,18 +32,19 @@ if STEP == 0:
     filenos = np.arange(START, END)
     files = ['%s%d_%03d.%d.hdf5'%(PREFIX, BOX, SNAPSHOT, i) for i in filenos]
 elif STEP == 1:
-    w = hp.File(FINAL+'%s%d_%03d.final.hdf5'%(PREFIX, BOX, SNAPSHOT),'w')
-    pnt = Printer(LOG+'%s%d_%03d.final.log'%(PREFIX, BOX, SNAPSHOT))
+
     filenos = np.arange(START, END, 20)
     files = ['%s%d_%03d.%d.%d.hdf5'%(PREFIX, BOX, SNAPSHOT, i, i+20) for i in filenos]
 else:
     raise ValueError("the STEP input must be 0 or 1")
 
-pnt.write('first file: ' + files[0])
-pnt.write('last file: ' + files[-1])
 f = hp.File(BASE+files[0], 'r')
 keylist = list(f.keys())
 GRID = f[keylist[0]][:].shape
+
+if STEP == 1:
+    w = hp.File(FINAL+'%s%d_%03d.%dres.final.hdf5'%(PREFIX, BOX, SNAPSHOT,GRID[0]),'w')
+    pnt = Printer(LOG+'%s%d_%03d.%dres.final.log'%(PREFIX, BOX, SNAPSHOT, GRID[0]))
 # sum each model's grid individually
 for key in keylist:
     total = np.zeros(GRID, dtype=np.float32)

@@ -37,9 +37,9 @@ REDSHIFT = head['Redshift']
 
 # if we are in redshift space, shift positions using velocity
 # then make output file, changing the name depending on if its in real space or redshift space
-wrs = hp.File(SAVE+"hisubhalors%d_%03d.final.hdf5"%(BOX,SNAPSHOT), 'w')
-w = hp.File(SAVE+'hisubhalo%d_%03d.final.hdf5'%(BOX,SNAPSHOT), 'w')
-pnt = Printer(LOG+'hisubhalo%d_%03d.log'%(BOX,SNAPSHOT))
+wrs = hp.File(SAVE+"hisubhalors%d_%03d.%dres.final.hdf5"%(BOX,SNAPSHOT,RES), 'w')
+w = hp.File(SAVE+'hisubhalo%d_%03d.%dres.final.hdf5'%(BOX,SNAPSHOT,RES), 'w')
+pnt = Printer(LOG+'hisubhalo%d_%03d.%dres.log'%(BOX,SNAPSHOT,RES))
 pnt.write('the boxsize is %f'%BOXSIZE)
 
 # input data
