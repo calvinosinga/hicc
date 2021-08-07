@@ -11,7 +11,7 @@ import sys
 from library_hicc.mas import CICW
 from library_hicc.printer import Printer
 from library_hicc.redshift_space import pos_redshift_space
-
+import library_hicc.color as coldef
 # reading command line inputs
 CHUNK = int(sys.argv[1])
 SNAPSHOT = int(sys.argv[2])
@@ -24,6 +24,7 @@ PTLPATH = '/lustre/cosinga/tng%d/snapdir_%03d/'%(BOX, SNAPSHOT) # where the ptl 
 OUTPATH = '/lustre/cosinga/HI-color/chunk_output/' # where to save the output
 HIPATH = '/lustre/diemer/illustris/hih2/'  # where the hiptl files are saved
 LOG = '/lustre/cosinga/HI-color/hicc/logs/ptl/'
+GCPATH = '/lustre/cosinga/tng%d/groups_%03d/'%(BOX,SNAPSHOT)
 
 # input files
 ptlfile = hp.File(PTLPATH+"snap_%03d.%d.hdf5" %(SNAPSHOT, CHUNK), 'r')
@@ -69,6 +70,21 @@ for p in ptltype:
 
 pnt.write("saving real-space grid...")
 w.create_dataset("particles", data=field, compression="gzip", compression_opts=9)
+
+# creating grids for galaxy-ptl
+names = ['blue_ptl', 'red_ptl','unresolved_ptl']
+subh = hp.File(GCPATH+'fof_subhalo_tab_%03d.%d.hdf5'%(SNAPSHOT,CHUNK),'r')
+try:
+    subhpos = subh['SubhaloPos'][:]
+    subhphoto = subh['SubhaloStellarPhotometrics'][:]
+    subhmass = subh['SubhaloMassType'][:]
+    found_file = True
+except KeyError:
+    pnt.write("did not find any information in the file for %d"%CHUNK)
+    found_file=False
+field = np.zeros(GRID, dtype=np.float32)
+if found_file:
+    
 w.close()
 
 pnt.write('creating new grid for redshift space...')
