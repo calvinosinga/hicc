@@ -83,8 +83,7 @@ except KeyError:
     pnt.write("did not find any information in the file for %d"%CHUNK)
     found_file=False
 field = np.zeros(GRID, dtype=np.float32)
-if found_file:
-    
+
 w.close()
 
 pnt.write('creating new grid for redshift space...')
