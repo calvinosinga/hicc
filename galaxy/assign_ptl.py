@@ -41,7 +41,6 @@ vel = sub[flds[3]][:] # km/s, 52 MB
 runs = ['low','mid','high']
 w = hp.File(HOME + 'postprocessing/color_ptlID%d_%03d.hdf5'%(BOX,SNAPSHOT),'w')
 
-states = np.zeros()
 for RUN in runs:
     resolved_mask = lhicc.is_resolved_stmass(mass[:,4])
     red_mask = lhicc.is_red_nelson(gr,mass[:,4],RUN)
