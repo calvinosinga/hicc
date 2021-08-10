@@ -8,8 +8,6 @@ import numpy as np
 import h5py as hp
 import sys
 # import MAS_library as masl
-from library_hicc.mas import CICW
-from library_hicc.redshift_space import pos_redshift_space
 import library_hicc.color as lhicc
 import illustris_python as il
 from library_hicc.printer import Printer
@@ -43,6 +41,7 @@ vel = sub[flds[3]][:] # km/s, 52 MB
 runs = ['low','mid','high']
 w = hp.File(HOME + 'postprocessing/color_ptlID%d_%03d.hdf5'%(BOX,SNAPSHOT),'w')
 
+states = np.zeros()
 for RUN in runs:
     resolved_mask = lhicc.is_resolved_stmass(mass[:,4])
     red_mask = lhicc.is_red_nelson(gr,mass[:,4],RUN)
