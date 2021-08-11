@@ -53,8 +53,9 @@ for RUN in runs:
 
     for i in range(len(blue_mask)):
         for p in ptltypes:
-            ptl = il.snapshot.loadSubhalo(HOME, SNAPSHOT, i, p, fields='ParticleIDs')
-            ptl = ptl[:]
+            ptl = il.snapshot.loadSubhalo(HOME, SNAPSHOT, i, p, fields=['ParticleIDs'])
+            if i == 0:
+                print(ptl)
             if blue_mask[i] == 1: # this subhalo is blue, label constituent ptls as blue
                 blue_ptls.extend(list(ptl))
             elif red_mask[i] == 1:
